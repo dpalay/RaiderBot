@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const _ = require('underscore');
 const fuzz = require('fuzzball');
+const converter = require('base-64')
 const client = new Discord.Client();
 const loggerID = "342771447602610176";
 const activeRaids = {};
@@ -21,9 +22,9 @@ const helpembed = new Discord.RichEmbed().setTitle("Raider Bot Help Information!
 helpembed.setColor(0xEE6600).setTimestamp().setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
 helpembed.setDescription("These are the commands available to help organize raids:")
 helpembed.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
-helpembed.addField("New", "\tCreates a new raid for others to join.\n\t**Syntax**: `!raider new <time>, <pokemon>, <location> [, <# of people you're bringing>]`\n\t**Example**: `!raider new 3:30, Articuno, Gym on Main St., 3`"
-+ nl + nl + tab + "**Alternate Syntax**: `!raider new <time>, <RAID_ID_FROM_MESSAGE>, <Gym>`"
-+ nl + tab + "**Example:** `raider new, 3:00, ID=352935634740183040?342054368733822977, Metal Birds`")
+helpembed.addField("New", "\tCreates a new raid for others to join.\n\t**Syntax**: `!raider new <time>, <pokemon>, <location> [, <# of people you're bringing>]`\n\t**Example**: `!raider new 3:30, Articuno, Gym on Main St., 3`" +
+  nl + nl + tab + "**Alternate Syntax**: `!raider new <time>, <RAID_ID_FROM_MESSAGE>, <Gym>`" +
+  nl + tab + "**Example:** `raider new, 3:00, ID=352935634740183040?342054368733822977, Metal Birds`")
 helpembed.addField("Join", "\tJoins an existing raid, listing how many people are in your party.\n\t**Syntax**: `!raider join <RaidID> [, <# of people you're bringing>]`\n\t**Example**: `!raider join 32, 3`")
 helpembed.addField("Leave", "\tLeaves a raid, removing you and anyone you're bringing.\n\t**Syntax**: `!raider leave <RaidID>`\n\t**Example**: `!raider leave 42`")
 helpembed.addField("Update", "\tChanges the count of people you're bringing.\n\t**Syntax**: `!raider update <RaidID>, <new # of people>`\n\t**Example**: `!raider update 23, 3`")
@@ -271,6 +272,12 @@ function sendHelp(message, parseArray) {
 function sendNew(message, parseArray) {
   console.log("sendNew from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
   console.log("\t" + message.content);
+
+  if (message.content.trim() == '!raider new') {
+    sendHelp(message, parseArray)
+    return;
+  }
+
   let options = {};
   let r = {};
   let returnFlag = false;
@@ -288,6 +295,10 @@ function sendNew(message, parseArray) {
     })
   }
   //!raider new id='somereally?longstring' More Info
+  if (!parseArray[1]) {
+    message.channel.send("Sorry, " + message.author + ". I couldn't understand your request.  Perhaps you used the wrong syntax?")
+    return;
+  }
 
   if (parseArray[1].indexOf("=") >= 0) {
     options.time = parseArray.shift();
@@ -295,44 +306,49 @@ function sendNew(message, parseArray) {
     let msgChan = options.msgChan.split("?");
     msgChan[0] = msgChan[0].substr(3);
     options.gym = parseArray.join(" ");
-    
+
     // go find the message
-    client.channels.get(msgChan[1]).fetchMessage(msgChan[0]).then((msg) => {
-      // console.log(message);
+    if (client.channels.get(msgChan[1])) {
 
-      // set the options for the new raid(time, poke, location, owner, count)
-      options.poke = msg.embeds[0].description.split(" ")[0] // gets the #123
-      options.location = "[" + msg.embeds[0].title + "](" + msg.embeds[0].url + ")"
+      client.channels.get(msgChan[1]).fetchMessage(msgChan[0]).then((msg) => {
+        // console.log(message);
 
-      //console.log(options);
+        // set the options for the new raid(time, poke, location, owner, count)
+        options.poke = msg.embeds[0].description.split(" ")[0] // gets the #123
+        options.location = "[" + msg.embeds[0].title + "](" + msg.embeds[0].url + ")"
 
-      // Call the new raid
-      r = new raid(options.time, options.poke, options.location, message.author);
-      if (options.gym) {
-        r.gym =options.gym;
-      }
+        //console.log(options);
 
-      //Let them know the raid is created.
+        // Call the new raid
+        r = new raid(options.time, options.poke, options.location, message.author);
+        if (options.gym) {
+          r.gym = options.gym;
+        }
 
-      // Send the embed
-      message.channel.send({
-        embed: r.embed()
+        //Let them know the raid is created.
+
+        // Send the embed
+        message.channel.send({
+          embed: r.embed()
+        })
+
+        message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
+          r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
+          //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
+          nl + "Others can join this raid by typing `!raider join " + r.id + "`");
+
+        //message.channel.send("Others can join this raid by typing `!raider join " + r.id + "`").then(() => console.log("Raid Created"));
+        // remove raid in 2 hours
+        setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+
+      }).catch(() => {
+        console.error
+        returnFlag = true;
       })
 
-      message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
-        r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
-        //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
-        nl + "Others can join this raid by typing `!raider join " + r.id + "`");
-
-      //message.channel.send("Others can join this raid by typing `!raider join " + r.id + "`").then(() => console.log("Raid Created"));
-      // remove raid in 2 hours
-      setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
-
-    }).catch(() => {
-      console.error
-      returnFlag = true;
-    })
-
+    } else {
+      message.channel.send("Sorry, " + message.author + ". I couldn't find a Raid posting with that ID.  Perhaps you used the wrong syntax?")
+    }
     //let raidMessage = // get the message id.trim()
     // get the Raid posting
     // get the pokemon and the gym (with link!)
@@ -341,6 +357,7 @@ function sendNew(message, parseArray) {
 
     //FIXME: Check the time and find the next instance of that time
     // raid(time, pokemon, location, owner, count)
+
     r = new raid(parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
     message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
       r.poke.name + "** at **" + r.location + "**" +
@@ -672,7 +689,7 @@ client.on('message', message => {
     if (_.find(RaidRooms, (room) => {
         return message.channel.id == room;
       }) && message.author.discriminator == '0000') {
-      message.channel.send("The above Raid posting has Raid Message ID=" + message.id + "?" + channel.id)
+      message.channel.send("The above Raid posting has Raid Message ID=" + message.id + "?" + message.channel.id)
     }
 
 
