@@ -304,7 +304,8 @@ function sendNew(message, parseArray) {
     options.time = parseArray.shift();
     options.msgChan = parseArray.shift();
     let msgChan = options.msgChan.split("?");
-    msgChan[0] = msgChan[0].substr(3);
+    msgChan[0] = converter.decode(msgChan[0].substr(3));
+    msgChan[1] = converter.decode(msgChan[1]);
     options.gym = parseArray.join(" ");
 
     // go find the message
@@ -689,7 +690,7 @@ client.on('message', message => {
     if (_.find(RaidRooms, (room) => {
         return message.channel.id == room;
       }) && message.author.discriminator == '0000') {
-      message.channel.send("The above Raid posting has Raid Message ID=" + message.id + "?" + message.channel.id)
+      message.channel.send("The above Raid posting has Raid Message ID=" + converter.encode(message.id) + "?" + converter.encode(message.channel.id)
     }
 
 
