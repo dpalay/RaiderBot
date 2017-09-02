@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const _ = require('underscore');
 const fuzz = require('fuzzball');
-const converter = require('base-64')
+const bigInt = require('big-integer')
 const client = new Discord.Client();
 const loggerID = "342771447602610176";
 const activeRaids = {};
@@ -308,8 +308,8 @@ function sendNew(message, parseArray) {
       return
     }
       let msgChan = options.msgChan.split("?");
-      msgChan[0] = converter.decode(msgChan[0].substr(3));
-      msgChan[1] = converter.decode(msgChan[1]);
+      msgChan[0] = bigInt(msgChan[0].substr(3),36).toString();
+      msgChan[1] = bigInt(msgChan[1],36).toString();
     options.gym = parseArray.join(" ");
 
     // go find the message
@@ -694,7 +694,7 @@ client.on('message', message => {
     if (_.find(RaidRooms, (room) => {
         return message.channel.id == room;
       }) && message.author.discriminator == '0000') {
-      message.channel.send("The above Raid posting has Raid Message ID=" + converter.encode(message.id) + "?" + converter.encode(message.channel.id))
+      message.channel.send("The above Raid posting has Raid Message ID=" + bigInt(message.id).toString(36) + "?" + bigInt(message.channel.id).toString(36))
     }
 
 
