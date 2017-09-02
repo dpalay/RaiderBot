@@ -265,7 +265,9 @@ function sendHelp(message, parseArray) {
         break;
     }
   }
- if(message.channel.type == 'text'){ message.delete().catch(console.error)}
+  if (message.channel.type == 'text') {
+    message.delete().catch(console.error)
+  }
 }
 
 //!raider new <time>, <poke>, <location>
@@ -323,7 +325,7 @@ function sendNew(message, parseArray) {
         options.poke = msg.embeds[0].description.split(" ")[0] // gets the #123
         options.location = "[" + msg.embeds[0].title + "](" + msg.embeds[0].url + ")"
 
-        //console.log(options);
+
 
         // Call the new raid
         r = new raid(options.time, options.poke, options.location, message.author);
@@ -405,7 +407,9 @@ function sendTransfer(message, parseArray) {
   } else {
     message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.")
   }
-  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
+  if (message.channel.type == 'text') {
+    message.delete().catch(console.error)
+  }
 }
 
 //!raider join raidID
@@ -439,7 +443,9 @@ function sendJoin(message, parseArray) {
   } else {
     message.reply("this wasn't a positive number I could recognize.  Try again?");
   }
-  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
+  if (message.channel.type == 'text') {
+    message.delete().catch(console.error)
+  }
 }
 
 //!raider leave RaidID
@@ -462,7 +468,9 @@ function sendLeave(message, parseArray) {
   else {
     message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.")
   }
-  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
+  if (message.channel.type == 'text') {
+    message.delete().catch(console.error)
+  }
 }
 
 function sendUpdate(message, parseArray) {
@@ -512,7 +520,9 @@ function sendUpdate(message, parseArray) {
   } else {
     message.reply("this wasn't a positive number I could recognize.  Try again?");
   }
-  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
+  if (message.channel.type == 'text') {
+    message.delete().catch(console.error)
+  }
 }
 
 function sendInfo(message, parseArray) {
@@ -535,7 +545,9 @@ function sendInfo(message, parseArray) {
   } else {
     message.reply("No raid found")
   }
-  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
+  if (message.channel.type == 'text') {
+    message.delete().catch(console.error)
+  }
 }
 
 
@@ -613,7 +625,9 @@ function sendList(message, parseArray) {
       });
     }
   );
-  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
+  if (message.channel.type == 'text') {
+    message.delete().catch(console.error)
+  }
 }
 
 
@@ -669,7 +683,9 @@ function sendMyRaids(message, parseArray) {
       }
     })
   })
-  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
+  if (message.channel.type == 'text') {
+    message.delete().catch(console.error)
+  }
 }
 
 //admin command
