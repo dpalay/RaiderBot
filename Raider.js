@@ -265,7 +265,7 @@ function sendHelp(message, parseArray) {
         break;
     }
   }
-  message.delete()
+ if(message.channel.type == 'text'){ message.delete().catch(console.error)}
 }
 
 //!raider new <time>, <poke>, <location>
@@ -405,7 +405,7 @@ function sendTransfer(message, parseArray) {
   } else {
     message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.")
   }
-  message.delete();
+  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
 }
 
 //!raider join raidID
@@ -439,7 +439,7 @@ function sendJoin(message, parseArray) {
   } else {
     message.reply("this wasn't a positive number I could recognize.  Try again?");
   }
-  message.delete();
+  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
 }
 
 //!raider leave RaidID
@@ -462,7 +462,7 @@ function sendLeave(message, parseArray) {
   else {
     message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.")
   }
-  message.delete();
+  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
 }
 
 function sendUpdate(message, parseArray) {
@@ -512,7 +512,7 @@ function sendUpdate(message, parseArray) {
   } else {
     message.reply("this wasn't a positive number I could recognize.  Try again?");
   }
-  message.delete();
+  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
 }
 
 function sendInfo(message, parseArray) {
@@ -535,7 +535,7 @@ function sendInfo(message, parseArray) {
   } else {
     message.reply("No raid found")
   }
-  message.delete();
+  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
 }
 
 
@@ -613,7 +613,7 @@ function sendList(message, parseArray) {
       });
     }
   );
-  message.delete();
+  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
 }
 
 
@@ -669,7 +669,7 @@ function sendMyRaids(message, parseArray) {
       }
     })
   })
-  message.delete();
+  if(message.channel.type == 'text'){ message.delete().catch(console.error)}
 }
 
 //admin command
