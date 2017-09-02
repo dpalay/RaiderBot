@@ -568,4 +568,4 @@ client.on('message', message => {
   }
 });
 
-client.login("MzQyNzcxNDQ3NjAyNjEwMTc2.DGUfLA.Bd4ZVPqvOvmSwtvFPvNRNJh4esM") //logger
+client.login("MzQ1MjY2OTI0OTMyMDM4NjU2.DIv59g.RvgSKhfttwulF4EFTXHzm6cPYos") //deletebot1
