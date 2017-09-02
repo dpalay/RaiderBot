@@ -303,9 +303,13 @@ function sendNew(message, parseArray) {
   if (parseArray[1].indexOf("=") >= 0) {
     options.time = parseArray.shift();
     options.msgChan = parseArray.shift();
-    let msgChan = options.msgChan.split("?");
-    msgChan[0] = converter.decode(msgChan[0].substr(3));
-    msgChan[1] = converter.decode(msgChan[1]);
+    if(!options.msgChan.includes('?')){
+      message.channel.send("Sorry, " + message.author + ". I couldn't understand your request.  Perhaps you used the wrong syntax?  There should have been a ? in the ID somewhere.  Did you copy from the Raid Posting?")
+      return
+    }
+      let msgChan = options.msgChan.split("?");
+      msgChan[0] = converter.decode(msgChan[0].substr(3));
+      msgChan[1] = converter.decode(msgChan[1]);
     options.gym = parseArray.join(" ");
 
     // go find the message
@@ -690,7 +694,7 @@ client.on('message', message => {
     if (_.find(RaidRooms, (room) => {
         return message.channel.id == room;
       }) && message.author.discriminator == '0000') {
-      message.channel.send("The above Raid posting has Raid Message ID=" + converter.encode(message.id) + "?" + converter.encode(message.channel.id)
+      message.channel.send("The above Raid posting has Raid Message ID=" + converter.encode(message.id) + "?" + converter.encode(message.channel.id))
     }
 
 
