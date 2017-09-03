@@ -285,6 +285,7 @@ function sendNew(message, parseArray) {
   let r = {};
   let returnFlag = false;
 
+  
   // no comma
   // "!raider new time pokemon a location count" => ["time", "pokemon", "a", "location", "count"]
   // "!raider new id=12321232132?12321232132" => ["id=12321232132?12321232132"]
@@ -297,13 +298,17 @@ function sendNew(message, parseArray) {
       return m.trim()
     })
   }
-  //!raider new id='somereally?longstring' More Info
+
+  //!raider new time id='somereally?longstring' More Info
   if (!parseArray[1]) {
     message.channel.send("Sorry, " + message.author + ". I couldn't understand your request.  Perhaps you used the wrong syntax?")
     return;
   }
 
-  if (parseArray[1].indexOf("=") >= 0) {
+  if(parseArray[0].indexOf("=") >= 0 && parseArray[0].indexOf("?") >= 0){
+    message.channel.send("Sorry, " + message.author + ". It looks like you didn't have a time before your ID=.  Try creating the raid again? The syntax is `!raider new <time>, ID=<copied raid ID>`")
+  }
+  else if (parseArray[1].indexOf("=") >= 0) {
     options.time = parseArray.shift();
     options.msgChan = parseArray.shift();
     if (!options.msgChan.includes('?')) {
