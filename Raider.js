@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const _ = require('underscore');
 const fuzz = require('fuzzball');
 const bigInt = require('big-integer')
-const client = new Discord.Client();
+const client = new Discord.Client({autoReconnect:true});
 const loggerID = "342771447602610176";
 const activeRaids = {};
 let ME = loggerID;
@@ -32,7 +32,7 @@ helpembed.addField("Info", "\tProvides information about a raid in a neat little
 helpembed.addField("List", "\tLists all the active Raids.\n\t**Syntax**: `!raider list`")
 helpembed.addField("Merge", "\tMerges two existing raids, copying the users from one to another.**_You must be the owner of the from raid_**\n\t**Syntax**: `!raider merge <From Raid ID>, <To Raid ID>`\n\t**Example**: `!raider merge 33, 17`")
 helpembed.addField("Transfer", "\tTransfers ownership of a raid. **_You must be the owner to grant ownership to someone else._**\n\t**Syntax**: `!raider transfer <RaidID>, <@new Owner>`\n\t**Example**: `!raider transfer 23, @Thanda`")
-helpembed.addField("Inactivate", "\Inactivates (deletes) a raid. **_You must be the owner of the raid to inactivate it._**\n\t**Syntax**: `!raider inactivate <RaidID>`\n\t**Example**: `!raider inactivate 4C`")
+helpembed.addField("Inactivate", "\tInactivates (deletes) a raid. **_You must be the owner of the raid to inactivate it._**\n\t**Syntax**: `!raider inactivate <RaidID>`\n\t**Example**: `!raider inactivate 4C`")
 
 // Helper functions
 
@@ -42,7 +42,7 @@ helpembed.addField("Inactivate", "\Inactivates (deletes) a raid. **_You must be 
  * @param {*} message 
  */
 function authorized(raid, message) {
-  return (raid.owner == message.author || message.author.id == '218550507659067392') // Admin :)
+  return (raid.owner.id == message.author.id || message.author.id == '218550507659067392') // Admin :)
 }
 
 /**
@@ -718,7 +718,7 @@ client.on('message', message => {
     if (_.find(RaidRooms, (room) => {
         return message.channel.id == room;
       }) && message.author.discriminator == '0000') {
-      message.channel.send("The above Raid posting has Raid Message ID=" + bigInt(message.id).toString(36) + "?" + bigInt(message.channel.id).toString(36))
+      message.channel.send("ID=" + bigInt(message.id).toString(36) + "?" + bigInt(message.channel.id).toString(36))
     }
 
 
