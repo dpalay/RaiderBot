@@ -5,9 +5,10 @@ const _ = require('underscore');
 const fuzz = require('fuzzball');
 const bigInt = require('big-integer')
 const client = new Discord.Client({ autoReconnect: true });
-const loggerID = "342771447602610176";
+const loggerID = config.loggerClient;
+const raiderID = config.raiderClient;
 const activeRaids = {};
-let ME = loggerID;
+let ME = raiderID;
 const ALPHANUM = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     //https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/1.png sprites for pokemon
 
