@@ -4,7 +4,9 @@ const Discord = require('discord.js');
 const _ = require('underscore');
 const fuzz = require('fuzzball');
 const bigInt = require('big-integer')
-const client = new Discord.Client({ autoReconnect: true });
+const client = new Discord.Client({
+    autoReconnect: true
+});
 const loggerID = config.loggerClient;
 const raiderID = config.raiderClient;
 const activeRaids = {};
@@ -492,6 +494,26 @@ function sendUpdate(message, parseArray) {
     console.log("\t" + message.content);
     let ID = ""
     let count = ""
+
+    // Get the ID
+    let tmp = message.substring(15).split(" ")
+    ID = tmp.shift();
+    ID = ID.replace(",", "").trim()
+
+    if (activeRaids[ID]) {
+
+    } else {
+        // No Raid with that ID found.
+        message.author.createDM().then((dm) => {
+            dm.send("Either that raid doesn't exist, or I couldn't process the command.\nType `!raider list` for a list of active raids and `!raider help` for a list of commands.\nYou typed `" + message + "`")
+        }).catch(console.error)
+    }
+
+    // Clear out the message the user typed to Raider
+    if (message.channel.type == 'text') {
+        message.delete().catch(console.error)
+    }
+
 
     /*
         //handle if the user used a comma or not
