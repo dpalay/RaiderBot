@@ -824,4 +824,4 @@ client.on('message', message => {
     }
 });
 
-client.login(config.raider) //logger
+client.login(config.raider) //raider
