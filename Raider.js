@@ -777,7 +777,7 @@ client.on('message', message => {
         }
 
         //is it a command?
-        else if (message.content.toLowerCase().startsWith("!tester")) {
+        else if (message.content.toLowerCase().startsWith("!raider")) {
             // get the commands
             let parseArray = message.content.split(" ");
             if (parseArray.length == 1) {
