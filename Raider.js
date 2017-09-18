@@ -5,8 +5,13 @@ const _ = require('underscore');
 const fuzz = require('fuzzball');
 const bigInt = require('big-integer');
 const storage = require('node-persist');
-storage.initSync({ dir: './RaiderData' })
-const client = new Discord.Client({ autoReconnect: true });
+storage.initSync({
+    dir: './RaiderData',
+    ttl: 1000 * 60 * 2
+})
+const client = new Discord.Client({
+    autoReconnect: true
+});
 const loggerID = config.loggerClient;
 const raiderID = config.raiderClient;
 const activeRaids = {};
@@ -40,6 +45,16 @@ helpembed.addField("Transfer", "\tTransfers ownership of a raid. **_You must be 
 helpembed.addField("Inactivate", "\tInactivates (deletes) a raid. **_You must be the owner of the raid to inactivate it._**\n\t**Syntax**: `!raider inactivate <RaidID>`\n\t**Example**: `!raider inactivate 4C`")
 
 // Helper functions
+
+/**
+ * Stores the raid to the disk.  Called any time the raid object is modified
+ * @param raid 
+ */
+function storeRaid(raid) {
+    storage.setItemSync(raid.id, raid, {
+            ttl: raid.expires
+        }) // store the raid to disk
+}
 
 /**
  * Checks if the user owns the raid (or is me).  Used in things like transfering, merging, and inactivating raids
@@ -81,7 +96,7 @@ function interpretPoke(poke) {
         poke = "tyranitaur";
         console.log("==\twas ttar, now tyranitaur")
     }
-    if (poke.startsWith("#")) {
+    if (poke.toString().startsWith("#")) {
         console.log("==\tStarted with #")
         pokeID = parseInt(poke.substring(1));
     } else if (parseInt(poke) >= 0) {
@@ -125,9 +140,9 @@ function attendee(userID, username, mention, count = 1) {
 }
 
 /** Raid object */
-function raid(time, poke, location, owner, guests = 1) {
+function raid(time, poke, location, owner, guests = 1, idOverride = undefined) {
     let tmpuser = new attendee(owner.id, owner.username, owner.toString(), guests)
-    this.id = getRaidID();
+    this.id = idOverride || getRaidID();
     this.time = time;
     this.location = location;
     this.gym = location;
@@ -359,8 +374,7 @@ function sendNew(message, parseArray) {
                 //message.channel.send("Others can join this raid by typing `!raider join " + r.id + "`").then(() => console.log("Raid Created"));
                 // remove raid in 2 hours
                 setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
-                storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
-
+                storeRaid(r); //save raid to disk
             }).catch(() => {
                 console.error
                 returnFlag = true;
@@ -384,7 +398,7 @@ function sendNew(message, parseArray) {
             nl + "Others can join this raid by typing `!raider join " + r.id + "`");
         // remove raid in 2 hours
         setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
-        storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
+        storeRaid(r); // Save raid to disk
     }
 }
 
@@ -412,7 +426,7 @@ function sendTransfer(message, parseArray) {
                 message.reply("you already own this raid. Did you want to give it to someone else?")
             } else {
                 r.owner = user;
-                storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
+                storeRaid(r); // store the raid to disk
                 message.reply("Set " + user + " as the owner of raid " + ID)
             }
         } else {
@@ -443,10 +457,11 @@ function sendJoin(message, parseArray) {
         // does raid exist
         if (activeRaids[ID]) {
             // try to add user to the raid
+            let r = activeRaids[ID];
             if (addToRaid(ID, message.author, count)) {
-                message.reply(" added to raid " + ID + " owned by " + activeRaids[ID].owner +
-                    "  Total confirmed is: **" + activeRaids[ID].total() + "**");
-                storage.setItemSync(ID, activeRaids[ID], { ttl: activeRaids[ID].expires - Date.now() }) // store the raid to disk
+                message.reply(" added to raid " + ID + " owned by " + r.owner +
+                    "  Total confirmed is: **" + r.total() + "**");
+                storeRaid(r); // store the raid to disk
 
             } else {
                 message.reply("You are already added to the raid. To remove yourself, type `!raider leave " + ID + "` to change the number of players you're bringing, use `!raider update " + ID + ", <new #>`")
@@ -476,7 +491,7 @@ function sendLeave(message, parseArray) {
             // try to remove user to the raid
         if (removeFromRaid(r, message.author)) {
             message.reply(" removed from raid " + ID + " **Total confirmed is: " + r.total() + "**")
-            storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
+            storeRaid(r) // store the raid to disk
         } else {
             message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendLeave() function")
         }
@@ -520,14 +535,14 @@ function sendUpdate(message, parseArray) {
             if (r.attendees[message.author.id]) {
                 if (count == 0) {
                     if (removeFromRaid(r, message.author)) {
-                        storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
+                        storeRaid(r); // store the raid to disk
                         message.reply(" removed from raid " + ID + nl + "Total confirmed is: " + r.total())
                     } else {
                         message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendUpdate() function")
                     }
                 } else {
                     r.attendees[message.author.id].count = count;
-                    storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
+                    storeRaid(r); // store the raid to disk
                     message.reply("Updated total for the raid is now " + r.total())
                 }
             } else {
@@ -661,7 +676,7 @@ function sendKick(message, parseArray) {
                 for (let i = 0; i < mentions.users.length; i++) {
                     r
                 }
-                storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
+                storeRaid(r); // store the raid to disk
                 message.reply("Users have been removed from the raid. **Total confirmed is: " + r.total() + "**")
             } else {
                 message.reply("Sorry, I couldn't understand your request.  I think you were trying `!raid kick <Raid ID> @user`")
@@ -684,7 +699,7 @@ function sendTerminate(message, parseArray) {
             console.log("attempting to destroy info for " + ID)
             sendInfo(message, parseArray);
             clearRaidID(ID);
-            storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
+            storeRaid(r); // store the raid to disk
             message.reply("Raid " + ID + " destroyed.  Thank you for using Raider!");
         } else {
             message.reply("Either the raid doesn't exist, or you're not the owner.")
@@ -838,4 +853,19 @@ client.on('message', message => {
     }
 });
 
-client.login(config.logger) //logger for testing.  FIXME:  Change back to Raider for prod
+// load the stored raids into memory
+storage.forEach((k, v) => {
+    activeRaids[k] = new raid(v.time, v.poke.id, v.location, v.owner, v.owner.count, v.id);
+    activeRaids[k].gym = v.gym;
+    activeRaids[k].locationComment = v.locationComment
+    activeRaids[k].expires = v.expires
+    activeRaids[k].owner = v.owner
+    activeRaids[k].attendees = {}
+    _.each(v.attendees, (att) => {
+        activeRaids[k].attendees[att.id] = new attendee(att.id, att.username, att.mention, att.count)
+    })
+
+})
+
+// connect
+client.login(config.raider) //logger for testing.  FIXME:  Change back to Raider for prod
