@@ -751,6 +751,7 @@ function sendSpecial(message, parseArray) {
 // Connected!
 client.on('ready', () => {
     console.log('Raider is ready!');
+    client.user.setGame('!raider help | More info')
     ME = client.user
 });
 
