@@ -88,6 +88,7 @@ function getRaidID() {
  */
 function clearRaidID(id) {
     delete activeRaids[id];
+    storage.removeItemSync(id); // remove the raid to disk
     return activeRaids;
 }
 
@@ -706,8 +707,7 @@ function sendTerminate(message, parseArray) {
             let r = activeRaids[ID];
             console.log("attempting to destroy info for " + ID)
             sendInfo(message, parseArray);
-            clearRaidID(ID);
-            storeRaid(r); // store the raid to disk
+            clearRaidID(ID); // clears the raid and removes from disk
             message.reply("Raid " + ID + " destroyed.  Thank you for using Raider!");
         } else {
             message.reply("Either the raid doesn't exist, or you're not the owner.")
@@ -861,19 +861,25 @@ client.on('message', message => {
     }
 });
 
-// load the stored raids into memory
+console.log("Loading saved Raids")
+    // load the stored raids into memory
 storage.forEach((k, v) => {
-    activeRaids[k] = new raid(v.time, v.poke.id, v.location, v.owner, v.owner.count, v.id);
-    activeRaids[k].gym = v.gym;
-    activeRaids[k].locationComment = v.locationComment
-    activeRaids[k].expires = v.expires
-    activeRaids[k].owner = v.owner
-    activeRaids[k].attendees = {}
-    _.each(v.attendees, (att) => {
-        activeRaids[k].attendees[att.id] = new attendee(att.id, att.username, att.mention, att.count)
-    })
+    if (v.expires <= Date.now()) {
+        storage.removeItemSync(k); // remove the raid to disk
+    } else {
 
+        activeRaids[k] = new raid(v.time, v.poke.id, v.location, v.owner, v.owner.count, v.id);
+        activeRaids[k].gym = v.gym;
+        activeRaids[k].locationComment = v.locationComment
+        activeRaids[k].expires = v.expires
+        activeRaids[k].owner = v.owner
+        activeRaids[k].attendees = {}
+        _.each(v.attendees, (att) => {
+            activeRaids[k].attendees[att.id] = new attendee(att.id, att.username, att.mention, att.count)
+        })
+        setTimeout(() => clearRaidID(activeRaids[k].id), activeRaids[k].expires - Date.now())
+    }
 })
-
-// connect
+console.log("Logging in!")
+    // connect
 client.login(config.raider) //logger for testing.  FIXME:  Change back to Raider for prod
