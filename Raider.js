@@ -27,7 +27,7 @@ let ME = raiderID;
 
 
 const ALPHANUM = constants.alphanum;
-const names = constants.pokeList;
+const names = constants.pokelist;
 const RaidRooms = constants.raidrooms;
 
 // Formatting
