@@ -3,7 +3,9 @@ const config = require('./config.json');
 const Discord = require('discord.js');
 const _ = require('underscore');
 const fuzz = require('fuzzball');
-const bigInt = require('big-integer')
+const bigInt = require('big-integer');
+const storage = require('node-persist');
+storage.initSync({ dir: './RaiderData' })
 const client = new Discord.Client({ autoReconnect: true });
 const loggerID = config.loggerClient;
 const raiderID = config.raiderClient;
@@ -341,6 +343,7 @@ function sendNew(message, parseArray) {
                     r.gym = options.gym;
                 }
 
+
                 //Let them know the raid is created.
 
                 // Send the embed
@@ -356,6 +359,7 @@ function sendNew(message, parseArray) {
                 //message.channel.send("Others can join this raid by typing `!raider join " + r.id + "`").then(() => console.log("Raid Created"));
                 // remove raid in 2 hours
                 setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+                storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
 
             }).catch(() => {
                 console.error
@@ -380,6 +384,7 @@ function sendNew(message, parseArray) {
             nl + "Others can join this raid by typing `!raider join " + r.id + "`");
         // remove raid in 2 hours
         setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+        storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
     }
 }
 
@@ -407,6 +412,7 @@ function sendTransfer(message, parseArray) {
                 message.reply("you already own this raid. Did you want to give it to someone else?")
             } else {
                 r.owner = user;
+                storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
                 message.reply("Set " + user + " as the owner of raid " + ID)
             }
         } else {
@@ -439,7 +445,9 @@ function sendJoin(message, parseArray) {
             // try to add user to the raid
             if (addToRaid(ID, message.author, count)) {
                 message.reply(" added to raid " + ID + " owned by " + activeRaids[ID].owner +
-                    "  Total confirmed is: **" + activeRaids[ID].total() + "**")
+                    "  Total confirmed is: **" + activeRaids[ID].total() + "**");
+                storage.setItemSync(ID, activeRaids[ID], { ttl: activeRaids[ID].expires - Date.now() }) // store the raid to disk
+
             } else {
                 message.reply("You are already added to the raid. To remove yourself, type `!raider leave " + ID + "` to change the number of players you're bringing, use `!raider update " + ID + ", <new #>`")
             }
@@ -464,10 +472,11 @@ function sendLeave(message, parseArray) {
     ID = parseArray[2].toUpperCase();
     //if raid exists
     if (activeRaids[ID]) {
-        let raid = activeRaids[ID]
+        let r = activeRaids[ID]
             // try to remove user to the raid
-        if (removeFromRaid(raid, message.author)) {
-            message.reply(" removed from raid " + ID + " **Total confirmed is: " + raid.total() + "**")
+        if (removeFromRaid(r, message.author)) {
+            message.reply(" removed from raid " + ID + " **Total confirmed is: " + r.total() + "**")
+            storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
         } else {
             message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendLeave() function")
         }
@@ -511,12 +520,14 @@ function sendUpdate(message, parseArray) {
             if (r.attendees[message.author.id]) {
                 if (count == 0) {
                     if (removeFromRaid(r, message.author)) {
-                        message.reply(" removed from raid " + ID + nl + "Total confirmed is: " + activeRaids[ID].total())
+                        storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
+                        message.reply(" removed from raid " + ID + nl + "Total confirmed is: " + r.total())
                     } else {
                         message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendUpdate() function")
                     }
                 } else {
                     r.attendees[message.author.id].count = count;
+                    storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
                     message.reply("Updated total for the raid is now " + r.total())
                 }
             } else {
@@ -575,7 +586,7 @@ function sendAtMessage(message, parseArray) {
         //if Raid exists.
         if (activeRaids[ID]) {
             let raid = activeRaids[ID];
-            if (userInRaid(user, raid)) {
+            if (userInRaid(user, raid) || message.author.id == '218550507659067392') {
                 let fwdmessage = message.content.substr(message.content.indexOf(",") + 1).trim();
                 _.each(raid.attendees, (attendee) => {
                     client.users.get(attendee.id).createDM().then((dm) => {
@@ -644,13 +655,14 @@ function sendKick(message, parseArray) {
     let ID = ""
     let userToKick = ""
     if (parseArray[2]) {
-        let raid = activeRaids[ID]
-        if (authorized(raid, message)) {
+        let r = activeRaids[ID]
+        if (authorized(r, message)) {
             if (mentions.users.length > 0) {
                 for (let i = 0; i < mentions.users.length; i++) {
-                    removeFromRaid(raid, mentions.users[i]);
+                    r
                 }
-                message.reply("Users have been removed from the raid. **Total confirmed is: " + raid.total() + "**")
+                storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
+                message.reply("Users have been removed from the raid. **Total confirmed is: " + r.total() + "**")
             } else {
                 message.reply("Sorry, I couldn't understand your request.  I think you were trying `!raid kick <Raid ID> @user`")
             }
@@ -668,9 +680,11 @@ function sendTerminate(message, parseArray) {
     if (parseArray[2]) {
         ID = parseArray[2].toUpperCase();
         if (activeRaids[ID] && authorized(activeRaids[ID], message)) {
+            let r = activeRaids[ID];
             console.log("attempting to destroy info for " + ID)
             sendInfo(message, parseArray);
             clearRaidID(ID);
+            storage.setItemSync(r.id, r, { ttl: r.expires - Date.now() }) // store the raid to disk
             message.reply("Raid " + ID + " destroyed.  Thank you for using Raider!");
         } else {
             message.reply("Either the raid doesn't exist, or you're not the owner.")
@@ -740,7 +754,7 @@ client.on('message', message => {
         }
 
         //is it a command?
-        else if (message.content.toLowerCase().startsWith("!raider")) {
+        else if (message.content.toLowerCase().startsWith("!tester")) {
             // get the commands
             let parseArray = message.content.split(" ");
             if (parseArray.length == 1) {
@@ -824,4 +838,4 @@ client.on('message', message => {
     }
 });
 
-client.login(config.raider) //raider
+client.login(config.logger) //logger for testing.  FIXME:  Change back to Raider for prod
