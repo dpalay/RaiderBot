@@ -883,4 +883,4 @@ storage.forEach((k, v) => {
 })
 console.log("Logging in!")
     // connect
-client.login(config.raider) //logger for testing.  FIXME:  Change back to Raider for prod
+client.login(config.raider) //raider's ID
