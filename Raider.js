@@ -514,58 +514,84 @@ function sendLeave(message, parseArray) {
     }
 }
 
+
+// !raider update ID, #
+// !raider update ID, count, #
+// !raider update ID, poke, new poke
+// !raider update ID, pokemon, new poke
+// !raider update ID, time, new time
 function sendUpdate(message, parseArray) {
     console.log("sendUpdate from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\t" + message.content);
     let ID = ""
     let count = ""
 
-    //handle if the user used a comma or not
-    if (message.content.includes(",")) {
-        // "!raider update 23, 3" => [23, 3]
-        parseArray = message.content.substring(15).split(",").map((m) => {
-            return m.trim()
-        })
-        ID = parseArray[0].toUpperCase();
-        count = parseInt(parseArray[1]);
+    // Get the ID
+    let tmp = message.substring(15).split(" ")
+    ID = tmp.shift();
+    ID = ID.replace(",", "").trim()
+
+    if (activeRaids[ID]) {
+
     } else {
-        //!raider update ## #
-        ID = parseArray[2].toUpperCase;
-        count = parseArray[3];
+        // No Raid with that ID found.
+        message.author.createDM().then((dm) => {
+            dm.send("Either that raid doesn't exist, or I couldn't process the command.\nType `!raider list` for a list of active raids and `!raider help` for a list of commands.\nYou typed `" + message + "`")
+        }).catch(console.error)
     }
 
-    console.log("\tID: " + ID + "\tcount: " + count + "\tparseArray: " + parseArray)
-    if (count >= 0) {
-        let r = {}
-            // if raid exists
-        if (activeRaids[ID]) {
-            r = activeRaids[ID]
-                // if the user is part of the raid
-            if (r.attendees[message.author.id]) {
-                if (count == 0) {
-                    if (removeFromRaid(r, message.author)) {
-                        storeRaid(r); // store the raid to disk
-                        message.reply(" removed from raid " + ID + nl + "Total confirmed is: " + r.total())
-                    } else {
-                        message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendUpdate() function")
-                    }
-                } else {
-                    r.attendees[message.author.id].count = count;
-                    storeRaid(r); // store the raid to disk
-                    message.reply("Updated total for the raid is now " + r.total())
-                }
-            } else {
-                message.reply("You aren't in this raid.  If you'd like to be, try `!raider join " + ID + "`")
-            }
-        } else {
-            message.reply("Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids and `!raider help` for a list of commands.")
-        }
-    } else {
-        message.reply("this wasn't a positive number I could recognize.  Try again?");
-    }
+    // Clear out the message the user typed to Raider
     if (message.channel.type == 'text') {
         message.delete().catch(console.error)
     }
+
+
+    /*
+        //handle if the user used a comma or not
+        if (message.content.includes(",")) {
+            // "!raider update 23, 3" => [23, 3]
+            parseArray = message.content.substring(15).split(",").map((m) => {
+                return m.trim()
+            })
+            ID = parseArray[0].toUpperCase();
+            count = parseInt(parseArray[1]);
+        } else {
+            //!raider update ## #
+            ID = parseArray[2].toUpperCase;
+            count = parseArray[3];
+        }
+
+        console.log("\tID: " + ID + "\tcount: " + count + "\tparseArray: " + parseArray)
+        if (count >= 0) {
+            let r = {}
+                // if raid exists
+            if (activeRaids[ID]) {
+                r = activeRaids[ID]
+                    // if the user is part of the raid
+                if (r.attendees[message.author.id]) {
+                    if (count == 0) {
+                        if (removeFromRaid(r, message.author)) {
+                            message.reply(" removed from raid " + ID + nl + "Total confirmed is: " + activeRaids[ID].total())
+                        } else {
+                            message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendUpdate() function")
+                        }
+                    } else {
+                        r.attendees[message.author.id].count = count;
+                        message.reply("Updated total for the raid is now " + r.total())
+                    }
+                } else {
+                    message.reply("You aren't in this raid.  If you'd like to be, try `!raider join " + ID + "`")
+                }
+            } else {
+                message.reply("Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids and `!raider help` for a list of commands.")
+            }
+        } else {
+            message.reply("this wasn't a positive number I could recognize.  Try again?");
+        }
+        if (message.channel.type == 'text') {
+            message.delete().catch(console.error)
+        }
+      */
 }
 
 function sendInfo(message, parseArray) {
