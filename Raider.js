@@ -4,7 +4,7 @@ const constants = require('./constant.json');
 // Set up persistant file storage
 const storage = require('node-persist');
 storage.initSync({
-    dir: './RaiderData',
+    dir: './LoggerData',
     ttl: 1000 * 60 * 2
 })
 
@@ -23,7 +23,7 @@ const bigInt = require('big-integer');
 const loggerID = config.loggerClient;
 const raiderID = config.raiderClient;
 const activeRaids = {};
-let ME = raiderID;
+let ME = loggerID;
 
 
 const ALPHANUM = constants.alphanum;
@@ -828,17 +828,17 @@ client.on('ready', () => {
 //When a message is posted
 client.on('message', message => {
     if (message.author.id != ME.id) { // logger shouldn't check it's own stuff)
+        /*
+                // If message is from one of the RaidRooms and comes from a webhook
+                if (_.find(RaidRooms, (room) => {
+                        return message.channel.id == room;
+                    }) && message.author.discriminator == '0000') {
+                    message.channel.send("ID=" + bigInt(message.id).toString(36) + "?" + bigInt(message.channel.id).toString(36))
+                }
+        
 
-        // If message is from one of the RaidRooms and comes from a webhook
-        if (_.find(RaidRooms, (room) => {
-                return message.channel.id == room;
-            }) && message.author.discriminator == '0000') {
-            message.channel.send("ID=" + bigInt(message.id).toString(36) + "?" + bigInt(message.channel.id).toString(36))
-        }
-
-
-        /** FIXME: Delete this eventually */
-        else if (message.content === 'pingg') {
+        
+            }else if (message.content === 'pingg') {
             message.author.createDM().then(
                 (dm) => {
                     dm.send("pongg");
@@ -846,8 +846,10 @@ client.on('message', message => {
             );
         }
 
+
         //is it a command?
-        else if (message.content.toLowerCase().startsWith("!raider")) {
+        else */
+        if (message.content.toLowerCase().startsWith("!tester")) {
             // get the commands
             let parseArray = message.content.split(" ");
             if (parseArray.length == 1) {
@@ -952,4 +954,4 @@ storage.forEach((k, v) => {
 })
 console.log("Logging in!")
     // connect
-client.login(config.raider) //raider's ID
+client.login(config.logger)
