@@ -167,6 +167,7 @@ function raid(time, poke, location, owner, guests = 1, idOverride = undefined) {
     //  this.comments = {};   //TODO:  Add in a way for users to add comments to the raid
     this.attendees[owner.id] = tmpuser
 
+    this.to = null;
 
 
     // Add this raid to the active raids
@@ -244,6 +245,19 @@ function raid(time, poke, location, owner, guests = 1, idOverride = undefined) {
 
         return emb;
     }
+
+    this.messageRaid = function(channel, fwdmessage) {
+        _.each(this.attendees, (attendee) => {
+            client.users.get(attendee.id).createDM().then((dm) => {
+                dm.send("Message from one of your raids in the " + channel + " channel")
+            })
+
+        })
+        channel.send(raid.atAttendees() + nl + fwdmessage).then(
+            console.log(tab + tab + fwdmessage)
+        )
+    };
+
 }
 
 // add a user to the raid
@@ -382,7 +396,7 @@ function sendNew(message, parseArray) {
 
                 //message.channel.send("Others can join this raid by typing `!raider join " + r.id + "`").then(() => console.log("Raid Created"));
                 // remove raid in 2 hours
-                setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+                r.to = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
                 storeRaid(r); //save raid to disk
             }).catch(() => {
                 console.error
@@ -406,7 +420,7 @@ function sendNew(message, parseArray) {
             r.poke.name + "** at **" + r.location + "**" +
             nl + "Others can join this raid by typing `!raider join " + r.id + "`");
         // remove raid in 2 hours
-        setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+        r.to = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
         storeRaid(r); // Save raid to disk
     }
 }
@@ -515,11 +529,13 @@ function sendLeave(message, parseArray) {
 }
 
 
-// !raider update ID, #
-// !raider update ID, count, #
-// !raider update ID, poke, new poke
-// !raider update ID, pokemon, new poke
-// !raider update ID, time, new time
+// let message1 = {content: "!raider update ID, #"}
+// let message2 = {content: "!raider update ID, count, #"}
+// let message3 = {content: "!raider update ID, poke, new poke"}
+// let message4 = {content: "!raider update ID, pokemon, new poke"}
+// let message5 = {content: "!raider update ID, time, new time"}
+// let message6 = {content: "!raider update ID, gym, Gym name"}
+// let message7 = {content: "!raider update ID, location, some location place"}
 function sendUpdate(message, parseArray) {
     console.log("sendUpdate from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\t" + message.content);
@@ -527,11 +543,93 @@ function sendUpdate(message, parseArray) {
     let count = ""
 
     // Get the ID
-    let tmp = message.substring(15).split(" ")
+    let tmp = message.content.substring(15).split(" ")
     ID = tmp.shift();
-    ID = ID.replace(",", "").trim()
+    ID = ID ? ID.replace(",", "").trim() : "" // in case the shift is undefined
 
     if (activeRaids[ID]) {
+        let r = activeRaids[ID]
+
+        // Get the command
+        let cmd = tmp.shift();
+        cmd = cmd ? cmd.replace(",", "").trim() : "";
+        // if it's "count" or a number, then they don't need to have security, they just need to be in the raid
+        if (cmd == "count" || parseInt(cmd)) {
+            if (cmd == "count") {
+                count = tmp.shift();
+                count = count.replace(",", "").trim();
+            } else {
+                count = parseInt(cmd);
+            }
+            if (r.attendees[message.author.id]) { // If the user is in the raid
+                if (count == 0) {
+                    if (removeFromRaid(r, message.author)) {
+                        storeRaid(r);
+                        message.reply(" removed from raid " + ID + nl + "Total confirmed is: " + activeRaids[ID].total())
+                    } else {
+                        message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendUpdate() function")
+                    }
+                } else {
+                    r.attendees[message.author.id].count = count;
+                    message.reply("Updated total for the raid is now " + r.total())
+                    storeRaid(r);
+                }
+            } else {
+                message.reply("You aren't in this raid.  If you'd like to be, try `!raider join " + ID + "`")
+            }
+        } else if (authorized(r, message)) {
+            switch (cmd) {
+                case "poke":
+                case "pokemon":
+                    let poke = tmp.shift()
+                    poke = poke ? poke.replace(",", "").trim() : "1";
+                    r.poke.id = interpretPoke(poke);
+                    r.poke.name = names[r.poke.id - 1] ? names[r.poke.id - 1] : poke;
+                    console.log(tab + "Updating Pokemon to " + r.poke.name)
+                    r.messageRaid(message.channel, "The Pokemon for raid " + ID + " has been update to " + r.poke)
+                    break;
+                case "time":
+                    clearTimeout(r.to);
+                    let time = tmp.shift();
+                    time = time ? time.replace(",", "").trim() : r.time;
+                    r.time = time;
+                    r.expires = r.poke.id != '150' ? Date.now() + 7200000 : Date.now() + 36000000; //TODO: better expiration
+                    r.to = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+                    console.log(tab + "Updated Time to " + r.time)
+                    r.messageRaid(message.channel, "The time for raid " + ID + " has been updated to " + r.time)
+                    break;
+                case "gym":
+                    r.gym = tmp.join(" ");
+                    console.log(tab + "Updated Gym to " + r.gym)
+                    r.messageRaid(message.channel, "The gym for raid " + ID + " has been updated to " + r.gym)
+                    break;
+                case "location":
+                    r.location = tmp.join(" ");
+                    console.log(tab + "Updated location to " + r.location)
+                    r.messageRaid(message.channel, "The location for raid " + ID + " has been updated to " + r.location)
+                    break;
+                case "expire":
+                case "expiration":
+                case "expires":
+                case "timer":
+
+                    let expires = tmp.shift();
+                    if (parseInt(expires)) {
+                        clearTimeout(r.to);
+                        r.expires = parseInt(expires) * 60 * 1000;
+                        r.to = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+                    }
+                    break;
+                default:
+                    break;
+            }
+            storeRaid(r);
+        } else {
+            // No Raid with that ID found.
+            message.author.createDM().then((dm) => {
+                dm.send("Sorry, I couldn't process the command.\nType `!raider list` for a list of active raids and `!raider help` for a list of commands.\nYou typed `" + message + "`")
+            }).catch(console.error)
+        }
 
     } else {
         // No Raid with that ID found.
@@ -545,53 +643,6 @@ function sendUpdate(message, parseArray) {
         message.delete().catch(console.error)
     }
 
-
-    /*
-        //handle if the user used a comma or not
-        if (message.content.includes(",")) {
-            // "!raider update 23, 3" => [23, 3]
-            parseArray = message.content.substring(15).split(",").map((m) => {
-                return m.trim()
-            })
-            ID = parseArray[0].toUpperCase();
-            count = parseInt(parseArray[1]);
-        } else {
-            //!raider update ## #
-            ID = parseArray[2].toUpperCase;
-            count = parseArray[3];
-        }
-
-        console.log("\tID: " + ID + "\tcount: " + count + "\tparseArray: " + parseArray)
-        if (count >= 0) {
-            let r = {}
-                // if raid exists
-            if (activeRaids[ID]) {
-                r = activeRaids[ID]
-                    // if the user is part of the raid
-                if (r.attendees[message.author.id]) {
-                    if (count == 0) {
-                        if (removeFromRaid(r, message.author)) {
-                            message.reply(" removed from raid " + ID + nl + "Total confirmed is: " + activeRaids[ID].total())
-                        } else {
-                            message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendUpdate() function")
-                        }
-                    } else {
-                        r.attendees[message.author.id].count = count;
-                        message.reply("Updated total for the raid is now " + r.total())
-                    }
-                } else {
-                    message.reply("You aren't in this raid.  If you'd like to be, try `!raider join " + ID + "`")
-                }
-            } else {
-                message.reply("Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids and `!raider help` for a list of commands.")
-            }
-        } else {
-            message.reply("this wasn't a positive number I could recognize.  Try again?");
-        }
-        if (message.channel.type == 'text') {
-            message.delete().catch(console.error)
-        }
-      */
 }
 
 function sendInfo(message, parseArray) {
@@ -638,15 +689,7 @@ function sendAtMessage(message, parseArray) {
             let raid = activeRaids[ID];
             if (userInRaid(user, raid) || message.author.id == '218550507659067392') {
                 let fwdmessage = message.content.substr(message.content.indexOf(",") + 1).trim();
-                _.each(raid.attendees, (attendee) => {
-                    client.users.get(attendee.id).createDM().then((dm) => {
-                        dm.send("Message from one of your raids in the " + message.channel + " channel")
-                    })
-
-                })
-                message.channel.send(raid.atAttendees() + nl + fwdmessage).then(
-                    console.log(tab + tab + fwdmessage)
-                )
+                raid.messageRaid(message.channel, fwdmessage);
             } else {
                 message.author.createDM().then(
                     (dm) => {
@@ -904,7 +947,7 @@ storage.forEach((k, v) => {
         _.each(v.attendees, (att) => {
             activeRaids[k].attendees[att.id] = new attendee(att.id, att.username, att.mention, att.count)
         })
-        setTimeout(() => clearRaidID(activeRaids[k].id), activeRaids[k].expires - Date.now())
+        activeRaids[k].to = setTimeout(() => clearRaidID(activeRaids[k].id), activeRaids[k].expires - Date.now())
     }
 })
 console.log("Logging in!")
