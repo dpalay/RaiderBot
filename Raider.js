@@ -933,6 +933,15 @@ client.on('message', message => {
     }
 });
 
+// Set up Metrics
+let probe = require('pmx').probe()
+
+let numRaids = probe.metric({
+    name: "# of raids",
+    value: () => _.size(activeRaids)
+});
+
+
 console.log("Loading saved Raids")
     // load the stored raids into memory
 storage.forEach((k, v) => {
