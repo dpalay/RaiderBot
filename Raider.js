@@ -1,11 +1,23 @@
-const config = require('./config.json');
+//I have formatted config.json with an extra layer of object.  This is so that a single config file could have information for more than one bot in the config file.  For example, I have a "raider" and a "tester" bot for 'prod' and 'nonprod'
+/*   config.json:  
+{
+    "raider": {
+        "token": "Your Super Secret Token Goes here",
+        "id": "Your Bot's User ID should go here",
+        "prefix": "!raider", // If you change this, make sure it's exactly 7 characters long.  Working on making that more flexible
+        "storageDir": "./RaiderData" // A subfolder to store the raids in so that if Raider dies it can read them when it boots back up.
+    },
+    "raidChannels": ["ChannelId1", "ChannelId2", "ChannelId3"...]
+}
+*/
+// Change the last section of the next line to be the name listed in your config.json file
+const config = require('./config.json').raider;
 const constants = require('./constant.json');
 
 // Set up persistant file storage
 const storage = require('node-persist');
 storage.initSync({
-    dir: './LoggerData',
-    ttl: 1000 * 60 * 2
+    dir: config.storageDir,
 })
 
 // Set up discord.js client
@@ -19,19 +31,22 @@ const _ = require('underscore');
 const fuzz = require('fuzzball');
 const bigInt = require('big-integer');
 
-
-const loggerID = config.loggerClient;
-const raiderID = config.raiderClient;
+// The list of raids and timers for the raids
 const activeRaids = {};
 const timeOuts = {}; // Parallel object for activeRaids containing the timeout values, since those can't be stored to disk.
-let ME = loggerID;
 
+
+let ME = config.id;
+const prefix = config.prefix
+const prfxLen = prefix.length
 
 const ALPHANUM = constants.alphanum;
 const names = constants.pokelist;
-const RaidRooms = constants.raidrooms;
 
-// Formatting
+//These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
+const RaidRooms = config.raidChannels;
+
+// Formatting shortcuts
 const newline = "\n";
 const nl = newline;
 const tab = "\t";
@@ -282,7 +297,7 @@ function sendHelp(message, parseArray) {
     console.log("sendHelp from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\tmessage:" + message.content);
     console.log("\tparseArray: " + parseArray.toString());
-    if (message.content == "!raider" || message.content == '!raider help') {
+    if (message.content == prefix || message.content == prefix + ' help') {
         message.author.createDM().then(
             (dm) => {
                 dm.send({
@@ -321,7 +336,7 @@ function sendNew(message, parseArray) {
     console.log("sendNew from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\t" + message.content);
 
-    if (message.content.trim() == '!raider new') {
+    if (message.content.trim() == prefix + ' new') {
         sendHelp(message, parseArray)
         return;
     }
@@ -826,7 +841,7 @@ function sendSpecial(message, parseArray) {
 // Connected!
 client.on('ready', () => {
     console.log('Raider is ready!');
-    client.user.setGame('!raider help | More info')
+    client.user.setGame(prefix + ' help | More info')
     ME = client.user
 });
 
@@ -834,118 +849,119 @@ client.on('ready', () => {
 //When a message is posted
 client.on('message', message => {
     if (message.author.id != ME.id) { // logger shouldn't check it's own stuff)
-        /*
-                // If message is from one of the RaidRooms and comes from a webhook
-                if (_.find(RaidRooms, (room) => {
-                        return message.channel.id == room;
-                    }) && message.author.discriminator == '0000') {
-                    message.channel.send("ID=" + bigInt(message.id).toString(36) + "?" + bigInt(message.channel.id).toString(36))
-                }
-        
 
-        
-            }else if (message.content === 'pingg') {
-            message.author.createDM().then(
-                (dm) => {
-                    dm.send("pongg");
-                }
-            );
+        // If message is from one of the RaidRooms and comes from a webhook
+        if (_.find(RaidRooms, (room) => {
+                return message.channel.id == room;
+            }) && message.author.discriminator == '0000') {
+            message.channel.send("ID=" + bigInt(message.id).toString(36) + "?" + bigInt(message.channel.id).toString(36))
         }
 
 
-        //is it a command?
-        else */
-        if (message.content.toLowerCase().startsWith("!tester")) {
-            // get the commands
-            let parseArray = message.content.split(" ");
-            if (parseArray.length == 1) {
-                // Just !raider.  DM Help Info
-                sendHelp(message, parseArray);
-            } else {
-                switch (parseArray[1].toLowerCase()) {
-                    //New Raid
-                    case "new":
-                        sendNew(message, parseArray);
-                        break;
 
-                        //Give ownership to someone else
-                    case "transfer":
-                        sendTransfer(message, parseArray);
-                        break;
+    } else if (message.content === 'pingg') {
+        message.author.createDM().then(
+            (dm) => {
+                dm.send("pongg");
+            }
+        );
+    }
 
-                        //Add self to the raid
-                    case "join":
-                        sendJoin(message, parseArray);
-                        break;
 
-                        // Leave the raid 
-                    case "remove":
-                    case "leave":
-                        sendLeave(message, parseArray);
-                        break;
+    //is it a command?
+    else
+    if (message.content.toLowerCase().startsWith(prefix)) {
+        // get the commands
+        let parseArray = message.content.split(" ");
+        if (parseArray.length == 1) {
+            // Just !raider.  DM Help Info
+            sendHelp(message, parseArray);
+        } else {
+            switch (parseArray[1].toLowerCase()) {
+                //New Raid
+                case "new":
+                    sendNew(message, parseArray);
+                    break;
 
-                        // update how many people are going
-                    case "change":
-                    case "update":
-                        sendUpdate(message, parseArray);
-                        break;
+                    //Give ownership to someone else
+                case "transfer":
+                    sendTransfer(message, parseArray);
+                    break;
 
-                        // get info about raid
-                    case "info":
-                        sendInfo(message, parseArray);
-                        break;
+                    //Add self to the raid
+                case "join":
+                    sendJoin(message, parseArray);
+                    break;
 
-                        // Merge two raids
-                    case "merge":
-                        message.reply("This command isn't implemented yet.  Sorry!");
-                        break;
+                    // Leave the raid 
+                case "remove":
+                case "leave":
+                    sendLeave(message, parseArray);
+                    break;
 
-                        // Inactivate a raid
-                    case "terminate":
-                    case "inactivate":
-                    case "kill":
-                        sendTerminate(message, parseArray);
-                        break;
+                    // update how many people are going
+                case "change":
+                case "update":
+                    sendUpdate(message, parseArray);
+                    break;
 
-                        // List active raids
-                    case "list":
-                        sendList(message, parseArray);
-                        break;
+                    // get info about raid
+                case "info":
+                    sendInfo(message, parseArray);
+                    break;
 
-                    case "myraids":
-                        sendMyRaids(message, parseArray);
-                        break;
+                    // Merge two raids
+                case "merge":
+                    message.reply("This command isn't implemented yet.  Sorry!");
+                    break;
 
-                    case "kick":
-                        sendKick(message, parseArray);
-                        break;
+                    // Inactivate a raid
+                case "terminate":
+                case "inactivate":
+                case "kill":
+                    sendTerminate(message, parseArray);
+                    break;
 
-                    case "message":
-                        sendAtMessage(message, parseArray);
-                        break;
+                    // List active raids
+                case "list":
+                    sendList(message, parseArray);
+                    break;
 
-                        // Ask for help
-                    case "help":
-                        sendHelp(message, parseArray);
-                        break;
-                    case "special":
-                        sendSpecial(message, parseArray);
-                        break;
-                    default:
-                        break;
-                }
+                case "myraids":
+                    sendMyRaids(message, parseArray);
+                    break;
+
+                case "kick":
+                    sendKick(message, parseArray);
+                    break;
+
+                case "message":
+                    sendAtMessage(message, parseArray);
+                    break;
+
+                    // Ask for help
+                case "help":
+                    sendHelp(message, parseArray);
+                    break;
+                case "special":
+                    sendSpecial(message, parseArray);
+                    break;
+                default:
+                    break;
             }
         }
     }
 });
 
-// Set up Metrics
+//Comment this out if you are not using pm2 and keymetrics.io.  But really, why aren't you using them?  They're awesome!
+// Set up Metric for Keymetrics.io
 let probe = require('pmx').probe()
 
 let numRaids = probe.metric({
     name: "# of raids",
     value: () => _.size(activeRaids)
 });
+
 
 
 console.log("Loading saved Raids")
@@ -969,4 +985,4 @@ storage.forEach((k, v) => {
 })
 console.log("Logging in!")
     // connect
-client.login(config.logger)
+client.login(config.token)
