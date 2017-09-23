@@ -637,7 +637,7 @@ function sendUpdate(message, parseArray) {
                     let expires = tmp.shift();
                     if (parseInt(expires)) {
                         clearTimeout(timeOuts[r.id]);
-                        r.expires = parseInt(expires) * 60 * 1000;
+                        r.expires = Date.now() + parseInt(expires) * 60 * 1000;
                         timeOuts[r.id] = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
                     }
                     break;
@@ -855,99 +855,96 @@ client.on('message', message => {
                 return message.channel.id == room;
             }) && message.author.discriminator == '0000') {
             message.channel.send("ID=" + bigInt(message.id).toString(36) + "?" + bigInt(message.channel.id).toString(36))
+        } else if (message.content === 'pingg') {
+            message.author.createDM().then(
+                (dm) => {
+                    dm.send("pongg");
+                }
+            );
         }
 
 
+        //is it a command?
+        else
+        if (message.content.toLowerCase().startsWith(prefix)) {
+            // get the commands
+            let parseArray = message.content.split(" ");
+            if (parseArray.length == 1) {
+                // Just !raider.  DM Help Info
+                sendHelp(message, parseArray);
+            } else {
+                switch (parseArray[1].toLowerCase()) {
+                    //New Raid
+                    case "new":
+                        sendNew(message, parseArray);
+                        break;
 
-    } else if (message.content === 'pingg') {
-        message.author.createDM().then(
-            (dm) => {
-                dm.send("pongg");
-            }
-        );
-    }
+                        //Give ownership to someone else
+                    case "transfer":
+                        sendTransfer(message, parseArray);
+                        break;
 
+                        //Add self to the raid
+                    case "join":
+                        sendJoin(message, parseArray);
+                        break;
 
-    //is it a command?
-    else
-    if (message.content.toLowerCase().startsWith(prefix)) {
-        // get the commands
-        let parseArray = message.content.split(" ");
-        if (parseArray.length == 1) {
-            // Just !raider.  DM Help Info
-            sendHelp(message, parseArray);
-        } else {
-            switch (parseArray[1].toLowerCase()) {
-                //New Raid
-                case "new":
-                    sendNew(message, parseArray);
-                    break;
+                        // Leave the raid 
+                    case "remove":
+                    case "leave":
+                        sendLeave(message, parseArray);
+                        break;
 
-                    //Give ownership to someone else
-                case "transfer":
-                    sendTransfer(message, parseArray);
-                    break;
+                        // update how many people are going
+                    case "change":
+                    case "update":
+                        sendUpdate(message, parseArray);
+                        break;
 
-                    //Add self to the raid
-                case "join":
-                    sendJoin(message, parseArray);
-                    break;
+                        // get info about raid
+                    case "info":
+                        sendInfo(message, parseArray);
+                        break;
 
-                    // Leave the raid 
-                case "remove":
-                case "leave":
-                    sendLeave(message, parseArray);
-                    break;
+                        // Merge two raids
+                    case "merge":
+                        message.reply("This command isn't implemented yet.  Sorry!");
+                        break;
 
-                    // update how many people are going
-                case "change":
-                case "update":
-                    sendUpdate(message, parseArray);
-                    break;
+                        // Inactivate a raid
+                    case "terminate":
+                    case "inactivate":
+                    case "kill":
+                        sendTerminate(message, parseArray);
+                        break;
 
-                    // get info about raid
-                case "info":
-                    sendInfo(message, parseArray);
-                    break;
+                        // List active raids
+                    case "list":
+                        sendList(message, parseArray);
+                        break;
 
-                    // Merge two raids
-                case "merge":
-                    message.reply("This command isn't implemented yet.  Sorry!");
-                    break;
+                    case "myraids":
+                        sendMyRaids(message, parseArray);
+                        break;
 
-                    // Inactivate a raid
-                case "terminate":
-                case "inactivate":
-                case "kill":
-                    sendTerminate(message, parseArray);
-                    break;
+                    case "kick":
+                        sendKick(message, parseArray);
+                        break;
 
-                    // List active raids
-                case "list":
-                    sendList(message, parseArray);
-                    break;
+                    case "message":
+                        sendAtMessage(message, parseArray);
+                        break;
 
-                case "myraids":
-                    sendMyRaids(message, parseArray);
-                    break;
-
-                case "kick":
-                    sendKick(message, parseArray);
-                    break;
-
-                case "message":
-                    sendAtMessage(message, parseArray);
-                    break;
-
-                    // Ask for help
-                case "help":
-                    sendHelp(message, parseArray);
-                    break;
-                case "special":
-                    sendSpecial(message, parseArray);
-                    break;
-                default:
-                    break;
+                        // Ask for help
+                    case "help":
+                        sendHelp(message, parseArray);
+                        break;
+                    case "special":
+                        sendSpecial(message, parseArray);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -982,7 +979,7 @@ storage.forEach((k, v) => {
         })
         timeOuts[activeRaids[k].id] = setTimeout(() => clearRaidID(activeRaids[k].id), activeRaids[k].expires - Date.now())
     }
-})
+});
 console.log("Logging in!")
     // connect
 client.login(config.token)
