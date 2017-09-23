@@ -12,6 +12,8 @@
 */
 // Change the last section of the next line to be the name listed in your config.json file
 const config = require('./config.json').raider;
+//These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
+const RaidRooms = require('./config.json').raidChannels
 const constants = require('./constant.json');
 
 // Set up persistant file storage
@@ -42,9 +44,6 @@ const prfxLen = prefix.length
 
 const ALPHANUM = constants.alphanum;
 const names = constants.pokelist;
-
-//These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
-const RaidRooms = config.raidChannels;
 
 // Formatting shortcuts
 const newline = "\n";
