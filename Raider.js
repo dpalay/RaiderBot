@@ -23,6 +23,7 @@ const bigInt = require('big-integer');
 const loggerID = config.loggerClient;
 const raiderID = config.raiderClient;
 const activeRaids = {};
+const timeOuts = {}; // Parallel object for activeRaids containing the timeout values, since those can't be stored to disk.
 let ME = loggerID;
 
 
@@ -167,8 +168,6 @@ function raid(time, poke, location, owner, guests = 1, idOverride = undefined) {
     //  this.comments = {};   //TODO:  Add in a way for users to add comments to the raid
     this.attendees[owner.id] = tmpuser
 
-    this.to = null;
-
 
     // Add this raid to the active raids
     activeRaids[this.id] = this;
@@ -238,6 +237,7 @@ function raid(time, poke, location, owner, guests = 1, idOverride = undefined) {
             str += "**Gym: **: " + this.gym + nl
         }
         str += "**Pokemon: **#" + this.poke.id + " " + this.poke.name + nl +
+            "Self-destructs at: " + new Date(this.expires).toLocaleTimeString() + nl +
             "**Total Attendees: **" + this.total() + nl +
             "**Attendee List:**" + nl + this.listAttendees()
 
@@ -253,7 +253,7 @@ function raid(time, poke, location, owner, guests = 1, idOverride = undefined) {
             })
 
         })
-        channel.send(raid.atAttendees() + nl + fwdmessage).then(
+        channel.send(this.atAttendees() + nl + fwdmessage).then(
             console.log(tab + tab + fwdmessage)
         )
     };
@@ -396,7 +396,7 @@ function sendNew(message, parseArray) {
 
                 //message.channel.send("Others can join this raid by typing `!raider join " + r.id + "`").then(() => console.log("Raid Created"));
                 // remove raid in 2 hours
-                r.to = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+                timeOuts[r.id] = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
                 storeRaid(r); //save raid to disk
             }).catch(() => {
                 console.error
@@ -420,7 +420,7 @@ function sendNew(message, parseArray) {
             r.poke.name + "** at **" + r.location + "**" +
             nl + "Others can join this raid by typing `!raider join " + r.id + "`");
         // remove raid in 2 hours
-        r.to = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+        timeOuts[r.id] = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
         storeRaid(r); // Save raid to disk
     }
 }
@@ -436,7 +436,7 @@ function sendTransfer(message, parseArray) {
     parseArray = message.content.substring(17).split(",").map((m) => {
         return m.trim()
     })
-    ID = parseArray[0]
+    ID = parseArray[0].toUpperCase()
         // check if the raid exists and there was a target
     if (activeRaids[ID] && message.mentions.users) {
         // get the raid
@@ -456,7 +456,7 @@ function sendTransfer(message, parseArray) {
             message.reply(": you don't have permission to give away Raid " + ID)
         }
     } else {
-        message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.")
+        message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids.")
     }
     if (message.channel.type == 'text') {
         message.delete().catch(console.error)
@@ -544,7 +544,7 @@ function sendUpdate(message, parseArray) {
 
     // Get the ID
     let tmp = message.content.substring(15).split(" ")
-    ID = tmp.shift();
+    ID = tmp.shift().toUpperCase();
     ID = ID ? ID.replace(",", "").trim() : "" // in case the shift is undefined
 
     if (activeRaids[ID]) {
@@ -561,21 +561,26 @@ function sendUpdate(message, parseArray) {
             } else {
                 count = parseInt(cmd);
             }
-            if (r.attendees[message.author.id]) { // If the user is in the raid
-                if (count == 0) {
-                    if (removeFromRaid(r, message.author)) {
-                        storeRaid(r);
-                        message.reply(" removed from raid " + ID + nl + "Total confirmed is: " + activeRaids[ID].total())
+            if (parseInt(count) >= 0) {
+
+                if (r.attendees[message.author.id]) { // If the user is in the raid
+                    if (count == 0) {
+                        if (removeFromRaid(r, message.author)) {
+                            storeRaid(r);
+                            message.reply(" removed from raid " + ID + nl + "Total confirmed is: " + activeRaids[ID].total())
+                        } else {
+                            message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendUpdate() function")
+                        }
                     } else {
-                        message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendUpdate() function")
+                        r.attendees[message.author.id].count = count;
+                        message.reply("Updated total for the raid is now " + r.total())
+                        storeRaid(r);
                     }
                 } else {
-                    r.attendees[message.author.id].count = count;
-                    message.reply("Updated total for the raid is now " + r.total())
-                    storeRaid(r);
+                    message.reply("You aren't in this raid.  If you'd like to be, try `!raider join " + ID + "`")
                 }
             } else {
-                message.reply("You aren't in this raid.  If you'd like to be, try `!raider join " + ID + "`")
+                message.reply("I couldn't figure out how many people you're trying to bring.  What number is `" + count + "`")
             }
         } else if (authorized(r, message)) {
             switch (cmd) {
@@ -586,15 +591,15 @@ function sendUpdate(message, parseArray) {
                     r.poke.id = interpretPoke(poke);
                     r.poke.name = names[r.poke.id - 1] ? names[r.poke.id - 1] : poke;
                     console.log(tab + "Updating Pokemon to " + r.poke.name)
-                    r.messageRaid(message.channel, "The Pokemon for raid " + ID + " has been update to " + r.poke)
+                    r.messageRaid(message.channel, "The Pokemon for raid " + ID + " has been update to " + r.poke.name)
                     break;
                 case "time":
-                    clearTimeout(r.to);
+                    clearTimeout(timeOuts[r.id]);
                     let time = tmp.shift();
                     time = time ? time.replace(",", "").trim() : r.time;
                     r.time = time;
                     r.expires = r.poke.id != '150' ? Date.now() + 7200000 : Date.now() + 36000000; //TODO: better expiration
-                    r.to = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+                    timeOuts[r.id] = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
                     console.log(tab + "Updated Time to " + r.time)
                     r.messageRaid(message.channel, "The time for raid " + ID + " has been updated to " + r.time)
                     break;
@@ -615,9 +620,9 @@ function sendUpdate(message, parseArray) {
 
                     let expires = tmp.shift();
                     if (parseInt(expires)) {
-                        clearTimeout(r.to);
+                        clearTimeout(timeOuts[r.id]);
                         r.expires = parseInt(expires) * 60 * 1000;
-                        r.to = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
+                        timeOuts[r.id] = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
                     }
                     break;
                 default:
@@ -958,7 +963,7 @@ storage.forEach((k, v) => {
         _.each(v.attendees, (att) => {
             activeRaids[k].attendees[att.id] = new attendee(att.id, att.username, att.mention, att.count)
         })
-        activeRaids[k].to = setTimeout(() => clearRaidID(activeRaids[k].id), activeRaids[k].expires - Date.now())
+        timeOuts[activeRaids[k].id] = setTimeout(() => clearRaidID(activeRaids[k].id), activeRaids[k].expires - Date.now())
     }
 })
 console.log("Logging in!")
