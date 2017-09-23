@@ -1,0 +1,36 @@
+{
+  "name": "raider",
+  "version": "1.0.0",
+  "description": "A discord chatbot to help organize raids for Pokemon Go.",
+  "main": "Raider.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dpalay/RaiderBot.git"
+  },
+  "keywords": [
+    "Pokemon",
+    "Go",
+    "Raids",
+    "discord"
+  ],
+  "author": {
+    "name": "Dave Palay",
+    "email": "lordthanda@gmail.com"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/dpalay/RaiderBot/issues"
+  },
+  "homepage": "https://github.com/dpalay/RaiderBot#readme",
+  "dependencies": {
+    "big-integer": "^1.6.25",
+    "discord.js": "^11.2.1",
+    "fuzzball": "^0.13.5",
+    "node-persist": "^2.1.0",
+    "pmx": "^1.5.3",
+    "underscore": "^1.8.3"
+  }
+}
