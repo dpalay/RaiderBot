@@ -10,3 +10,4 @@ RaiderData/
 LoggerData/
 
 node_modules/
+\.eslintrc\.json
