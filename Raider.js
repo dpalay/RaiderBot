@@ -482,7 +482,7 @@ function sendTransfer(message, parseArray) {
 function sendJoin(message, parseArray) {
     console.log("sendJoin from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\t" + message.content);
-    let id = ""
+    let ID = ""
     let count = 0;
     //"!raider join ##, 3" => ["##", "3"]
     parseArray = message.content.substring(13).split(",").map((m) => {
@@ -522,7 +522,7 @@ function sendLeave(message, parseArray) {
     console.log("sendLeave from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\t" + message.content);
     // "!raider leave ##"
-    ID = parseArray[2].toUpperCase();
+    let ID = parseArray[2].toUpperCase();
     //if raid exists
     if (activeRaids[ID]) {
         let r = activeRaids[ID]
