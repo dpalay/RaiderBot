@@ -766,13 +766,12 @@ function sendList(message, parseArray) {
 //!raider kick raidID @user
 function sendKick(message, parseArray) {
     let ID = ""
-    let userToKick = ""
     if (parseArray[2]) {
         let r = activeRaids[ID]
         if (authorized(r, message)) {
-            if (mentions.users.length > 0) {
-                for (let i = 0; i < mentions.users.length; i++) {
-                    r
+            if (message.mentions.users.length > 0) {
+                for (let i = 0; i < message.mentions.users.length; i++) {
+                    removeFromRaid(r, message.mentions.users[i]);
                 }
                 storeRaid(r); // store the raid to disk
                 message.reply("Users have been removed from the raid. **Total confirmed is: " + r.total() + "**")
