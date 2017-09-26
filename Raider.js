@@ -1,15 +1,3 @@
-//I have formatted config.json with an extra layer of object.  This is so that a single config file could have information for more than one bot in the config file.  For example, I have a "raider" and a "tester" bot for 'prod' and 'nonprod'
-/*   config.json:  
-{
-    "raider": {
-        "token": "Your Super Secret Token Goes here",
-        "id": "Your Bot's User ID should go here",
-        "prefix": "!raider", // If you change this, make sure it's exactly 7 characters long.  Working on making that more flexible
-        "storageDir": "./RaiderData" // A subfolder to store the raids in so that if Raider dies it can read them when it boots back up.
-    },
-    "raidChannels": ["ChannelId1", "ChannelId2", "ChannelId3"...]
-}
-*/
 // Change the last section of the next line to be the name listed in your config.json file
 const config = require('./config.json').raider;
 //These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
@@ -790,12 +778,12 @@ function sendKick(message, parseArray) {
 //!raider kill raidID
 function sendTerminate(message, parseArray) {
     if (parseArray[2]) {
-        ID = parseArray[2].toUpperCase();
+        let ID = parseArray[2].toUpperCase();
         if (activeRaids[ID] && authorized(activeRaids[ID], message)) {
             let r = activeRaids[ID];
             console.log("attempting to destroy info for " + ID)
             sendInfo(message, parseArray);
-            clearRaidID(ID); // clears the raid and removes from disk
+            clearRaidID(r.id); // clears the raid and removes from disk
             message.reply("Raid " + ID + " destroyed.  Thank you for using Raider!");
         } else {
             message.reply("Either the raid doesn't exist, or you're not the owner.")
