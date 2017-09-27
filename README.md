@@ -1,6 +1,15 @@
 # RaiderBot
+## Table of contents
+1. [Welcome to RaiderBot](https://github.com/dpalay/RaiderBot/blob/master/README.md#welcome-to-riaderbot)
+  1. [Shameless Plug]
+  2. [Intro]
+    1. [Early steps and problems]
+    2. [Enter RaiderBot]
+2. [RaiderBot Usage](https://github.com/dpalay/RaiderBot/blob/master/README.md#raiderbots-usage-after-its-live-on-a-server)
+3. [Setting up and Installing RaiderBot](https://github.com/dpalay/RaiderBot/blob/master/README.md#setting-up-and-installing-raiderbot-dev-stuff)
 
-## Welcome to RiaderBot
+
+## Welcome to RaiderBot
 __TL; DR:__  RaiderBot is for Pokemon GO Discord chats to help organize raids.
 
 ### Shameless Plug
@@ -9,6 +18,7 @@ I maintain and distribute RaiderBot free of charge.  However, if you enjoy it, p
 ### Intro
 Pokemon GO's raid mechanics is a pretty interesting twist on an Augmented Reality game.  It forces players to come together and coordinate in order to receive better rewards than they could get alone. However, there is no in-game mechanism for organizing raids.  This makes it risky for some players to go out of their way to get ot a location, only to find that no other players were going to that raid (or even knew that raid existed!). 
 
+#### Early Steps and problems
 The first solution to this problem was the organic establishment of communities.  Sub-reddits, Facebook groups, Group Mes, Hangouts, and Discord are all examples of places that Pokemon GO regional groups have established themselves.  In my area, near Madison, WI, we have mostly settled onto a single Discord server.  
 On the server though, the following situation was fairly common:
 > Person 1:  There's an Articuno at the Memorial Rock starting at 3:00.  Anyone interested?
@@ -27,7 +37,7 @@ At this point, there's typically several other people on the server waiting for 
 
 This problem gets even worse when the server has overlapping sub-regions.  In that case, the above conversation could be happening in "#downtown" and an entirely separate conversation could be happening in "#northside". With better communication, the raid could have happened.
 
-__Enter RaiderBot__
+####Enter RaiderBot
 With RaiderBot, we get to add another layer of organization. When you set up RaiderBot, you give it permission to manage messages in the channels that your raid groups are using.  Using the above example above, the chat would instead look something like this:
 > Person 1:  There's an Articuno at Memorial Rock starting at 3:00
 >
