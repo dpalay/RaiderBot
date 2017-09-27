@@ -3,10 +3,8 @@
 1. [Welcome to RaiderBot](https://github.com/dpalay/RaiderBot/blob/master/README.md#welcome-to-raiderbot)
   1. [Shameless Plug](https://github.com/dpalay/RaiderBot/blob/master/README.md#shameless-plug)
   2. [Intro](https://github.com/dpalay/RaiderBot/blob/master/README.md#intro)
-    1. [Early steps and problems](https://github.com/dpalay/RaiderBot/blob/master/README.md#early-steps-and-problems)
-    2. [Enter RaiderBot](https://github.com/dpalay/RaiderBot/blob/master/README.md#enter-raiderbot)
-2. [RaiderBot Usage](https://github.com/dpalay/RaiderBot/blob/master/README.md#raiderbots-usage-after-its-live-on-a-server)
-3. [Setting up and Installing RaiderBot](https://github.com/dpalay/RaiderBot/blob/master/README.md#setting-up-and-installing-raiderbot-dev-stuff)
+2. [Setting up and Installing RaiderBot](https://github.com/dpalay/RaiderBot/blob/master/README.md#setting-up-and-installing-raiderbot-dev-stuff)
+3. [RaiderBot Usage](https://github.com/dpalay/RaiderBot/blob/master/README.md#raiderbots-usage-after-its-live-on-a-server)
 
 
 ## Welcome to RaiderBot
@@ -64,6 +62,7 @@ And so on and so forth.  In other channels, anyone could type `!raider info 9j` 
 ## RaiderBot's Usage (After it's live on a server)
 Probably the simpliest thing you can do to learn how to use the bot is type `!raider help` which the bot will then PM you a list of the available commands.
 
+MORE COMING HERE.  
 
 ## Setting up and Installing RaiderBot (dev stuff)
 Option 2 is listed first because Option 1 is way more work, but I expect more people to go that route.
