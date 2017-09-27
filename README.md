@@ -1,6 +1,6 @@
 # RaiderBot
 ## Table of contents
-1. [Welcome to RaiderBot](https://github.com/dpalay/RaiderBot/blob/master/README.md#welcome-to-riaderbot)
+1. [Welcome to RaiderBot](https://github.com/dpalay/RaiderBot/blob/master/README.md#welcome-to-raiderbot)
   1. [Shameless Plug](https://github.com/dpalay/RaiderBot/blob/master/README.md#shameless-plug)
   2. [Intro](https://github.com/dpalay/RaiderBot/blob/master/README.md#intro)
     1. [Early steps and problems](https://github.com/dpalay/RaiderBot/blob/master/README.md#early-steps-and-problems)
