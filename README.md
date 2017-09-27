@@ -7,7 +7,7 @@ __TL; DR:__  RaiderBot is for Pokemon GO Discord chats to help organize raids.
 I maintain and distribute RaiderBot free of charge.  However, if you enjoy it, please consider donating either directly through [PayPal](https://www.paypal.me/Lthanda) or becoming a patron on [Patreon](https://www.patreon.com/davepalay)  These contributions keep me caffeinated well enough to continue to develop, improve, and support RaiderBot and other bots like it!
 
 ### Intro
-Pokemon GO's raid mechanics is a pretty interesting twist on an Augmented Reality game.  It forces players to come together and coordinate in order to receive better rewards than they could get alone. However, there is no in-game mechanism for organizing raids.  This makes it risky for some players to go out of their way to get ot a location, only to find that no other players were going to that raid (or even knew that raid existed!). 
+Pokemon GO's raid mechanics is a pretty interesting twist on an Augmented Reality game.  It forces players to come together and coordinate in order to receive better rewards than they could get alone. However, there is no in-game mechanism for organizing raids.  This makes it risky for some players to go out of their way to get to a location, only to find that no other players were going to that raid (or even knew that raid existed!). 
 
 The first solution to this problem was the organic establishment of communities.  Sub-reddits, Facebook groups, Group Mes, Hangouts, and Discord are all examples of places that Pokemon GO regional groups have established themselves.  In my area, near Madison, WI, we have mostly settled onto a single Discord server.  
 On the server though, the following situation was fairly common:
