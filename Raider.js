@@ -2,8 +2,8 @@
 const config = require('./config.json').raider;
 //These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
 const RaidRooms = require('./config.json').raidChannels
+const quietMode = require('./config.json').quietMode;
 const constants = require('./constant.json');
-
 // Set up persistant file storage
 const storage = require('node-persist');
 storage.initSync({
@@ -387,15 +387,17 @@ function sendNew(message, parseArray) {
 
                 //Let them know the raid is created.
 
-                // Send the embed
-                message.channel.send({
-                    embed: r.embed()
-                })
+                if (quietMode) {
 
-                message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
-                    r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
-                    //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
-                    nl + "Others can join this raid by typing `!raider join " + r.id + "`");
+                    message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
+                        r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
+                        //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
+                        nl + "Others can join this raid by typing `!raider join " + r.id + "`");
+                } else {
+                    message.channel.send({
+                        embed: raid.embed()
+                    });
+                }
 
                 //message.channel.send("Others can join this raid by typing `!raider join " + r.id + "`").then(() => console.log("Raid Created"));
                 // remove raid in 2 hours
@@ -417,12 +419,17 @@ function sendNew(message, parseArray) {
 
         //FIXME: Check the time and find the next instance of that time
         // raid(time, pokemon, location, owner, count)
+        if (quietMode) {
 
-        r = new raid(parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
-        message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
-            r.poke.name + "** at **" + r.location + "**" +
-            nl + "Others can join this raid by typing `!raider join " + r.id + "`");
-        // remove raid in 2 hours
+            message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
+                r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
+                //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
+                nl + "Others can join this raid by typing `!raider join " + r.id + "`");
+        } else {
+            message.channel.send({
+                embed: raid.embed()
+            });
+        } // remove raid in 2 hours
         timeOuts[r.id] = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
         storeRaid(r); // Save raid to disk
     }
