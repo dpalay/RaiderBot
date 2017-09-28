@@ -425,8 +425,7 @@ function sendNew(message, parseArray) {
             });
         }
         message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
-            r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
-            //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
+            r.poke.name + "** at **" + r.location + "**" +
             nl + "Others can join this raid by typing `!raider join " + r.id + "`");
         // remove raid in 2 hours
         timeOuts[r.id] = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
