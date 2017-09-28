@@ -395,7 +395,7 @@ function sendNew(message, parseArray) {
                         nl + "Others can join this raid by typing `!raider join " + r.id + "`");
                 } else {
                     message.channel.send({
-                        embed: raid.embed()
+                        embed: r.embed()
                     });
                 }
 
@@ -427,7 +427,7 @@ function sendNew(message, parseArray) {
                 nl + "Others can join this raid by typing `!raider join " + r.id + "`");
         } else {
             message.channel.send({
-                embed: raid.embed()
+                embed: r.embed()
             });
         } // remove raid in 2 hours
         timeOuts[r.id] = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
