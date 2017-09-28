@@ -387,17 +387,16 @@ function sendNew(message, parseArray) {
 
                 //Let them know the raid is created.
 
-                if (quietMode) {
 
-                    message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
-                        r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
-                        //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
-                        nl + "Others can join this raid by typing `!raider join " + r.id + "`");
-                } else {
+                if (!quietMode) {
                     message.channel.send({
                         embed: r.embed()
                     });
                 }
+                message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
+                    r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
+                    //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
+                    nl + "Others can join this raid by typing `!raider join " + r.id + "`");
 
                 //message.channel.send("Others can join this raid by typing `!raider join " + r.id + "`").then(() => console.log("Raid Created"));
                 // remove raid in 2 hours
@@ -419,17 +418,17 @@ function sendNew(message, parseArray) {
 
         //FIXME: Check the time and find the next instance of that time
         // raid(time, pokemon, location, owner, count)
-        if (quietMode) {
-
-            message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
-                r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
-                //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
-                nl + "Others can join this raid by typing `!raider join " + r.id + "`");
-        } else {
+        r = new raid(parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
+        if (!quietMode) {
             message.channel.send({
                 embed: r.embed()
             });
-        } // remove raid in 2 hours
+        }
+        message.channel.send("**" + r.time + "**" + " Raid (" + r.id + ") created by " + message.author + " for **" +
+            r.poke.name + "** at **" + r.location.slice(1, r.location.indexOf("]")) + "**" +
+            //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
+            nl + "Others can join this raid by typing `!raider join " + r.id + "`");
+        // remove raid in 2 hours
         timeOuts[r.id] = setTimeout(() => clearRaidID(r.id), r.expires - Date.now())
         storeRaid(r); // Save raid to disk
     }
