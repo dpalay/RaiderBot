@@ -68,12 +68,7 @@ MORE COMING HERE.
 Option 2 is listed first because Option 1 is way more work, but I expect more people to go that route.
 
 ### Option 2: Have me run it
-This is the much simpler option for many, but comes with its own risks.  
-1. It won't likely be free.  
- * I'll be asking for some sort of compensation.
-2. I can't promise 100% uptime. 
- * I'm running it from my house, on a local machine.  If I lose power, so does RaiderBot.  If I lose internet, so does RaiderBot.
- * If that sort of downtime happened, I'd certainly work with you to find something fair with respect to paymeht (see point #1)
+This is the much simpler option for many, but would not be free.  I have a VPS with a 99.99% uptime SLA, so your RaiderBot would only be down during catastrophic failure.  Additionally, your code would be updated to always be current with each patch.
 
 ### Option 1: DIY
 The recommended method of running RaiderBot is to host it yourself on a server capable of running Node applications.  There's quite a bit of setup involved, but I've done what I can to simplify this.
