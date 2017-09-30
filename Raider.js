@@ -760,6 +760,7 @@ function sendList(message, parseArray) {
 function sendKick(message, parseArray) {
     let ID = ""
     if (parseArray[2]) {
+        ID = parseArray[2].toUpperCase()
         let r = activeRaids[ID]
         if (authorized(r, message)) {
             if (message.mentions.users.length > 0) {
