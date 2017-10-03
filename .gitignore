@@ -11,3 +11,9 @@ LoggerData/
 
 node_modules/
 \.eslintrc\.json
+
+tester\.json
+
+raider\.json
+
+\.vscode/

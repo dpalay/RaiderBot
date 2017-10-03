@@ -1,8 +1,15 @@
+let config = {};
+if (process.argv[2]) {
+    let configfile = './' + process.argv[2]
+    config = require(configfile);
+} else {
+    console.error("No config file given.  start with node Raider.js configFileName")
+}
 // Change the last section of the next line to be the name listed in your config.json file
-const config = require('./config.json').raider;
+
 //These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
-const RaidRooms = require('./config.json').raidChannels
-const quietMode = require('./config.json').quietMode;
+const RaidRooms = config.raidChannels
+const quietMode = config.quietMode;
 const constants = require('./constant.json');
 // Set up persistant file storage
 const storage = require('node-persist');
@@ -195,7 +202,7 @@ function raid(time, poke, location, owner, guests = 1, idOverride = undefined) {
         str += tab + "Time: " + this.time + nl;
         str += tab + "Pokemon: #" + this.poke.id + " " + this.poke.name + nl;
         str += tab + "Location: " + this.location + nl;
-        str += tab + "Organizer: " + this.owner + nl;
+        str += tab + "Organizer: " + this.owner.mention + nl;
         str += tab + "Confirmed attendees: " + nl;
         _.each(this.attendees, (attendee) => {
             str += tab + tab + attendee.count + tab + " - " + attendee + nl;
@@ -453,7 +460,7 @@ function sendTransfer(message, parseArray) {
         if (authorized(r, message)) {
             user = message.mentions.users.first()
                 //set the owner to be the user with the @mention
-            if (r.owner == user) {
+            if (r.owner.id == user.id) {
                 message.reply("you already own this raid. Did you want to give it to someone else?")
             } else {
                 r.owner = user;
@@ -490,7 +497,7 @@ function sendJoin(message, parseArray) {
             // try to add user to the raid
             let r = activeRaids[ID];
             if (addToRaid(ID, message.author, count)) {
-                message.reply(" added to raid " + ID + " owned by " + r.owner +
+                message.reply(" added to raid " + ID + " owned by " + r.owner.mention +
                     "  Total confirmed is: **" + r.total() + "**");
                 storeRaid(r); // store the raid to disk
 

@@ -1,16 +1,8 @@
 {
-    "tester": {
-        "token": "Your secret Token for this bot",
-        "id": "The discord user id of the bot",
-        "prefix": "!tester",
-        "storageDir": "./testerData"
-    },
-    "raider": {
-        "token": "Your secret Token for this bot",
-        "id": "The discord user id of this bot",
-        "prefix": "!raider",
-        "storageDir": "./RaiderData"
-    },
+    "token": "Your secret Token for this bot",
+    "id": "The discord user id of this bot",
+    "prefix": "!raider",
+    "storageDir": "./RaiderData",
     "raidChannels": ["Comma", "Delimited" "list", "of channel", "Ids for the raider to report on", "Probably will leave this all blank"],
     "quietMode": "true or false, without quotes, depending on if you want the raid to make a full embed when someone creates a new raid, or just a brief text message"
 }

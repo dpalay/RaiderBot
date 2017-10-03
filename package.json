@@ -1,6 +1,6 @@
 {
     "name": "raider",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "A discord chatbot to help organize raids for Pokemon Go.",
     "main": "Raider.js",
     "scripts": {
