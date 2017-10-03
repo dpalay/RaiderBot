@@ -101,7 +101,7 @@ Head on over to [Discord's Bot creation page](https://discordapp.com/developers/
 #### Update config.json
 1. One of the files in the repository is `config.json.example`.  Copy that file and name it just `config.json`.
   * `config.json`is the file where we're going to be storing some VERY secret and important data.  **DO NOT POST YOUR config.json file to any websites or add ** 
-2. The sample `config.json.example` file contains placeholders for a testing bot (tester) and a real bot (raider). I would suggest leaving tester where it is, and just worrying about raider.  
+2. The sample `config.json.example` file contains placeholders for the information for you to put in, such as your discord Token and Bot's user ID. 
 3. Replace the `Your secret Token for this bot` with the token from step 3 of `Create a bot` above.  
 4. Replace the `The discord user id of the bot` with teh Client ID from step 3 of `Create a bot` above.
 5. `raidChannels` will only be useful if you're using PokeAlarm's webhooks to post raids in your server.  If you're not doing that, then just leave this as `"raidChannels": []`
