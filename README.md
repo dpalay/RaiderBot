@@ -113,6 +113,5 @@ If you did everything up to this point, you should be all set.  There are two wa
 2. `npm start`
   * This actually launches another command: `pm2 start Raider.js`.  [PM2](https://www.npmjs.com/package/pm2) is a process management option designed for node.  It startst the process as a background process, and will automatically restart the process if it crashes.  Additionally, it comes with some pretty sick monitoring tools, and I'm currently adding integration into the [Dashboard](https://app.keymetrics.io/#/) it comes with.
 
-
 ## Final Thoughts
 That should be it.  This is the first project that I've done that would potentially be large-scale, so your patience is appreciated.  
