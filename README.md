@@ -104,7 +104,7 @@ Head on over to [Discord's Bot creation page](https://discordapp.com/developers/
 2. The sample `config.json.example` file contains placeholders for the information for you to put in, such as your discord Token and Bot's user ID. 
 3. Replace the `Your secret Token for this bot` with the token from step 3 of `Create a bot` above.  
 4. Replace the `The discord user id of the bot` with teh Client ID from step 3 of `Create a bot` above.
-5. `raidChannels` will only be useful if you're using PokeAlarm's webhooks to post raids in your server.  If you're not doing that, then just leave this as `"raidChannels": []`
+5. `raidChannels` will only be useful if you're using PokeAlarm's webhooks to post raids in your server, and is currently only if you use the same PA config that we're using on the Madison server.  If you're not doing that, then just leave this as `"raidChannels": []`
 6. Save your `config.json` file.
 #### Start the bot
 If you did everything up to this point, you should be all set.  There are two ways of starting the bot:  
