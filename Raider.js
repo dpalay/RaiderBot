@@ -170,7 +170,7 @@ function raid(time, poke, location, owner, guests = 1, idOverride = undefined) {
     this.poke.id = interpretPoke(poke);
     this.poke.name = names[this.poke.id - 1] ? names[this.poke.id - 1] : poke;
     this.owner = tmpuser;
-    this.expires = this.poke.id != '150' ? Date.now() + 7200000 : Date.now() + 36000000; //TODO: better expiration
+    this.expires = this.poke.id != '150' ? Date.now() + 7200000 : Date.now() + 2592000000; //Should be a 72 hour expiration for mewtwo
     this.channels = {}
     this.attendees = {};
     //  this.potential = {};  //TODO:  "Maybe" a raid; potentially joining
