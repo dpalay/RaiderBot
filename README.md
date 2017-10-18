@@ -101,10 +101,10 @@ Head on over to [Discord's Bot creation page](https://discordapp.com/developers/
 #### Update config.json
 1. One of the files in the repository is `config.json.example`.  Copy that file and name it just `config.json`.
   * `config.json`is the file where we're going to be storing some VERY secret and important data.  **DO NOT POST YOUR config.json file to any websites or add ** 
-2. The sample `config.json.example` file contains placeholders for a testing bot (tester) and a real bot (raider). I would suggest leaving tester where it is, and just worrying about raider.  
+2. The sample `config.json.example` file contains placeholders for the information for you to put in, such as your discord Token and Bot's user ID. 
 3. Replace the `Your secret Token for this bot` with the token from step 3 of `Create a bot` above.  
 4. Replace the `The discord user id of the bot` with teh Client ID from step 3 of `Create a bot` above.
-5. `raidChannels` will only be useful if you're using PokeAlarm's webhooks to post raids in your server.  If you're not doing that, then just leave this as `"raidChannels": []`
+5. `raidChannels` will only be useful if you're using PokeAlarm's webhooks to post raids in your server, and is currently only if you use the same PA config that we're using on the Madison server.  If you're not doing that, then just leave this as `"raidChannels": []`
 6. Save your `config.json` file.
 #### Start the bot
 If you did everything up to this point, you should be all set.  There are two ways of starting the bot:  
@@ -112,7 +112,6 @@ If you did everything up to this point, you should be all set.  There are two wa
   * This is a great way to test changes to the bot, since the log outputs to the console.  However, if the bot crashes, then it does not reboot.
 2. `npm start`
   * This actually launches another command: `pm2 start Raider.js`.  [PM2](https://www.npmjs.com/package/pm2) is a process management option designed for node.  It startst the process as a background process, and will automatically restart the process if it crashes.  Additionally, it comes with some pretty sick monitoring tools, and I'm currently adding integration into the [Dashboard](https://app.keymetrics.io/#/) it comes with.
-
 
 ## Final Thoughts
 That should be it.  This is the first project that I've done that would potentially be large-scale, so your patience is appreciated.  
