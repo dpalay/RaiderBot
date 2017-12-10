@@ -36,6 +36,8 @@ const timeOuts = {}; // Parallel object for activeRaids containing the timeout v
 let ME = config.id;
 const prefix = config.prefix
 const prfxLen = prefix.length
+const timeoutNormal = config.timeoutNormal //number of milliseconds before deleting the raid
+const timeoutEX = config.timeoutEX //number of milliseconds before deleting the raid
 
 const ALPHANUM = constants.alphanum;
 const names = constants.pokelist;
@@ -170,7 +172,7 @@ function raid(time, poke, location, owner, guests = 1, idOverride = undefined) {
     this.poke.id = interpretPoke(poke);
     this.poke.name = names[this.poke.id - 1] ? names[this.poke.id - 1] : poke;
     this.owner = tmpuser;
-    this.expires = this.poke.id != '150' ? Date.now() + 7200000 : Date.now() + 259200000; //Should be a 72 hour expiration for mewtwo
+    this.expires = this.poke.id != '150' ? Date.now() + timeoutNormal : Date.now() + timeoutEX; //Sets up EX raid vs normal raid timeouts
     this.channels = {}
     this.attendees = {};
     //  this.potential = {};  //TODO:  "Maybe" a raid; potentially joining
