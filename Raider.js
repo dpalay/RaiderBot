@@ -916,6 +916,7 @@ client.on('message', message => {
                     case "terminate":
                     case "inactivate":
                     case "kill":
+                    case "delete":
                         sendTerminate(message, parseArray);
                         break;
 
