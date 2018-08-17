@@ -17,6 +17,7 @@ storage.initSync({
     dir: config.storageDir,
 })
 
+
 // Set up discord.js client
 const Discord = require('discord.js');
 const client = new Discord.Client({
@@ -338,17 +339,18 @@ function sendNew(message, parseArray) {
     let options = {};
     let r = {};
     let returnFlag = false;
+    let msgstart = prfxLen + 5
 
 
     // no comma
     // "!raider new time pokemon a location count" => ["time", "pokemon", "a", "location", "count"]
     // "!raider new id=12321232132?12321232132" => ["id=12321232132?12321232132"]
     if (!(message.content.indexOf(",") >= 0)) {
-        parseArray = message.content.substring(12).split(" ")
+        parseArray = message.content.substring(msgstart).split(" ") // " new " is 5 characters
     } else {
         // with comma
         // "!raider new time pokemon a location count" => ["time", "pokemon","a", "location", "count"]
-        parseArray = message.content.substring(12).split(",").map((m) => {
+        parseArray = message.content.substring(msgstart).split(",").map((m) => {
             return m.trim()
         })
     }
@@ -444,11 +446,12 @@ function sendNew(message, parseArray) {
 function sendTransfer(message, parseArray) {
     console.log("sendTransfer from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\t" + message.content);
-    let r = {}
-    let ID = ""
-    let user = {}
+    let r = {};
+    let ID = "";
+    let user = {};
+    let msgstart = prfxLen + 10; // " transfer " is 10 chars
         // "!raider transfer 23, @person" => ["23", "@person"]
-    parseArray = message.content.substring(17).split(",").map((m) => {
+    parseArray = message.content.substring(msgstart).split(",").map((m) => {
         return m.trim()
     })
     ID = parseArray[0].toUpperCase()
@@ -484,8 +487,9 @@ function sendJoin(message, parseArray) {
     console.log("\t" + message.content);
     let ID = ""
     let count = 0;
+    let msgstart = prfxLen + 6; // " join " is 6 chars
     //"!raider join ##, 3" => ["##", "3"]
-    parseArray = message.content.substring(13).split(",").map((m) => {
+    parseArray = message.content.substring(msgstart).split(",").map((m) => {
         return m.trim()
     })
     ID = parseArray[0].toUpperCase();
@@ -558,7 +562,8 @@ function sendUpdate(message, parseArray) {
     let count = ""
 
     // Get the ID
-    let tmp = message.content.substring(15).split(" ")
+    let msgstart = prfxLen + 8; // " update " is 8 chars
+    let tmp = message.content.substring(msgstart).split(" ")
     ID = tmp.shift().toUpperCase();
     ID = ID ? ID.replace(",", "").trim() : "" // in case the shift is undefined
 
