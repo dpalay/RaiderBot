@@ -340,7 +340,6 @@ function sendNew(message, parseArray) {
 
     let options = {};
     let r = {};
-    let returnFlag = false;
     let msgstart = prfxLen + 5
 
 
@@ -452,7 +451,7 @@ function sendTransfer(message, parseArray) {
     let ID = "";
     let user = {};
     let msgstart = prfxLen + 10; // " transfer " is 10 chars
-        // "!raider transfer 23, @person" => ["23", "@person"]
+    // "!raider transfer 23, @person" => ["23", "@person"]
     parseArray = message.content.substring(msgstart).split(",").map((m) => {
         return m.trim()
     })
