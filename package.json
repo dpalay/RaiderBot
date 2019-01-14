@@ -28,10 +28,14 @@
     "homepage": "https://github.com/dpalay/RaiderBot#readme",
     "dependencies": {
         "big-integer": "^1.6.25",
-        "discord.js": "^11.2.1",
+        "discord.js": "^11.4.2",
         "fuzzball": "^0.13.5",
         "node-persist": "^2.1.0",
-        "pmx": "^1.5.3",
+        "pmx": "^1.6.7",
         "underscore": "^1.8.3"
+    },
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "mocha": "^5.2.0"
     }
 }

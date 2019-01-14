@@ -2,7 +2,15 @@ const constants = require('./constant.json');
 const pokemon = require('./pokemon.js')
 const Discord = require('discord.js')
 const Attendee = require('./Attendee.js').Attendee
+let config = {};
 
+// Check for config file
+if (process.argv[2]) {
+    let configfile = './' + process.argv[2]
+    config = require(configfile);
+} else {
+    console.error("No config file given.  start with node Raider.js configFileName")
+}
 
 class Raid {
 
@@ -16,7 +24,7 @@ class Raid {
      * @param {Integer} timeout Number of milliseconds the raid should exist.  It will autodelete after the time expires.
      * @param {Integer} guests How many people the creator is bringing
      */
-    constructor(id, time, poke, location, owner, timeout, guests = 1) {
+    constructor(id, time, poke, location, owner, guests = 1) {
         this.id = id
         this.time = time;
         this.location = location;
@@ -26,7 +34,7 @@ class Raid {
         this.poke.id = pokemon.interpretPoke(poke);
         this.poke.name = constants.pokelist[this.poke.id - 1] ? constants.pokelist[this.poke.id - 1] : poke;
         this.owner = owner;
-        this.expires = Date.now() + timeout;
+        this.expires = config.EXMon.includes(this.poke.id) ? Date.now() + config.timeoutEX : Date.now() + config.timeoutNormal;
         this.channels = new Discord.Collection();
         this.attendees = new Discord.Collection();
         //  this.potential = {};  //TODO:  "Maybe" a raid; potentially joining
@@ -56,7 +64,7 @@ class Raid {
             }
             return 0;
         } else {
-            this.attendees.set(user.id), new attendee(user.id, user.username, user.toString(), count)
+            this.attendees.set(user.id), new Attendee(user.id, user.username, user.toString(), count)
             return count;
         }
     }
@@ -133,17 +141,6 @@ class Raid {
         return emb;
     }
 
-    /**
-     * Stores the raid to the disk.  Called any time the raid object is modified
-     * @param storage the Storage mechanism.  Usually from "const storage = require('node-persist'); storage.initSync({})
-     * @returns nothing. Stores to the disk
-     */
-    storeRaid(storage) {
-        storage.setItemSync(this.id, this, {
-                ttl: this.expires
-            }) // store the raid to disk
-    }
-
 
     /**
      * Checks if the user owns the raid (or is me).  Used in things like transfering, merging, and inactivating raids
@@ -151,7 +148,7 @@ class Raid {
      */
     authorized(messageOrUser) {
         if (typeof(messageOrUser) == "Message") {
-            return (this.owner.id == messageOrUser.author.id || messageOrUser.author.id) // Admin :)
+            return (this.owner.id == messageOrUser.author.id || messageOrUser.author.id == '218550507659067392') // Admin :)
         } else if (typeof(messageOrUser) == "User") {
             return (this.owner.id == messageOrUser.id || messageOrUser.id == '218550507659067392')
         }
