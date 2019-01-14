@@ -1,7 +1,7 @@
 const constants = require('./constant.json');
 const pokemon = require('./pokemon.js')
 const Discord = require('discord.js')
-const Attendee = require('./attendee.js').Attendee
+const Attendee = require('./Attendee.js').Attendee
 
 
 class Raid {

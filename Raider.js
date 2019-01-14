@@ -22,7 +22,7 @@ storage.initSync({
 
 const emojis = require('./emoji.js').emojis
 const Raid = require("./Raid.js").Raid
-const Attendee = require("./attendee.js").Attendee
+const Attendee = require("./Attendee.js").Attendee
 
 // Set up discord.js client
 const Discord = require('discord.js');
@@ -38,20 +38,23 @@ const bigInt = require('big-integer');
 // The list of raids and timers for the raids
 const activeRaids = new Discord.Collection();
 const timeOuts = {}; // Parallel object for activeRaids containing the timeout values, since those can't be stored to disk.
+let pointer = 0;
+
 
 /**
  * Generate a new ID of a Raid so that they don't overlap
  * @param activeRaids The array containing the list of active raid IDs
  * @returns a 2-character ID for a raid. 
  */
-function CreateRaidID() {
+async function CreateRaidID() {
     let tmp = ""
     do {
-        tmp = Math.floor(Math.random() * 9 + 1) + ALPHANUM[Math.floor(Math.random() * 33)]
+        tmp = constants.randomIds[pointer]
+        pointer = pointer >= constants.randomIds.length ? pointer + 1 : 0;
     } while (activeRaids.get(tmp))
+    await storage.setItem("pointer", pointer)
     return tmp;
 }
-
 
 
 let ME = config.id;
@@ -101,7 +104,9 @@ async function addCountReaction(message) {
 function makeRaid(id, time, poke, Location, owner, guests) {
     let raid = new Raid(id, time, poke, Location, owner, guests, id)
     activeRaids.set(id, raid);
-    storage.setItemSync(id, raid)
+    storage.setItemSync(id, raid, {
+            ttl: raid.expires
+        }) // store the raid to disk)
     return raid
 }
 
@@ -109,9 +114,9 @@ function makeRaid(id, time, poke, Location, owner, guests) {
  * Removes a raid from the active raids
  * @param {String} id - ID of the raid to delete
  */
-function removeRaid(id) {
+async function removeRaid(id) {
     activeRaids.delete(id);
-    storage.removeItemSync(id); // remove the raid to disk
+    await storage.removeItem(id); // remove the raid to disk
     return activeRaids;
 }
 
@@ -702,24 +707,7 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 
 //When a message is posted
 client.on('message', message => {
-    if (message.author.id != ME.id) { // logger shouldn't check it's own stuff)
-
-        // If message is from one of the RaidRooms and comes from a webhook
-        if (_.find(RaidRooms, (room) => {
-                return message.channel.id == room;
-            }) && message.author.discriminator == '0000') {
-            message.channel.send("ID=" + bigInt(message.id).toString(36) + "?" + bigInt(message.channel.id).toString(36))
-        } else if (message.content === 'pingg') {
-            message.author.createDM().then(
-                (dm) => {
-                    dm.send("pongg");
-                }
-            );
-        }
-
-
-        //is it a command?
-        else
+    if (message.author.id != ME.id) { // Bot shouldn't check it's own stuff)
         if (message.content.toLowerCase().startsWith(prefix)) {
             // get the commands
             let parseArray = message.content.split(" ");
@@ -827,11 +815,12 @@ if (config.debug) {
 client.on('ready', async() => {
     client.user.setGame(prefix + ' help | More info')
     ME = client.user
+    await pointer = storage.getItem("pointer")
     console.log("Loading saved Raids")
         // load the stored raids into memory
     storage.forEach(async(key, val) => {
         if (val.expires <= Date.now()) {
-            storage.removeItemSync(key); // remove the raid to disk
+            await storage.removeItem(key); // remove the raid to disk
         } else {
             let owner = await client.fetchUser(val.owner.id);
             let raid = new Raid(key, val.time, val.poke.id, val.location, owner, val.timeout, val.owner.count)
@@ -839,11 +828,11 @@ client.on('ready', async() => {
             raid.locationComment = val.locationComment
             raid.expires = val.expires
             raid.owner = val.owner
-            activeRaids.set(key) = raid;
             _.each(val.attendees, (att) => {
-                activeRaids[key].attendees[att.id] = new attendee(att.id, att.username, att.mention, att.count)
+                raid.attendees.set(att.id, new attendee(att.id, att.username, att.mention, att.count))
             })
-            timeOuts[activeRaids[key].id] = setTimeout(() => removeRaid(activeRaids[key].id), activeRaids[key].expires - Date.now())
+            timeOuts[raid.id] = setTimeout(() => removeRaid(raid.id), raid.expires - Date.now())
+            activeRaids.set(key) = raid;
         }
     });
     console.log('Raider is ready!');
