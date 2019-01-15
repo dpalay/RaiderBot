@@ -49,10 +49,10 @@ let pointer = 0;
 function CreateRaidID() {
     let tmp = ""
     do {
-        tmp = constants.randomIds[pointer]
-        pointer = pointer >= constants.randomIds.length ? pointer + 1 : 0;
-    } while (activeRaids.get(tmp))
-    storage.setItem("pointer", pointer)
+        tmp = constants.randomIds[pointer];
+        pointer = pointer < constants.randomIds.length ? pointer + 1 : 0;
+    } while (activeRaids.get(tmp));
+    storage.setItem("pointer", pointer);
     return tmp;
 }
 
@@ -103,7 +103,7 @@ function makeRaid(id, time, poke, location, owner, guests) {
     let raid = new Raid(id, time, poke, location, owner, guests, id)
     activeRaids.set(id, raid);
     // store the raid to disk)
-    storage.setItemSync(id, raid, {
+    storage.setItemSync(id, raid.save(), {
         ttl: raid.expires
     });
     // set timer to remove the raid 
@@ -273,14 +273,17 @@ async function sendNew(message, parseArray) {
     //FIXME: Check the time and find the next instance of that time
     raid = makeRaid(CreateRaidID(), parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
     if (!quietMode) {
-        message.channel.send({
+        await message.channel.send({
             embed: raid.embed()
         }).then(console.log(`Raid created by ${message.author} in ${message.channel}`));
     }
     message.channel.send("**" + raid.time + "**" + " Raid (" + raid.id + ") created by " + message.author + " for **" +
             raid.poke.name + "** at **" + raid.location + "**" +
             nl + "Others can join this raid by typing `!raider join " + raid.id + "` or by clicking the reaction buttons below")
-        .then((message) => addCountReaction(message))
+        .then((message) => {
+            raid.addMessage(message.channel, message);
+            addCountReaction(message)
+        })
         .catch(console.error);
 }
 
@@ -692,10 +695,10 @@ function sendSpecial(message, parseArray) {
 client.on('messageReactionAdd', (messageReaction, user) => {
     if (user != ME && messageReaction.message.author == ME) {
         console.log(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
-        messageReaction.remove(user).then((messageReaction) => {
             // add user to the raid
-            let id = messageReaction.message.content.match(/Raid \((.*)\)/)[1]
-            addToRaid(id, user, emojis.indexOf(messageReaction.emoji))
+        let id = messageReaction.message.content.match(/Raid \((.*)\)/)[1]
+        activeRaids.get(id).addToRaid(id, user, emojis.indexOf(messageReaction.emoji))
+        messageReaction.remove(user).then((messageReaction) => {
             console.log(`removed ${user.username}`)
                 //messageReaction.message.edit(messageReaction.message.content + "\n\t" + user.username + ": " + messageReaction.emoji.name)
         })
@@ -711,84 +714,79 @@ client.on('message', message => {
         if (message.content.toLowerCase().startsWith(prefix)) {
             // get the commands
             let parseArray = message.content.substring(prefix.length + 1).split(" ");
-            if (parseArray.length == 1) {
-                // Just !raider <command>.  DM Help Info
-                sendHelp(message, parseArray);
-            } else {
-                switch (parseArray[0].toLowerCase()) {
-                    //New Raid
-                    case "new":
-                        sendNew(message, parseArray);
-                        break;
+            switch (parseArray[0].toLowerCase()) {
+                //New Raid
+                case "new":
+                    sendNew(message, parseArray);
+                    break;
 
-                        //Give ownership to someone else
-                    case "transfer":
-                        sendTransfer(message, parseArray);
-                        break;
+                    //Give ownership to someone else
+                case "transfer":
+                    sendTransfer(message, parseArray);
+                    break;
 
-                        //Add self to the raid
-                    case "join":
-                        sendJoin(message, parseArray);
-                        break;
+                    //Add self to the raid
+                case "join":
+                    sendJoin(message, parseArray);
+                    break;
 
-                        // Leave the raid 
-                    case "remove":
-                    case "leave":
-                        sendLeave(message, parseArray);
-                        break;
+                    // Leave the raid 
+                case "remove":
+                case "leave":
+                    sendLeave(message, parseArray);
+                    break;
 
-                        // update how many people are going
-                    case "change":
-                    case "update":
-                        sendUpdate(message, parseArray);
-                        break;
+                    // update how many people are going
+                case "change":
+                case "update":
+                    sendUpdate(message, parseArray);
+                    break;
 
-                        // get info about raid
-                    case "info":
-                        sendInfo(message, parseArray);
-                        break;
+                    // get info about raid
+                case "info":
+                    sendInfo(message, parseArray);
+                    break;
 
-                        // Merge two raids
-                    case "merge":
-                        message.reply("This command isn't implemented yet.  Sorry!");
-                        break;
+                    // Merge two raids
+                case "merge":
+                    message.reply("This command isn't implemented yet.  Sorry!");
+                    break;
 
-                        // Inactivate a raid
-                    case "terminate":
-                    case "inactivate":
-                    case "kill":
-                    case "destroy":
-                    case "delete":
-                        sendTerminate(message, parseArray);
-                        break;
+                    // Inactivate a raid
+                case "terminate":
+                case "inactivate":
+                case "kill":
+                case "destroy":
+                case "delete":
+                    sendTerminate(message, parseArray);
+                    break;
 
-                        // List active raids
-                    case "list":
-                        sendList(message, parseArray);
-                        break;
+                    // List active raids
+                case "list":
+                    sendList(message, parseArray);
+                    break;
 
-                    case "myraids":
-                        sendMyRaids(message, parseArray);
-                        break;
+                case "myraids":
+                    sendMyRaids(message, parseArray);
+                    break;
 
-                    case "kick":
-                        sendKick(message, parseArray);
-                        break;
+                case "kick":
+                    sendKick(message, parseArray);
+                    break;
 
-                    case "message":
-                        sendAtMessage(message, parseArray);
-                        break;
+                case "message":
+                    sendAtMessage(message, parseArray);
+                    break;
 
-                        // Ask for help
-                    case "help":
-                        sendHelp(message, parseArray);
-                        break;
-                    case "special":
-                        sendSpecial(message, parseArray);
-                        break;
-                    default:
-                        break;
-                }
+                    // Ask for help
+                case "help":
+                    sendHelp(message, parseArray);
+                    break;
+                case "special":
+                    sendSpecial(message, parseArray);
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -817,24 +815,26 @@ if (config.debug) {
 client.on('ready', async() => {
     client.user.setActivity(prefix + ' help | More info')
     ME = client.user
-    pointer = await storage.getItem("pointer")
     console.log("Loading saved Raids")
         // load the stored raids into memory
     storage.forEach(async(key, val) => {
-        if (val.expires <= Date.now()) {
-            await storage.removeItem(key); // remove the raid to disk
+        if (key == "pointer") {
+            pointer == val
         } else {
-            let owner = await client.fetchUser(val.owner.id);
-            let raid = new Raid(key, val.time, val.poke.id, val.location, owner, val.owner.count)
-            raid.gym = val.gym;
-            raid.locationComment = val.locationComment
-            raid.expires = val.expires
-            raid.owner = val.owner
-            _.each(val.attendees, (att) => {
-                raid.attendees.set(att.id, new Attendee(att.id, att.username, att.mention, att.count))
-            })
-            timeOuts[raid.id] = setTimeout(() => removeRaid(raid.id), raid.expires - Date.now())
-            activeRaids.set(key) = raid;
+            if (val.expires <= Date.now()) {
+                await storage.removeItem(key); // remove the raid to disk
+            } else {
+                let owner = await client.fetchUser(val.owner.id);
+                let raid = new Raid(key, val.time, val.poke.id, val.location, owner, val.owner.count)
+                raid.gym = val.gym;
+                raid.locationComment = val.locationComment
+                raid.expires = val.expires
+                _.each(val.attendees, (att) => {
+                    raid.attendees.set(att.id, new Attendee(att.id, att.username, att.mention, att.count))
+                })
+                timeOuts[raid.id] = setTimeout(() => removeRaid(raid.id), raid.expires - Date.now())
+                activeRaids.set(key, raid);
+            }
         }
     });
     console.log('Raider is ready!');

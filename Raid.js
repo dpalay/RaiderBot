@@ -35,13 +35,31 @@ class Raid {
         this.poke.name = constants.pokelist[this.poke.id - 1] ? constants.pokelist[this.poke.id - 1] : poke;
         this.owner = owner;
         this.expires = config.EXMon.includes(this.poke.id) ? Date.now() + config.timeoutEX : Date.now() + config.timeoutNormal;
-        this.channels = new Discord.Collection();
+        this.channels = [];
         this.attendees = new Discord.Collection();
         //  this.potential = {};  //TODO:  "Maybe" a raid; potentially joining
         //  this.comments = {};   //TODO:  Add in a way for users to add comments to the raid
         this.addToRaid(owner, guests)
     }
 
+    save() {
+        let raid = {};
+        raid.id = this.id;
+        raid.time = this.time;
+        raid.location = this.location;
+        raid.gym = this.gym;
+        raid.locationComment = this.locationComment;
+        raid.poke = this.poke;
+        raid.owner = { id: this.owner.id };
+        raid.expires = this.expires;
+        raid.channels = this.channels;
+        raid.attendees = this.attendees.map((attendee) => attendee.id);
+        return raid
+    }
+
+    addMessage(channel, message) {
+        this.channels.pop([channel.id, message.id])
+    }
 
     userInRaid(user) {
         return this.attendees.get(user.id)
@@ -56,7 +74,7 @@ class Raid {
     // add a user to the raid
     addToRaid(user, count = 1) {
         // check if the user is already in the raid
-        if (this.attendees.get([user.id])) {
+        if (this.attendees.get(user.id)) {
             // if the count is different
             if (this.attendees.get(user.id).count != count) {
                 this.attendees.get(user.id).count = count
@@ -64,7 +82,7 @@ class Raid {
             }
             return 0;
         } else {
-            this.attendees.set(user.id), new Attendee(user.id, user.username, user.toString(), count)
+            this.attendees.set(user.id, new Attendee(user.id, user.username, user.toString(), count))
             return count;
         }
     }
@@ -120,14 +138,14 @@ class Raid {
         let emb = new Discord.RichEmbed();
         emb.setTitle("Raid Information");
         emb.setColor(0xEE6600).setTimestamp();
-        if (pokemon[this.poke.id]) {
+        if (constants.pokelist[this.poke.id]) {
             emb.setAuthor("RaiderBot_" + this.poke.name, "https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png")
             emb.setThumbnail("https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png")
         } else {
             emb.setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
             emb.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
         }
-        let str = `**Time: **" ${this.time}
+        let str = `**Time: ** ${this.time}
             **Location: **${this.location}\n`
         if (this.gym != this.location) {
             str += `**Gym: **: ${this.gym}\n`

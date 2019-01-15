@@ -4,7 +4,7 @@
     "description": "A discord chatbot to help organize raids for Pokemon Go.",
     "main": "Raider.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "mocha",
         "start": "pm2 start Raider.js"
     },
     "repository": {
@@ -27,15 +27,16 @@
     },
     "homepage": "https://github.com/dpalay/RaiderBot#readme",
     "dependencies": {
-        "big-integer": "^1.6.25",
+        "big-integer": "^1.6.40",
         "discord.js": "^11.4.2",
-        "fuzzball": "^0.13.5",
+        "fuzzball": "^0.13.6",
         "node-persist": "^2.1.0",
         "pmx": "^1.6.7",
-        "underscore": "^1.8.3"
+        "underscore": "^1.9.1"
     },
     "devDependencies": {
         "chai": "^4.2.0",
+        "chai-as-promised": "^7.1.1",
         "mocha": "^5.2.0"
     }
 }
