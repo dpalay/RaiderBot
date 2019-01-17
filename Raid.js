@@ -1,7 +1,7 @@
 const constants = require('./constant.json');
 const pokemon = require('./pokemon.js')
 const Discord = require('discord.js')
-const Attendee = require('./Attendee.js').Attendee
+const Attendee = require('./Attendee.js')
 let config = {};
 
 // Check for config file
@@ -9,6 +9,7 @@ if (process.argv[2]) {
     let configfile = './' + process.argv[2]
     config = require(configfile);
 } else {
+    config = require('./tester.json')
     console.error("No config file given.  start with node Raider.js configFileName")
 }
 
@@ -96,8 +97,8 @@ class Raid {
      * @returns the total count of attendees registered for the raid
      */
     total() {
-        let sum = 0;
-        sum += this.attendees.forEach((attendee) => attendee.count)
+        return this.attendees.reduce((acc, val) => { return acc + val.count }, 0);
+
     }
 
     toString() {
@@ -172,22 +173,19 @@ class Raid {
         }
     }
 
-    messageRaid(channel, fwdmessage, client) {
-        this.attendees.forEach((attendee) => {
+    async messageRaid(channel, fwdmessage, client) {
+
+        await channel.send(`${this.atAttendees()}\n${fwdmessage}`);
+        this.attendees.forEach(async(attendee) => {
             client.users.get(attendee.id).createDM().then(
                 (dm) => {
                     dm.send("Message from one of your raids in the " + channel + " channel")
-                })
+                });
         });
-
-
-        channel.send(this.atAttendees() + nl + fwdmessage).then(
-            console.log(tab + tab + fwdmessage)
-        )
     };
 
 
 
 }
 
-module.exports.Raid = Raid
+module.exports = Raid

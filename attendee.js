@@ -19,4 +19,4 @@ class Attendee {
     };
 }
 
-module.exports.Attendee = Attendee
+module.exports = Attendee

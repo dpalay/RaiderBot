@@ -21,8 +21,8 @@ storage.initSync({
 })
 
 const emojis = constants.emojis
-const Raid = require("./Raid.js").Raid
-const Attendee = require("./Attendee.js").Attendee
+const Raid = require("./Raid.js")
+const Attendee = require("./Attendee.js")
 
 // Set up discord.js client
 const Discord = require('discord.js');
@@ -589,13 +589,13 @@ function sendList(message, parseArray) {
     emb.setTitle("Active Raids!")
     emb.setColor(0xEE6600).setTimestamp().setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
     emb.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
-    if (_.size(activeRaids) == 0) {
+    if (activeRaids.size == 0) {
         emb.setDescription("There are no currently active raids.\nTry `!raider new <time>, <poke>, <location>` to start a new one.");
         //message.reply({embed: emb});
     } else {
         emb.setDescription("These are the currently active raids:")
-        _.each(activeRaids, (raid) => {
-            emb.addField(raid.id, tab + "**Owner: ** " + raid.owner.mention + nl +
+        activeRaids.forEach((raid) => {
+            emb.addField(raid.id, tab + "**Owner: ** " + raid.owner + nl +
                 "**Time: **" + raid.time + nl +
                 "**Location: **" + raid.location + nl +
                 "**Pokemon: **#" + raid.poke.id + " " + raid.poke.name + nl +
@@ -710,86 +710,102 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 
 //When a message is posted
 client.on('message', message => {
-    if (message.author.id != ME.id) { // Bot shouldn't check it's own stuff)
-        if (message.content.toLowerCase().startsWith(prefix)) {
-            // get the commands
-            let parseArray = message.content.substring(prefix.length + 1).split(" ");
-            switch (parseArray[0].toLowerCase()) {
-                //New Raid
-                case "new":
-                    sendNew(message, parseArray);
-                    break;
+    if (message.author.bot) return;
+    if (message.content.toLowerCase().indexOf(prefix.toLowerCase()) !== 0) return;
 
-                    //Give ownership to someone else
-                case "transfer":
-                    sendTransfer(message, parseArray);
-                    break;
 
-                    //Add self to the raid
-                case "join":
-                    sendJoin(message, parseArray);
-                    break;
-
-                    // Leave the raid 
-                case "remove":
-                case "leave":
-                    sendLeave(message, parseArray);
-                    break;
-
-                    // update how many people are going
-                case "change":
-                case "update":
-                    sendUpdate(message, parseArray);
-                    break;
-
-                    // get info about raid
-                case "info":
-                    sendInfo(message, parseArray);
-                    break;
-
-                    // Merge two raids
-                case "merge":
-                    message.reply("This command isn't implemented yet.  Sorry!");
-                    break;
-
-                    // Inactivate a raid
-                case "terminate":
-                case "inactivate":
-                case "kill":
-                case "destroy":
-                case "delete":
-                    sendTerminate(message, parseArray);
-                    break;
-
-                    // List active raids
-                case "list":
-                    sendList(message, parseArray);
-                    break;
-
-                case "myraids":
-                    sendMyRaids(message, parseArray);
-                    break;
-
-                case "kick":
-                    sendKick(message, parseArray);
-                    break;
-
-                case "message":
-                    sendAtMessage(message, parseArray);
-                    break;
-
-                    // Ask for help
-                case "help":
-                    sendHelp(message, parseArray);
-                    break;
-                case "special":
-                    sendSpecial(message, parseArray);
-                    break;
-                default:
-                    break;
-            }
+    // This is the best way to define args. Trust me.
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
+    const command = args.shift().toLowerCase();
+    /*
+        // The list of if/else is replaced with those simple 2 lines:
+        try {
+            let commandFile = require(`./commands/${command}.js`);
+            commandFile.run(client, message, args);
+        } catch (err) {
+            console.error(err);
         }
+    });
+    */
+
+
+    // get the commands
+    let parseArray = message.content.substring(prefix.length).trim().split(" ");
+    switch (command) {
+        //New Raid
+        case "new":
+            sendNew(message, parseArray);
+            break;
+
+            //Give ownership to someone else
+        case "transfer":
+            sendTransfer(message, parseArray);
+            break;
+
+            //Add self to the raid
+        case "join":
+            sendJoin(message, parseArray);
+            break;
+
+            // Leave the raid 
+        case "remove":
+        case "leave":
+            sendLeave(message, parseArray);
+            break;
+
+            // update how many people are going
+        case "change":
+        case "update":
+            sendUpdate(message, parseArray);
+            break;
+
+            // get info about raid
+        case "info":
+            sendInfo(message, parseArray);
+            break;
+
+            // Merge two raids
+        case "merge":
+            message.reply("This command isn't implemented yet.  Sorry!");
+            break;
+
+            // Inactivate a raid
+        case "terminate":
+        case "inactivate":
+        case "kill":
+        case "destroy":
+        case "delete":
+            sendTerminate(message, parseArray);
+            break;
+
+            // List active raids
+        case "list":
+            sendList(message, parseArray);
+            break;
+
+        case "myraids":
+            sendMyRaids(message, parseArray);
+            break;
+
+        case "kick":
+            sendKick(message, parseArray);
+            break;
+
+        case "message":
+            sendAtMessage(message, parseArray);
+            break;
+
+            // Ask for help
+        case "help":
+            sendHelp(message, parseArray);
+            break;
+        case "special":
+            sendSpecial(message, parseArray);
+            break;
+        default:
+            break;
     }
+
 });
 
 
