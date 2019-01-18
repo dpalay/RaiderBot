@@ -29,7 +29,7 @@ describe("Pokemon", function() {
 describe("Raid", function() {
     let raidtest = {};
     describe("Raid Creation", function() {
-        describe('Creating the raid', function() {
+        describe('#new Creating the raid', function() {
             raidtest = new Raid("CD", "1:00", 150, "here", users.user1);
             it('should have a 2 character string id', function() {
                 expect(raidtest.id).to.be.a('string')
@@ -39,14 +39,14 @@ describe("Raid", function() {
 
 
 
-        describe("Creating the raid with 2 guests for 1 user", function() {
+        describe("#new Creating the raid with 2 guests for 1 user", function() {
             it('should have a count that is a number and equal to 2', function() {
                 let guests = 2;
                 raidtest = new Raid("ED", "1:00", 150, "here", users.user1, guests);
                 expect(raidtest.total()).to.be.a('number').equal(guests);
             });
         })
-        describe('Creating the raid with no guest argument', function() {
+        describe('#new Creating the raid with no guest argument', function() {
             it('should have a count that is a number and equal to 1', function() {
                 raidtest = new Raid("CF", "1:00", 150, "here", users.user1);
                 expect(raidtest.total()).to.be.a('number').equal(users.user1.count);
@@ -57,13 +57,12 @@ describe("Raid", function() {
         beforeEach(function() {
             raidtest = new Raid("CF", "1:00", 150, "here", users.user1);
         })
-        it('should have the user in the raid', function() {
-            raidtest = new Raid("CF", "1:00", 150, "here", users.user1);
+        it('Should have the user in the raid', function() {
             expect(raidtest.userInRaid(users.user1)).to.exist
             expect(raidtest.userInRaid(users.user2)).to.not.exist
             expect(raidtest.userInRaid(users.user3)).to.not.exist
         })
-        describe('Add user to raid', function() {
+        describe('Raid.addToRaid Add user to raid', function() {
             it('should add a user to the raid', function() {
                 raidtest.addToRaid(users.user2)
                 expect(raidtest.userInRaid(users.user1)).to.exist
@@ -80,7 +79,7 @@ describe("Raid", function() {
                 expect(size).to.equal(raidtest.attendees.size, 'they should be the same size')
             })
         })
-        describe('Change guests for a user', function() {
+        describe('Raid.addToRaid Change guests for a user', function() {
             it('should increase the number of guests', function() {
                 let count = raidtest.total();
 
@@ -88,7 +87,7 @@ describe("Raid", function() {
                 expect(count).to.be.lessThan(raidtest.total());
             })
         })
-        describe('Remove user from raid', function() {
+        describe('Raid.removeFromRaid Remove user from raid', function() {
             it('should remove a user from the raid', function() {
                 raidtest.addToRaid(users.user2)
                 let bool = raidtest.removeFromRaid(users.user2)
@@ -104,6 +103,14 @@ describe("Raid", function() {
                 expect(raidtest.userInRaid(users.user2)).to.not.exist
                 expect(raidtest.userInRaid(users.user3)).to.not.exist
             })
+        })
+    })
+    describe("Authorized to change raid", function() {
+        describe("Message", function(){
+
+        })
+        describe("User", function(){
+            
         })
     })
 })
