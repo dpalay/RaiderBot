@@ -106,11 +106,11 @@ describe("Raid", function() {
         })
     })
     describe("Authorized to change raid", function() {
-        describe("Message", function(){
+        describe("Message", function() {
 
         })
-        describe("User", function(){
-            
+        describe("User", function() {
+
         })
     })
 })

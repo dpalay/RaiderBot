@@ -7,7 +7,7 @@ const fuzz = require('fuzzball');
 /**
  * WHO'S THAT POKEMON!?
  * Function to try to guess which pokemon the user is trying to type in
- * @param {*} poke - the user's input.  Can be #111, 111, or text
+ * @param {String} poke - the user's input.  Can be #111, 111, or text
  * @returns the ID of the pokemon they typed in
  */
 exports.interpretPoke = function interpretPoke(poke) {

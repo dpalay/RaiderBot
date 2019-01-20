@@ -54,7 +54,7 @@ class Raid {
         raid.owner = { id: this.owner.id };
         raid.expires = this.expires;
         raid.channels = this.channels;
-        raid.attendees = this.attendees.map((attendee) => attendee.id);
+        raid.attendees = this.attendees.map((attendee) => { return { id: attendee.id, count: attendee.count, mention: attendee.mention, here: attendee.here, username: attendee.username } });
         return raid
     }
 
@@ -68,7 +68,7 @@ class Raid {
 
     /**
      * Adds a user and guests to the raid
-     * @param {User} user 
+     * @param {User or PsuedoUser} user 
      * @param {int} count 
      * @returns 0 if fail, user's count if success
      */
@@ -165,10 +165,10 @@ class Raid {
      * Checks if the user owns the raid (or is me).  Used in things like transfering, merging, and inactivating raids
      * @returns True if the message is owned by this raid's owner, if the user is this raid's owner, or if it's from the admin.
      */
-    authorized(messageOrUser) {
-        if (typeof(messageOrUser) == "Message") {
+    authorized(messageOrUser, whatisit) {
+        if (whatisit == "Message") {
             return (this.owner.id == messageOrUser.author.id || messageOrUser.author.id == '218550507659067392') // Admin :)
-        } else if (typeof(messageOrUser) == "User") {
+        } else if (whatisit == "User") {
             return (this.owner.id == messageOrUser.id || messageOrUser.id == '218550507659067392')
         }
     }
