@@ -43,6 +43,9 @@ class Raid {
         this.addToRaid(owner, guests)
     }
 
+    /**
+     * @returns {Object} Returns a "flattened raid" for saving to the disk.  Doesn't save any of the actual discord stuff
+     */
     save() {
         let raid = {};
         raid.id = this.id;
@@ -58,27 +61,37 @@ class Raid {
         return raid
     }
 
+    /**
+     * 
+     * @param {Discord.Channel} channel 
+     * @param {Discord.message} message 
+     */
     addMessage(channel, message) {
         this.channels.pop([channel.id, message.id])
     }
 
+    /**
+     * 
+     * @param {Discord.User} user 
+     */
     userInRaid(user) {
         return this.attendees.get(user.id)
     }
 
     /**
      * Adds a user and guests to the raid
-     * @param {User or PsuedoUser} user 
+     * @param {Discord.User | String} user 
      * @param {int} count 
      * @returns 0 if fail, user's count if success
      */
     // add a user to the raid
     addToRaid(user, count = 1) {
         // check if the user is already in the raid
-        if (this.attendees.get(user.id)) {
+        let att = this.attendees.get(user.id)
+        if (att) {
             // if the count is different
-            if (this.attendees.get(user.id).count != count) {
-                this.attendees.get(user.id).count = count
+            if (att.count != count) {
+                att.count = count
                 return count;
             }
             return 0;
@@ -88,19 +101,26 @@ class Raid {
         }
     }
 
-    // Removes the user from the raid
+
+    /**
+     * Removes the user from the raid
+     * @param {Discord.User} user user to remove from the raid
+     */
     removeFromRaid(user) {
         return this.attendees.delete(user.id)
     }
 
     /**
-     * @returns the total count of attendees registered for the raid
+     * @returns {Number} the total count of attendees registered for the raid
      */
     total() {
         return this.attendees.reduce((acc, val) => { return acc + val.count }, 0);
 
     }
 
+    /**
+     * @returns {String} stringified version of the Raid
+     */
     toString() {
         let str = ""
         str += `**Raid ID: ${this.id}**\n`;

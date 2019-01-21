@@ -1,5 +1,12 @@
-const Discord = module.require("discord.js");
+const Discord = require('discord.js')
+const Raid = require('../Raid.js')
 
+/**
+ * @param {Discord.Client} client
+ * @param {Discord.Message} message
+ * @param {Discord.Collection<any,Raid>} activeRaids
+ * @param {Array<String>} parseArray
+ */
 module.exports.run = async(client, message, activeRaids, parseArray) => {
     console.log("sendList from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\t" + message.content);

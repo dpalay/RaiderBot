@@ -22,7 +22,6 @@ storage.initSync({
 
 const emojis = constants.emojis
 const Raid = require("./Raid.js")
-const Attendee = require("./Attendee.js")
 
 // Set up discord.js client
 const Discord = require('discord.js');
@@ -31,15 +30,13 @@ const client = new Discord.Client({
 });
 
 // Get other libraries
-const _ = require('underscore');
 const fuzz = require('fuzzball');
-const bigInt = require('big-integer');
 
 // The list of raids and timers for the raids
 const activeRaids = new Discord.Collection();
 const timeOuts = {}; // Parallel object for activeRaids containing the timeout values, since those can't be stored to disk.
 let pointer = 0;
-
+let loaded = false;
 
 /**
  * Generate a new ID of a Raid so that they don't overlap
@@ -98,16 +95,22 @@ async function addCountReaction(message) {
     }
 }
 
+/**
+ * @param {Raid} raid The raid to save to the disk.
+ */
+activeRaids.saveRaid = async function saveRaid(raid) {
+    console.log(`Saving Raid ${raid.id} to disk`)
+    await storage.setItem(raid.id, raid.save(), { ttl: raid.expires })
+    console.log(raid)
+}
 
-function makeRaid(id, time, poke, location, owner, guests) {
+activeRaids.makeRaid = function makeRaid(id, time, poke, location, owner, guests) {
     let raid = new Raid(id, time, poke, location, owner, guests, id)
     activeRaids.set(id, raid);
     // store the raid to disk)
-    storage.setItemSync(id, raid.save(), {
-        ttl: raid.expires
-    });
-    // set timer to remove the raid 
-    timeOuts[raid.id] = setTimeout(() => removeRaid(raid.id), raid.expires - Date.now());
+    activeRaids.saveRaid(raid)
+        // set timer to remove the raid 
+    timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now());
     return raid
 }
 
@@ -115,7 +118,7 @@ function makeRaid(id, time, poke, location, owner, guests) {
  * Removes a raid from the active raids
  * @param {String} id - ID of the raid to delete
  */
-async function removeRaid(id) {
+activeRaids.removeRaid = async function removeRaid(id) {
     activeRaids.delete(id);
     await storage.removeItem(id); // remove the raid to disk
     return activeRaids;
@@ -202,76 +205,8 @@ async function sendNew(message, parseArray) {
         message.channel.send("Sorry, " + message.author + ". I couldn't understand your request.  Perhaps you used the wrong syntax?")
         return;
     }
-
-    /* Deprecated.  This was used when Raiderbot would follow the scanner's webhook with an ID=<channelID>?<messageID>
-    if (parseArray[1].indexOf("=") >= 0 && parseArray[1].indexOf("?") >= 0) {
-        message.channel.send("Sorry, " + message.author + ". It looks like you didn't have a time before your ID=.  Try creating the raid again? The syntax is `!raider new <time>, ID=<copied raid ID>`")
-    } else if (parseArray[1].indexOf("=") >= 0) {
-        options.time = parseArray.shift();
-        options.msgChan = parseArray.shift();
-        if (!options.msgChan.includes('?')) {
-            message.channel.send("Sorry, " + message.author + ". I couldn't understand your request.  Perhaps you used the wrong syntax?  There should have been a ? in the ID somewhere.  Did you copy from the Raid Posting?")
-            return
-        }
-        let msgChan = options.msgChan.split("?");
-        msgChan[0] = bigInt(msgChan[0].substr(3), 36).toString();
-        msgChan[1] = bigInt(msgChan[1], 36).toString();
-        options.gym = parseArray.join(" ");
-
-        // go find the message
-        if (client.channels.get(msgChan[1])) {
-
-            client.channels.get(msgChan[1]).fetchMessage(msgChan[0]).then((msg) => {
-                // console.log(message);
-
-                // set the options for the new raid(time, poke, location, owner, count)
-                options.poke = msg.embeds[0].description.split(" ")[0] // gets the #123
-                options.location = "[" + msg.embeds[0].title + "](" + msg.embeds[0].url + ")"
-
-
-
-                // Call the new raid
-                raid = new raid(options.time, options.poke, options.location, message.author);
-                if (options.gym) {
-                    raid.gym = options.gym;
-                }
-
-
-                //Let them know the raid is created.
-
-
-                if (!quietMode) {
-                    message.channel.send({
-                        embed: raid.embed()
-                    });
-                }
-                message.channel.send("**" + raid.time + "**" + " Raid (" + raid.id + ") created by " + message.author + " for **" +
-                        raid.poke.name + "** at **" + raid.location.slice(1, raid.location.indexOf("]")) + "**" +
-                        //nl +/"**Map link**: " + r.location.substr(r.location.indexOf("]"+1)) + 
-                        nl + "Others can join this raid by typing `!raider join " + raid.id + "`")
-                    .then((message) => addCountReaction(message))
-                    .catch(console.error);
-
-                //message.channel.send("Others can join this raid by typing `!raider join " + r.id + "`").then(() => console.log("Raid Created"));
-                // remove raid in 2 hours
-                timeOuts[raid.id] = setTimeout(() => removeRaid(raid.id), raid.expires - Date.now())
-                storeRaid(raid); //save raid to disk
-            }).catch(() => {
-                console.error
-                returnFlag = true;
-            })
-
-        } else {
-            message.channel.send("Sorry, " + message.author + ". I couldn't find a Raid posting with that ID.  Perhaps you used the wrong syntax?")
-        }
-        //let raidMessage = // get the message id.trim()
-        // get the Raid posting
-        // get the pokemon and the gym (with link!)
-    } else {
-*/
-
     //FIXME: Check the time and find the next instance of that time
-    raid = makeRaid(CreateRaidID(), parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
+    raid = activeRaids.makeRaid(CreateRaidID(), parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
     if (!quietMode) {
         await message.channel.send({
             embed: raid.embed()
@@ -320,46 +255,6 @@ function sendTransfer(message, parseArray) {
         }
     } else {
         message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids.")
-    }
-    if (message.channel.type == 'text') {
-        message.delete().catch(console.error)
-    }
-}
-
-//!raider join raidID
-function sendJoin(message, parseArray) {
-    console.log("sendJoin from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
-    console.log("\t" + message.content);
-    let ID = ""
-    let count = 0;
-    let msgstart = prfxLen + 6; // " join " is 6 chars
-    //"!raider join ##, 3" => ["##", "3"]
-    parseArray = message.content.substring(msgstart).split(",").map((m) => {
-        return m.trim()
-    })
-    ID = parseArray[0].toUpperCase();
-    count = parseInt(parseArray[1]) ? parseInt(parseArray[1]) : 1;
-    console.log("\tID: " + ID + "\tcount: " + count + "\tparseArray: " + parseArray)
-    if (count >= 0) {
-        // does raid exist
-        if (activeRaids.has(ID)) {
-            // try to add user to the raid
-            let r = activeRaids.get(ID);
-            if (addToRaid(ID, message.author, count)) {
-                message.reply(" added to raid " + ID + " owned by " + r.owner.mention +
-                    "  Total confirmed is: **" + r.total() + "**");
-                storeRaid(r); // store the raid to disk
-
-            } else {
-                message.reply("You are already added to the raid. To remove yourself, type `!raider leave " + ID + "` to change the number of players you're bringing, use `!raider update " + ID + ", <new #>`")
-            }
-        }
-        //raid doesn't exist
-        else {
-            message.reply("Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids.")
-        }
-    } else {
-        message.reply("this wasn't a positive number I could recognize.  Try again?");
     }
     if (message.channel.type == 'text') {
         message.delete().catch(console.error)
@@ -464,7 +359,7 @@ function sendUpdate(message, parseArray) {
                     time = time ? time.replace(",", "").trim() : r.time;
                     r.time = time;
                     r.expires = r.poke.id != '150' ? Date.now() + 7200000 : Date.now() + 36000000; //TODO: better expiration
-                    timeOuts[r.id] = setTimeout(() => removeRaid(r.id), r.expires - Date.now())
+                    timeOuts[r.id] = setTimeout(() => activeRaids.removeRaid(r.id), r.expires - Date.now())
                     console.log(tab + "Updated Time to " + r.time)
                     r.messageRaid(message.channel, "The time for raid " + ID + " has been updated to " + r.time)
                     break;
@@ -487,7 +382,7 @@ function sendUpdate(message, parseArray) {
                     if (parseInt(expires)) {
                         clearTimeout(timeOuts[r.id]);
                         r.expires = Date.now() + parseInt(expires) * 60 * 1000;
-                        timeOuts[r.id] = setTimeout(() => removeRaid(r.id), r.expires - Date.now())
+                        timeOuts[r.id] = setTimeout(() => activeRaids.removeRaid(r.id), r.expires - Date.now())
                     }
                     break;
                 default:
@@ -519,8 +414,8 @@ function sendInfo(message, parseArray) {
     console.log("sendInfo from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\tmessage:" + message.content);
     console.log("\tparseArray: " + parseArray.toString())
-    if (parseArray[2]) {
-        let ID = parseArray[2].toUpperCase();
+    if (parseArray[1]) {
+        let ID = parseArray[1].toUpperCase();
         let raid = {};
         if (activeRaids.has(ID)) {
             raid = activeRaids.get(ID);
@@ -528,9 +423,9 @@ function sendInfo(message, parseArray) {
                 //   message.reply(raid.toString());
             message.channel.send({
                 embed: raid.embed()
-            });
+            }).then(console.log(`Raid ${ID} information sent to ${message.author.username} in #${message.channel}`)).catch((err) => console.error(`Raid ${ID} info not sent! ${err}`));
         } else {
-            message.reply("Couldn't find raid " + ID + ".")
+            message.reply(`Couldn't find Raid ${ID}.`)
         }
     } else {
         message.reply("No raid found")
@@ -549,12 +444,12 @@ function sendInfo(message, parseArray) {
 function sendAtMessage(message, parseArray) {
     console.log("sendMessage from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     //if there's a RaidID
-    if (parseArray[2]) {
+    if (parseArray[1]) {
         // handle the comma after RaidID
-        if (parseArray[2].trim().search(",") >= 0) {
-            parseArray[2] = parseArray[2].split(",")[0];
+        if (parseArray[1].trim().search(",") >= 0) {
+            parseArray[1] = parseArray[1].split(",")[0];
         }
-        let ID = parseArray[2].toUpperCase();
+        let ID = parseArray[1].toUpperCase();
         let user = message.author;
         //if Raid exists.
         if (activeRaids.has(ID)) {
@@ -577,53 +472,14 @@ function sendAtMessage(message, parseArray) {
     }
 }
 
-/** Sends the list of raids to the user who requested.
- * @example !raider list 
-
-*/
-
-function sendList(message, parseArray) {
-    console.log("sendList from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
-    console.log("\t" + message.content);
-    let emb = new Discord.RichEmbed();
-    emb.setTitle("Active Raids!")
-    emb.setColor(0xEE6600).setTimestamp().setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
-    emb.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
-    if (activeRaids.size == 0) {
-        emb.setDescription("There are no currently active raids.\nTry `!raider new <time>, <poke>, <location>` to start a new one.");
-        //message.reply({embed: emb});
-    } else {
-        emb.setDescription("These are the currently active raids:")
-        activeRaids.forEach((raid) => {
-            emb.addField(raid.id, tab + "**Owner: ** " + raid.owner + nl +
-                "**Time: **" + raid.time + nl +
-                "**Location: **" + raid.location + nl +
-                "**Pokemon: **#" + raid.poke.id + " " + raid.poke.name + nl +
-                "**Attendees: **" + raid.total() + nl +
-                "`!raider info " + raid.id + "`", true);
-        })
-    }
-    //message.reply({embed: emb});
-    message.author.createDM().then(
-        (dm) => {
-            dm.send({
-                embed: emb
-            });
-        }
-    );
-    if (message.channel.type == 'text') {
-        message.delete().catch(console.error)
-    }
-}
-
 
 //!raider kick raidID @user
 function sendKick(message, parseArray) {
     let ID = ""
-    if (parseArray[2]) {
-        ID = parseArray[2].toUpperCase()
-        let r = activeRaids.get(ID)
-        if (authorized(r, message)) {
+    if (parseArray[1]) {
+        ID = parseArray[1].toUpperCase()
+        let raid = activeRaids.get(ID)
+        if (raid.authorized(message, "Message")) {
             if (message.mentions.users.length > 0) {
                 for (let i = 0; i < message.mentions.users.length; i++) {
                     removeFromRaid(r, message.mentions.users[i]);
@@ -642,39 +498,7 @@ function sendKick(message, parseArray) {
 }
 
 
-//!raider kill raidID
-function sendTerminate(message, parseArray) {
-    if (parseArray[2]) {
-        let ID = parseArray[2].toUpperCase();
-        if (activeRaids.has(ID) && activeRaids.get(ID).authorized(message)) {
-            let r = activeRaids.get(ID);
-            console.log("attempting to destroy info for " + ID)
-            sendInfo(message, parseArray);
-            removeRaid(r.id); // clears the raid and removes from disk
-            message.reply("Raid " + ID + " destroyed.  Thank you for using Raider!");
-        } else {
-            message.reply("Either the raid doesn't exist, or you're not the owner.")
-        }
-    } else {
-        message.reply("Sorry, I couldn't understand your request.  I think you were trying `!raid terminate <Raid ID>`")
-    }
-}
 
-//sends list of raids to the user
-function sendMyRaids(message, parseArray) {
-    message.author.createDM().then((dm) => {
-        _.each(activeRaids, (raid) => {
-            if (userInRaid(message.author, raid)) {
-                dm.send({
-                    embed: raid.embed()
-                })
-            }
-        })
-    })
-    if (message.channel.type == 'text') {
-        message.delete().catch(console.error)
-    }
-}
 
 //admin command
 function sendSpecial(message, parseArray) {
@@ -692,12 +516,14 @@ function sendSpecial(message, parseArray) {
 
 
 
-client.on('messageReactionAdd', (messageReaction, user) => {
+client.on('messageReactionAdd', async(messageReaction, user) => {
     if (user != ME && messageReaction.message.author == ME) {
         console.log(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
             // add user to the raid
         let id = messageReaction.message.content.match(/Raid \((.*)\)/)[1]
-        activeRaids.get(id).addToRaid(id, user, emojis.indexOf(messageReaction.emoji))
+        let raid = activeRaids.get(id)
+        raid.addToRaid(id, user, emojis.indexOf(messageReaction.emoji))
+        await activeRaids.saveRaid(raid);
         messageReaction.remove(user).then((messageReaction) => {
             console.log(`removed ${user.username}`)
                 //messageReaction.message.edit(messageReaction.message.content + "\n\t" + user.username + ": " + messageReaction.emoji.name)
@@ -716,7 +542,7 @@ client.on('message', message => {
 
     // This is the best way to define args. Trust me.
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
-    const command = args.shift().toLowerCase();
+    let command = args.shift().toLowerCase();
     /*
         // The list of if/else is replaced with those simple 2 lines:
         try {
@@ -731,6 +557,25 @@ client.on('message', message => {
 
     // get the commands
     let parseArray = message.content.substring(prefix.length).trim().split(" ");
+    //handling synonyms
+    switch (command) {
+        //Things that mean terminate
+        case "inactivate":
+        case "kill":
+        case "destroy":
+        case "delete":
+            command = "terminate";
+            break;
+            //things that mean new
+        case "make":
+        case "create":
+            command = "new";
+            break;
+        case "change":
+        case "alter":
+            command = "update";
+            break;
+    }
     switch (command) {
         //New Raid
         case "new":
@@ -743,9 +588,9 @@ client.on('message', message => {
             break;
 
             //Add self to the raid
-        case "join":
-            sendJoin(message, parseArray);
-            break;
+            // case "join":
+            //  sendJoin(message, parseArray);
+            //   break;
 
             // Leave the raid 
         case "remove":
@@ -769,26 +614,13 @@ client.on('message', message => {
             message.reply("This command isn't implemented yet.  Sorry!");
             break;
 
-            // Inactivate a raid
+        case "join":
         case "terminate":
-        case "inactivate":
-        case "kill":
-        case "destroy":
-        case "delete":
-            sendTerminate(message, parseArray);
-            break;
-
-            // List active raids
         case "list":
-            sendList(message, parseArray);
-            break;
-
         case "myraids":
-            sendMyRaids(message, parseArray);
-            break;
-
         case "kick":
-            sendKick(message, parseArray);
+            let runcommand = require(`./Commands/${command}.js`)
+            runcommand.run(client, message, activeRaids, parseArray);
             break;
 
         case "message":
@@ -821,7 +653,7 @@ if (config.debug) {
 
     let numRaids = probe.metric({
         name: "# of raids",
-        value: () => _.size(activeRaids)
+        value: () => activeRaids.size()
     });
 }
 
@@ -833,28 +665,30 @@ client.on('ready', async() => {
     ME = client.user
     console.log("Loading saved Raids")
         // load the stored raids into memory
-    storage.forEach(async(key, val) => {
-        if (key == "pointer") {
-            pointer == val
-        } else {
-            if (val.expires <= Date.now()) {
-                await storage.removeItem(key); // remove the raid to disk
+    if (!loaded) {
+        storage.forEach(async(key, val) => {
+            if (key == "pointer") {
+                pointer == val
             } else {
-                let owner = await client.fetchUser(val.owner.id);
-                let raid = new Raid(key, val.time, val.poke.id, val.location, owner, val.owner.count)
-                raid.gym = val.gym;
-                raid.locationComment = val.locationComment
-                raid.expires = val.expires
-                _.each(val.attendees, (att) => {
-                    raid.attendees.set(att.id, new Attendee(att.id, att.username, att.mention, att.count))
-                })
-                timeOuts[raid.id] = setTimeout(() => removeRaid(raid.id), raid.expires - Date.now())
-                activeRaids.set(key, raid);
+                if (val.expires <= Date.now()) {
+                    await storage.removeItem(key); // remove the raid to disk
+                } else {
+                    let owner = await client.fetchUser(val.owner.id);
+                    let raid = new Raid(key, val.time, val.poke.id, val.location, owner, val.owner.count)
+                    raid.gym = val.gym;
+                    raid.locationComment = val.locationComment
+                    raid.expires = val.expires
+                    val.attendees.forEach((att) => {
+                        raid.addToRaid(att, att.count);
+                    })
+                    timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now())
+                    activeRaids.set(key, raid);
+                }
             }
-        }
-    });
+        });
+    }
+    loaded = true;
     console.log('Raider is ready!');
-
 });
 
 

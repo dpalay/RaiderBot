@@ -1,5 +1,12 @@
-const Discord = module.require("discord.js");
+const Discord = require('discord.js')
+const Raid = require('../Raid.js')
 
+/**
+ * @param {Discord.Client} client
+ * @param {Discord.Message} message
+ * @param {Discord.Collection<any,Raid>} activeRaids
+ * @param {Array<String>} parseArray
+ */
 module.exports.run = async(client, message, activeRaids, parseArray) => {
     message.author.createDM().then((dm) => {
         activeRaids.forEach((raid) => {
@@ -16,7 +23,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
 }
 
 module.exports.help = {
-    name: "list",
-    description: "sends the list of active raids to the user",
-    usage: "list"
+    name: "my raids",
+    description: "sends the list of raids that the user is a part of",
+    usage: "myraids"
 }
