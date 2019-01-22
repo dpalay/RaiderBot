@@ -31,6 +31,7 @@
         "discord.js": "^11.4.2",
         "fuzzball": "^0.13.6",
         "node-persist": "^2.1.0",
+        "npm": "^6.6.0",
         "pmx": "^1.6.7",
         "underscore": "^1.9.1"
     },
