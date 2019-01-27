@@ -551,15 +551,16 @@ function sendSpecial(message, parseArray) {
 
 
 client.on('messageReactionAdd', async(messageReaction, user) => {
+    //TODO: Better logic.  The author shouldn't just be Raider, the message should be a raid message
     if (user !== ME && messageReaction.message.author === ME) {
         console.log(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
             // add user to the raid
         let id = messageReaction.message.content.match(/Raid \((.*)\)/)[1]
         let raid = activeRaids.get(id)
-        raid.addToRaid(id, user, emojis.indexOf(messageReaction.emoji))
+        raid.addToRaid(user, emojis.indexOf(messageReaction.emoji))
         await activeRaids.saveRaid(raid);
         messageReaction.remove(user).then((messageReaction) => {
-            console.log(`removed ${user.username}`)
+            console.log(`removed ${user.username}'s reaction`)
                 //messageReaction.message.edit(messageReaction.message.content + "\n\t" + user.username + ": " + messageReaction.emoji.name)
         })
     }
