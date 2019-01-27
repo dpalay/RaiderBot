@@ -37,11 +37,12 @@ class Raid {
         this.owner = owner;
         this.expires = config.EXMon.includes(this.poke.id) ? Date.now() + config.timeoutEX : Date.now() + config.timeoutNormal;
         this.channels = [];
+        /** @type {Discord.Collection<string,Attendee>} */
         this.attendees = new Discord.Collection();
         //  this.potential = {};  //TODO:  "Maybe" a raid; potentially joining
         //  this.comments = {};   //TODO:  Add in a way for users to add comments to the raid
-        this.addToRaid(owner, guests)
-    }
+        this.addToRaid(owner, isFinite(guests) && guests > 0 ? guests : 1)
+        }
 
     /**
      * @returns {Object} Returns a "flattened raid" for saving to the disk.  Doesn't save any of the actual discord stuff
@@ -64,7 +65,7 @@ class Raid {
     /**
      * 
      * @param {Discord.Channel} channel 
-     * @param {Discord.message} message 
+     * @param {Discord.Message} message 
      */
     addMessage(channel, message) {
         this.channels.pop([channel.id, message.id])
@@ -80,13 +81,14 @@ class Raid {
 
     /**
      * Adds a user and guests to the raid
-     * @param {Discord.User | String} user 
+     * @param {Discord.User | Discord.Snowflake} user 
      * @param {int} count 
      * @returns 0 if fail, user's count if success
      */
     // add a user to the raid
     addToRaid(user, count = 1) {
         // check if the user is already in the raid
+        
         let att = this.attendees.get(user.id)
         if (att) {
             // if the count is different
@@ -114,7 +116,10 @@ class Raid {
      * @returns {Number} the total count of attendees registered for the raid
      */
     total() {
-        return this.attendees.reduce((acc, val) => { return acc + val.count }, 0);
+        var sum = 0;
+        this.attendees.forEach((val) => {sum += val.count});
+        return sum;
+        //return this.attendees.reduce((acc, val) => { return acc + val.count }, 0);
 
     }
 
@@ -130,7 +135,7 @@ class Raid {
         if (this.gym != this.location) {
             str += `\tGym:${this.gym}\n`
         }
-        str += `\tOrganizer: ${this.owner.mention}\n`;
+        str += `\tOrganizer: ${this.owner}\n`;
         str += `\tAttendees:`
         str += this.listAttendees()
         str += `\tTotal Attendees: ${this.total()}`
@@ -173,23 +178,28 @@ class Raid {
         }
         str += `**Pokemon: **#${this.poke.id} ${this.poke.name}
             Self-destructs at: ${new Date(this.expires).toLocaleTimeString()}
-            **Total Attendees: **${this.total()}`
-            //  **Attendee List:**
-            //  ${this.listAttendees()}
+            **Total Attendees: **${this.total()}
+             **Attendee List:**: 
+             ${this.listAttendees()}`
         emb.addField("Raid " + this.id, str);
         return emb;
     }
 
 
     /**
+     
+     */
+    /**
      * Checks if the user owns the raid (or is me).  Used in things like transfering, merging, and inactivating raids
      * @returns True if the message is owned by this raid's owner, if the user is this raid's owner, or if it's from the admin.
+     * @param {Discord.Message | Discord.User} messageOrUser 
+     * @param {string} whatisit 
      */
-    authorized(messageOrUser, whatisit) {
-        if (whatisit == "Message") {
-            return (this.owner.id == messageOrUser.author.id || messageOrUser.author.id == '218550507659067392') // Admin :)
-        } else if (whatisit == "User") {
-            return (this.owner.id == messageOrUser.id || messageOrUser.id == '218550507659067392')
+    authorized(messageOrUser) {
+        if (messageOrUser instanceof Discord.Message) {
+            return (this.owner.id === messageOrUser.author.id || messageOrUser.author.id === '218550507659067392') // Admin :)
+        } else if (messageOrUser instanceof Discord.User) {
+            return (this.owner.id === messageOrUser.id || messageOrUser.id === '218550507659067392')
         }
     }
 

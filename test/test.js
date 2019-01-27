@@ -37,8 +37,6 @@ describe("Raid", function() {
             });
         });
 
-
-
         describe("#new Creating the raid with 2 guests for 1 user", function() {
             it('should have a count that is a number and equal to 2', function() {
                 let guests = 2;

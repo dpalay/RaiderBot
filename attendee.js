@@ -1,10 +1,10 @@
 class Attendee {
     /**
      * 
-     * @param {String} userID The Discord User's Id
-     * @param {String} username The Discord User's username
-     * @param {String} mention 
-     * @param {*} count 
+     * @param {string} userID The Discord User's Id
+     * @param {string} username The Discord User's username
+     * @param {string} mention 
+     * @param {number} count 
      */
     constructor(userID, username, mention, count = 1) {
         this.id = userID;

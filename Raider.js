@@ -5,9 +5,10 @@ if (process.argv[2]) {
     let configfile = './' + process.argv[2]
     config = require(configfile);
 } else {
+    config = require('./tester.json')
     console.error("No config file given.  start with node Raider.js configFileName")
 }
-// Change the last section of the next line to be the name listed in your config.json file
+
 
 //These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
 const RaidRooms = config.raidChannels
@@ -19,7 +20,7 @@ const storage = require('node-persist');
 storage.initSync({
     dir: config.storageDir,
 })
-
+/** @type {Array<string>} */
 const emojis = constants.emojis
 const Raid = require("./Raid.js")
 
@@ -33,14 +34,20 @@ const client = new Discord.Client({
 const fuzz = require('fuzzball');
 
 // The list of raids and timers for the raids
+/** @type {Discord.Collection<string,Raid>} */
 const activeRaids = new Discord.Collection();
+
 const timeOuts = {}; // Parallel object for activeRaids containing the timeout values, since those can't be stored to disk.
+
+/** @type {number} the index for picking the "random" raid id */
 let pointer = 0;
+
+/** @type {boolean} flag for whether it has already loaded the existing raids. */
 let loaded = false;
 
 /**
  * Generate a new ID of a Raid so that they don't overlap
- * @param activeRaids The array containing the list of active raid IDs
+ * @param {Discord.Collection<string,Raid>} activeRaids The array containing the list of active raid IDs
  * @returns a 2-character ID for a raid. 
  */
 function CreateRaidID() {
@@ -83,7 +90,10 @@ helpembed.addField("Inactivate", "\tInactivates (deletes) a raid. **_You must be
 
 // Helper functions
 
-
+/**
+ * Adds the list of emojis as reactions to a message.
+ * @param {Discord.Message} message 
+ */
 async function addCountReaction(message) {
     for (i in emojis) {
         try {
@@ -96,14 +106,31 @@ async function addCountReaction(message) {
 }
 
 /**
+ * Saves a flattened raid object to the disk with enough 
+ * information to be able to re-load the raid 
+ * if there is a system crash
  * @param {Raid} raid The raid to save to the disk.
  */
-activeRaids.saveRaid = async function saveRaid(raid) {
-    console.log(`Saving Raid ${raid.id} to disk`)
-    await storage.setItem(raid.id, raid.save(), { ttl: raid.expires })
-    console.log(raid)
-}
+activeRaids.saveRaid =async function saveRaid(raid) {
+    console.log(`Saving Raid ${raid.id} to disk`);
+    try {
+        await storage.setItem(raid.id, raid.save(), { ttl: raid.expires });
+    } catch (error) {
+        console.error(error)
+    }
+    console.log(raid);
+}; 
 
+
+/**
+ * 
+ * @param {string} id 
+ * @param {string} time 
+ * @param {string} poke 
+ * @param {string} location 
+ * @param {Discord.User} owner 
+ * @param {number} guests 
+ */
 activeRaids.makeRaid = function makeRaid(id, time, poke, location, owner, guests) {
     let raid = new Raid(id, time, poke, location, owner, guests, id)
     activeRaids.set(id, raid);
@@ -115,7 +142,7 @@ activeRaids.makeRaid = function makeRaid(id, time, poke, location, owner, guests
 }
 
 /**
- * Removes a raid from the active raids
+ * Removes a raid from the active raids and removes it from the disk
  * @param {String} id - ID of the raid to delete
  */
 activeRaids.removeRaid = async function removeRaid(id) {
@@ -134,7 +161,7 @@ function sendHelp(message, parseArray) {
     console.log("sendHelp from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\tmessage:" + message.content);
     console.log("\tparseArray: " + parseArray.toString());
-    if (message.content == prefix || message.content == prefix + ' help') {
+    if (message.content === prefix || message.content === prefix + ' help') {
         message.author.createDM().then(
             (dm) => {
                 dm.send({
@@ -162,7 +189,7 @@ function sendHelp(message, parseArray) {
                 break;
         }
     }
-    if (message.channel.type == 'text') {
+    if (message.channel.type === 'text') {
         message.delete().catch(console.error)
     }
 }
@@ -174,7 +201,7 @@ async function sendNew(message, parseArray) {
     console.log("\t" + message.content);
 
     //!raider new
-    if (message.content.trim() == prefix + ' new') {
+    if (message.content.trim() === prefix + ' new') {
         sendHelp(message, parseArray)
         return;
     }
@@ -223,11 +250,18 @@ async function sendNew(message, parseArray) {
 }
 
 //!raider transfer raidID @newperson
+/**
+ * 
+ * @param {Discord.Message} message 
+ * @param {string[]} parseArray 
+ */
 function sendTransfer(message, parseArray) {
     console.log("sendTransfer from " + message.author.username + "#" + message.author.discriminator + " in " + message.channel.name);
     console.log("\t" + message.content);
+    /** @type {Raid} */
     let r = {};
     let ID = "";
+    /** @type {Discord.User} */
     let user = {};
     let msgstart = prfxLen + 10; // " transfer " is 10 chars
     // "!raider transfer 23, @person" => ["23", "@person"]
@@ -240,10 +274,10 @@ function sendTransfer(message, parseArray) {
         // get the raid
         r = activeRaids.get(ID)
             // message author is owner
-        if (authorized(r, message)) {
+        if (r.authorized(message,"Message")) {
             user = message.mentions.users.first()
                 //set the owner to be the user with the @mention
-            if (r.owner.id == user.id) {
+            if (r.owner.id === user.id) {
                 message.reply("you already own this raid. Did you want to give it to someone else?")
             } else {
                 r.owner = user;
@@ -256,7 +290,7 @@ function sendTransfer(message, parseArray) {
     } else {
         message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids.")
     }
-    if (message.channel.type == 'text') {
+    if (message.channel.type === 'text') {
         message.delete().catch(console.error)
     }
 }
@@ -282,7 +316,7 @@ function sendLeave(message, parseArray) {
     else {
         message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.")
     }
-    if (message.channel.type == 'text') {
+    if (message.channel.type === 'text') {
         message.delete().catch(console.error)
     }
 }
@@ -314,8 +348,8 @@ function sendUpdate(message, parseArray) {
         let cmd = tmp.shift();
         cmd = cmd ? cmd.replace(",", "").trim() : "";
         // if it's "count" or a number, then they don't need to have security, they just need to be in the raid
-        if (cmd == "count" || parseInt(cmd)) {
-            if (cmd == "count") {
+        if (cmd === "count" || parseInt(cmd)) {
+            if (cmd === "count") {
                 count = tmp.shift();
                 count = count.replace(",", "").trim();
             } else {
@@ -404,7 +438,7 @@ function sendUpdate(message, parseArray) {
     }
 
     // Clear out the message the user typed to Raider
-    if (message.channel.type == 'text') {
+    if (message.channel.type === 'text') {
         message.delete().catch(console.error)
     }
 
@@ -430,7 +464,7 @@ function sendInfo(message, parseArray) {
     } else {
         message.reply("No raid found")
     }
-    if (message.channel.type == 'text') {
+    if (message.channel.type === 'text') {
         message.delete().catch(console.error)
     }
 }
@@ -454,7 +488,7 @@ function sendAtMessage(message, parseArray) {
         //if Raid exists.
         if (activeRaids.has(ID)) {
             let raid = activeRaids.get(ID);
-            if (userInRaid(user, raid) || message.author.id == '218550507659067392') {
+            if (userInRaid(user, raid) || message.author.id === '218550507659067392') {
                 let fwdmessage = message.content.substr(message.content.indexOf(",") + 1).trim();
                 raid.messageRaid(message.channel, fwdmessage);
             } else {
@@ -502,7 +536,7 @@ function sendKick(message, parseArray) {
 
 //admin command
 function sendSpecial(message, parseArray) {
-    if (message.author.id == '218550507659067392') {
+    if (message.author.id === '218550507659067392') {
         if (parseArray[2]) {
             let options = {
                 scorer: fuzz.token_set_ratio
@@ -517,7 +551,7 @@ function sendSpecial(message, parseArray) {
 
 
 client.on('messageReactionAdd', async(messageReaction, user) => {
-    if (user != ME && messageReaction.message.author == ME) {
+    if (user !== ME && messageReaction.message.author === ME) {
         console.log(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
             // add user to the raid
         let id = messageReaction.message.content.match(/Raid \((.*)\)/)[1]
@@ -653,7 +687,7 @@ if (config.debug) {
 
     let numRaids = probe.metric({
         name: "# of raids",
-        value: () => activeRaids.size()
+        value: () => activeRaids.size
     });
 }
 
@@ -667,7 +701,7 @@ client.on('ready', async() => {
         // load the stored raids into memory
     if (!loaded) {
         storage.forEach(async(key, val) => {
-            if (key == "pointer") {
+            if (key === "pointer") {
                 pointer == val
             } else {
                 if (val.expires <= Date.now()) {
