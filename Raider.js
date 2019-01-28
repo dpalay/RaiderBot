@@ -1,5 +1,6 @@
 let config = {};
 
+
 // Check for config file
 if (process.argv[2]) {
     let configfile = './' + process.argv[2]
@@ -10,6 +11,8 @@ if (process.argv[2]) {
 }
 
 
+
+
 //These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
 const RaidRooms = config.raidChannels
 const quietMode = config.quietMode;
@@ -18,17 +21,15 @@ const constants = require('./constant.json');
 // Set up persistant file storage
 const storage = require('node-persist');
 storage.initSync({
-    dir: config.storageDir,
-})
-/** @type {Array<string>} */
-const emojis = constants.emojis
-const Raid = require("./Raid.js")
+        dir: config.storageDir,
+    })
+    /** @type {Array<string>} */
+const emojis = constants.emojis;
+const Raid = require('./Raid.js');
 
 // Set up discord.js client
 const Discord = require('discord.js');
-const client = new Discord.Client({
-    autoReconnect: true
-});
+const client = new Discord.Client({});
 
 // Get other libraries
 const fuzz = require('fuzzball');
@@ -111,7 +112,7 @@ async function addCountReaction(message) {
  * if there is a system crash
  * @param {Raid} raid The raid to save to the disk.
  */
-activeRaids.saveRaid =async function saveRaid(raid) {
+activeRaids.saveRaid = async function saveRaid(raid) {
     console.log(`Saving Raid ${raid.id} to disk`);
     try {
         await storage.setItem(raid.id, raid.save(), { ttl: raid.expires });
@@ -119,7 +120,7 @@ activeRaids.saveRaid =async function saveRaid(raid) {
         console.error(error)
     }
     console.log(raid);
-}; 
+};
 
 
 /**
@@ -146,7 +147,11 @@ activeRaids.makeRaid = function makeRaid(id, time, poke, location, owner, guests
  * @param {String} id - ID of the raid to delete
  */
 activeRaids.removeRaid = async function removeRaid(id) {
+    activeRaids.get(id).channels.forEach(
+        //TODO:  Add message deletion here!!
+    )
     activeRaids.delete(id);
+
     await storage.removeItem(id); // remove the raid to disk
     return activeRaids;
 }
@@ -274,7 +279,7 @@ function sendTransfer(message, parseArray) {
         // get the raid
         r = activeRaids.get(ID)
             // message author is owner
-        if (r.authorized(message,"Message")) {
+        if (r.authorized(message, "Message")) {
             user = message.mentions.users.first()
                 //set the owner to be the user with the @mention
             if (r.owner.id === user.id) {
@@ -554,10 +559,28 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
     //TODO: Better logic.  The author shouldn't just be Raider, the message should be a raid message
     if (user !== ME && messageReaction.message.author === ME) {
         console.log(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
-            // add user to the raid
         let id = messageReaction.message.content.match(/Raid \((.*)\)/)[1]
         let raid = activeRaids.get(id)
-        raid.addToRaid(user, emojis.indexOf(messageReaction.emoji))
+        switch (messageReaction.emoji.name) {
+            case "❌":
+                raid.removeFromRaid(user)
+                break;
+            case "1⃣":
+            case "2⃣":
+            case "3⃣":
+            case "4⃣":
+            case "5⃣":
+                // add user to the raid
+                raid.addUserToRaid(user, emojis.indexOf(messageReaction.emoji))
+                break;
+            case "✔":
+                //TODO:  move this to the raid / attendee objects
+                raid.attendees.get(user.id).here = true;
+                break;
+            case "▶":
+                raid.messageRaid(messageReaction.message.channel, `${user} has started the raid!`, client)
+                break;
+        }
         await activeRaids.saveRaid(raid);
         messageReaction.remove(user).then((messageReaction) => {
             console.log(`removed ${user.username}'s reaction`)
@@ -714,9 +737,12 @@ client.on('ready', async() => {
                     raid.locationComment = val.locationComment
                     raid.expires = val.expires
                     val.attendees.forEach((att) => {
-                        raid.addToRaid(att, att.count);
+                        raid.addUserToRaid(att, att.count);
                     })
                     timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now())
+                    await Promise.all(raid.channels.map((chanMess) => {
+                        client.channels.get(chanMess[0]).fetchMessage(chanMess[1])
+                    }))
                     activeRaids.set(key, raid);
                 }
             }

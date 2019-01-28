@@ -2,7 +2,9 @@ const constants = require('./constant.json');
 const pokemon = require('./pokemon.js')
 const Discord = require('discord.js')
 const Attendee = require('./Attendee.js')
+    //const BotMessage = require('./BotMessage.js')
 let config = {};
+
 
 // Check for config file
 if (process.argv[2]) {
@@ -22,11 +24,11 @@ class Raid {
      * @param {String | Number} poke The pokemon identifier.  Could be the name, could be the number.
      * @param {String} location Where the raid is supposed to take place
      * @param {Discord.User} owner The user who created the raid
-     * @param {Integer} timeout Number of milliseconds the raid should exist.  It will autodelete after the time expires.
-     * @param {Integer} guests How many people the creator is bringing
+     * @param {Number} timeout Number of milliseconds the raid should exist.  It will autodelete after the time expires.
+     * @param {Number} guests How many people the creator is bringing
      */
     constructor(id, time, poke, location, owner, guests = 1) {
-        this.id = id
+        this.id = id;
         this.time = time;
         this.location = location;
         this.gym = location;
@@ -36,30 +38,40 @@ class Raid {
         this.poke.name = constants.pokelist[this.poke.id - 1] ? constants.pokelist[this.poke.id - 1] : poke;
         this.owner = owner;
         this.expires = config.EXMon.includes(this.poke.id) ? Date.now() + config.timeoutEX : Date.now() + config.timeoutNormal;
+        /** @type {[string, string][]} */
         this.channels = [];
         /** @type {Discord.Collection<string,Attendee>} */
         this.attendees = new Discord.Collection();
         //  this.potential = {};  //TODO:  "Maybe" a raid; potentially joining
         //  this.comments = {};   //TODO:  Add in a way for users to add comments to the raid
-        this.addToRaid(owner, isFinite(guests) && guests > 0 ? guests : 1)
-        }
+        this.addUserToRaid(owner, isFinite(guests) && guests > 0 ? guests : 1);
+    }
 
     /**
-     * @returns {Object} Returns a "flattened raid" for saving to the disk.  Doesn't save any of the actual discord stuff
+     * @returns {FlattenedRaid} Returns a "flattened raid" for saving to the disk.  Doesn't save any of the actual discord stuff
      */
     save() {
-        let raid = {};
-        raid.id = this.id;
-        raid.time = this.time;
-        raid.location = this.location;
-        raid.gym = this.gym;
-        raid.locationComment = this.locationComment;
-        raid.poke = this.poke;
-        raid.owner = { id: this.owner.id };
-        raid.expires = this.expires;
-        raid.channels = this.channels;
-        raid.attendees = this.attendees.map((attendee) => { return { id: attendee.id, count: attendee.count, mention: attendee.mention, here: attendee.here, username: attendee.username } });
-        return raid
+        let raid = {
+            id: this.id,
+            time: this.time,
+            location: this.location,
+            gym: this.gym,
+            locationComment: this.locationComment,
+            poke: this.poke,
+            owner: { id: this.owner.id },
+            expires: this.expires,
+            channels: this.channels,
+            attendees: this.attendees.map((attendee) => {
+                return {
+                    id: attendee.id,
+                    count: attendee.count,
+                    mention: attendee.mention,
+                    here: attendee.here,
+                    username: attendee.username
+                }
+            })
+        };
+        return raid;
     }
 
     /**
@@ -68,8 +80,8 @@ class Raid {
      * @param {Discord.Message} message 
      */
     addMessage(channel, message) {
-        this.channels.pop([channel.id, message.id])
-    }
+        this.channels.push([channel.id, message.id])
+    };
 
     /**
      * 
@@ -77,7 +89,7 @@ class Raid {
      */
     userInRaid(user) {
         return this.attendees.get(user.id)
-    }
+    };
 
     /**
      * Adds a user and guests to the raid
@@ -86,14 +98,17 @@ class Raid {
      * @returns 0 if fail, user's count if success
      */
     // add a user to the raid
-    addToRaid(user, count = 1) {
+    addUserToRaid(user, count = 1) {
         // check if the user is already in the raid
-        
         let att = this.attendees.get(user.id)
         if (att) {
             // if the count is different
             if (att.count != count) {
-                att.count = count
+                if (count == 0) {
+                    removeFromRaid(user);
+                } else {
+                    att.count = count;
+                }
                 return count;
             }
             return 0;
@@ -101,7 +116,8 @@ class Raid {
             this.attendees.set(user.id, new Attendee(user.id, user.username, user.toString(), count))
             return count;
         }
-    }
+    };
+
 
 
     /**
@@ -117,7 +133,7 @@ class Raid {
      */
     total() {
         var sum = 0;
-        this.attendees.forEach((val) => {sum += val.count});
+        this.attendees.forEach((val) => { sum += val.count });
         return sum;
         //return this.attendees.reduce((acc, val) => { return acc + val.count }, 0);
 
@@ -146,7 +162,7 @@ class Raid {
     listAttendees() {
         let str = ""
         this.attendees.forEach((attendee) => {
-            str += `\t\t${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`
+            str += `\t\t${attendee.here ? "✔" : "" }${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`
         })
         return str;
     }
@@ -183,17 +199,12 @@ class Raid {
              ${this.listAttendees()}`
         emb.addField("Raid " + this.id, str);
         return emb;
-    }
+    };
 
-
-    /**
-     
-     */
     /**
      * Checks if the user owns the raid (or is me).  Used in things like transfering, merging, and inactivating raids
      * @returns True if the message is owned by this raid's owner, if the user is this raid's owner, or if it's from the admin.
      * @param {Discord.Message | Discord.User} messageOrUser 
-     * @param {string} whatisit 
      */
     authorized(messageOrUser) {
         if (messageOrUser instanceof Discord.Message) {
@@ -201,7 +212,7 @@ class Raid {
         } else if (messageOrUser instanceof Discord.User) {
             return (this.owner.id === messageOrUser.id || messageOrUser.id === '218550507659067392')
         }
-    }
+    };
 
     async messageRaid(channel, fwdmessage, client) {
 
