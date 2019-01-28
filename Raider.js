@@ -1,3 +1,4 @@
+const Raid = require('./Raid.js');
 let config = {};
 
 
@@ -11,18 +12,18 @@ if (process.argv[2]) {
 }
 
 //These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
-const RaidRooms = config.raidChannels
-const quietMode = config.quietMode;
-const constants = require('./constant.json');
+const {raidChannels, quietMode, storageDir, prefix} = config
+const prfxLen = prefix.length
+let ME = config.id
 
+//import { emojis, randomIds, pokelist } from "./constant.json";
+const {emojis, randomIds, pokelist} = require('./constant.json');
 // Set up persistant file storage
 const storage = require('node-persist');
 storage.initSync({
-        dir: config.storageDir,
+        dir: storageDir,
     })
-    /** @type {Array<string>} */
-const emojis = constants.emojis;
-const Raid = require('./Raid.js');
+
 
 // Set up discord.js client
 const Discord = require('discord.js');
@@ -32,7 +33,7 @@ const client = new Discord.Client({});
 const fuzz = require('fuzzball');
 
 // The list of raids and timers for the raids
-/** @type {Discord.Collection<string,Raid>} */
+/** @type {Discord.Collection< string, Raid >} */
 const activeRaids = new Discord.Collection();
 
 const timeOuts = {}; // Parallel object for activeRaids containing the timeout values, since those can't be stored to disk.
@@ -51,18 +52,12 @@ let loaded = false;
 function CreateRaidID() {
     let tmp = ""
     do {
-        tmp = constants.randomIds[pointer];
-        pointer = pointer < constants.randomIds.length ? pointer + 1 : 0;
+        tmp = randomIds[pointer];
+        pointer = pointer < randomIds.length ? pointer + 1 : 0;
     } while (activeRaids.get(tmp));
     storage.setItem("pointer", pointer);
     return tmp;
 }
-
-
-let ME = config.id;
-const prefix = config.prefix
-const prfxLen = prefix.length
-const names = constants.pokelist;
 
 // Formatting shortcuts
 const newline = "\n";
@@ -112,7 +107,7 @@ async function addCountReaction(message) {
 activeRaids.saveRaid = async function saveRaid(raid) {
     console.log(`Saving Raid ${raid.id} to disk`);
     try {
-        await storage.setItem(raid.id, raid.save(), { ttl: raid.expires });
+        await storage.setItem(raid.id, raid.flatten(), { ttl: raid.expires });
     } catch (error) {
         console.error(error)
     }
@@ -144,12 +139,15 @@ activeRaids.makeRaid = function makeRaid(id, time, poke, location, owner, guests
  * @param {String} id - ID of the raid to delete
  */
 activeRaids.removeRaid = async function removeRaid(id) {
-    activeRaids.get(id).channels.forEach(
+    Promise.all(activeRaids.get(id).channels.map(
         //TODO:  Add message deletion here!!
-    )
-    activeRaids.delete(id);
-
-    await storage.removeItem(id); // remove the raid to disk
+        (botmessage) => {
+            channels.get(botmessage[0]).messages.get(botmessage[1]).delete()
+        }
+        )).then(/* when all messages are deleted */   )
+        .catch((err) => console.err(err))
+        .finally(activeRaids.delete(id) )
+    await storage.removeItem(id); // remove the raid from disk
     return activeRaids;
 }
 
@@ -385,7 +383,7 @@ function sendUpdate(message, parseArray) {
                     let poke = tmp.shift()
                     poke = poke ? poke.replace(",", "").trim() : "1";
                     r.poke.id = interpretPoke(poke);
-                    r.poke.name = names[r.poke.id - 1] ? names[r.poke.id - 1] : poke;
+                    r.poke.name = pokelist[r.poke.id - 1] ? pokelist[r.poke.id - 1] : poke;
                     console.log(tab + "Updating Pokemon to " + r.poke.name)
                     r.messageRaid(message.channel, "The Pokemon for raid " + ID + " has been update to " + r.poke.name)
                     break;
@@ -543,7 +541,7 @@ function sendSpecial(message, parseArray) {
             let options = {
                 scorer: fuzz.token_set_ratio
             };
-            let match = [fuzz.extract(parseArray[2], names, options)[0], fuzz.extract(parseArray[2], names, options)[1], fuzz.extract(parseArray[2], names, options)[2]]
+            let match = [fuzz.extract(parseArray[2], pokelist, options)[0], fuzz.extract(parseArray[2], pokelist, options)[1], fuzz.extract(parseArray[2], pokelist, options)[2]]
             message.reply(match)
         }
     }
@@ -715,7 +713,7 @@ if (config.debug) {
 
 
 // Connected!
-client.on('ready', async() => {
+client.once('ready', async() => {
     client.user.setActivity(prefix + ' help | More info')
     ME = client.user
     console.log("Loading saved Raids")

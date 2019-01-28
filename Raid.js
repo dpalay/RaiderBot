@@ -1,8 +1,8 @@
-const constants = require('./constant.json');
+const {pokelist} = require('./constant.json');
 const pokemon = require('./pokemon.js')
 const Discord = require('discord.js')
 const Attendee = require('./Attendee.js')
-    //const BotMessage = require('./BotMessage.js')
+const BotMessage = require('./BotMessage.js')
 let config = {};
 
 
@@ -35,10 +35,10 @@ class Raid {
         this.locationComment = "";
         this.poke = {};
         this.poke.id = pokemon.interpretPoke(poke);
-        this.poke.name = constants.pokelist[this.poke.id - 1] ? constants.pokelist[this.poke.id - 1] : poke;
+        this.poke.name = pokelist[this.poke.id - 1] ? pokelist[this.poke.id - 1] : poke;
         this.owner = owner;
         this.expires = config.EXMon.includes(this.poke.id) ? Date.now() + config.timeoutEX : Date.now() + config.timeoutNormal;
-        /** @type {[string, string][]} */
+        /** @type {BotMessage[]} */
         this.channels = [];
         /** @type {Discord.Collection<string,Attendee>} */
         this.attendees = new Discord.Collection();
@@ -50,7 +50,7 @@ class Raid {
     /**
      * @returns {FlattenedRaid} Returns a "flattened raid" for saving to the disk.  Doesn't save any of the actual discord stuff
      */
-    save() {
+    flatten() {
         let raid = {
             id: this.id,
             time: this.time,
@@ -60,7 +60,7 @@ class Raid {
             poke: this.poke,
             owner: { id: this.owner.id },
             expires: this.expires,
-            channels: this.channels,
+            channels: this.channels.map((bm) => bm.flatten()),
             attendees: this.attendees.map((attendee) => {
                 return {
                     id: attendee.id,
@@ -180,7 +180,7 @@ class Raid {
         let emb = new Discord.RichEmbed();
         emb.setTitle("Raid Information");
         emb.setColor(0xEE6600).setTimestamp();
-        if (constants.pokelist[this.poke.id]) {
+        if (pokelist[this.poke.id]) {
             emb.setAuthor("RaiderBot_" + this.poke.name, "https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png")
             emb.setThumbnail("https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png")
         } else {
