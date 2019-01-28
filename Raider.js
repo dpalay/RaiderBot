@@ -1,6 +1,5 @@
 let config = {};
 
-
 // Check for config file
 if (process.argv[2]) {
     let configfile = './' + process.argv[2]
@@ -9,9 +8,6 @@ if (process.argv[2]) {
     config = require('./tester.json')
     console.error("No config file given.  start with node Raider.js configFileName")
 }
-
-
-
 
 //These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
 const RaidRooms = config.raidChannels
