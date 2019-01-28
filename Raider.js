@@ -1,5 +1,6 @@
 let config = {};
 
+
 // Check for config file
 if (process.argv[2]) {
     let configfile = './' + process.argv[2]
