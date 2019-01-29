@@ -16,11 +16,13 @@ class BotMessage {
         this.channel = channel;
         this.message = message;
         this.type = type;
-     
     }
 
-    flatten(){
-        return [channel.id, message.id, type]
+    /**
+     * @returns 
+     */
+    flatten() {
+        return { channel: this.channel.id, message: this.message.id, type: this.type }
     }
 
 }

@@ -1,4 +1,4 @@
-const {pokelist} = require('./constant.json');
+const { pokelist } = require('./constant.json');
 const pokemon = require('./pokemon.js')
 const Discord = require('discord.js')
 const Attendee = require('./Attendee.js')
@@ -39,7 +39,7 @@ class Raid {
         this.owner = owner;
         this.expires = config.EXMon.includes(this.poke.id) ? Date.now() + config.timeoutEX : Date.now() + config.timeoutNormal;
         /** @type {BotMessage[]} */
-        this.channels = [];
+        this.channels = {};
         /** @type {Discord.Collection<string,Attendee>} */
         this.attendees = new Discord.Collection();
         //  this.potential = {};  //TODO:  "Maybe" a raid; potentially joining
@@ -78,9 +78,10 @@ class Raid {
      * 
      * @param {Discord.Channel} channel 
      * @param {Discord.Message} message 
+     * @param {"info" | "reply" | "unknown" } type
      */
-    addMessage(channel, message) {
-        this.channels.push([channel.id, message.id])
+    addMessage(channel, message, type = "info") {
+        this.channels.push(new BotMessage(channel, message, type))
     };
 
     /**

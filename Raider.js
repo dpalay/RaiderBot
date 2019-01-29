@@ -12,22 +12,22 @@ if (process.argv[2]) {
 }
 
 //These are the channels that Raider will watch to tag posts with IDs  See https://github.com/dpalay/RaiderBot for more info
-const {raidChannels, quietMode, storageDir, prefix} = config
+const { raidChannels, quietMode, storageDir, prefix } = config
+var { id: ME } = config
 const prfxLen = prefix.length
-let ME = config.id
 
 //import { emojis, randomIds, pokelist } from "./constant.json";
-const {emojis, randomIds, pokelist} = require('./constant.json');
+const { emojis, randomIds, pokelist } = require('./constant.json');
 // Set up persistant file storage
 const storage = require('node-persist');
 storage.initSync({
-        dir: storageDir,
-    })
+    dir: storageDir,
+})
 
 
 // Set up discord.js client
 const Discord = require('discord.js');
-const client = new Discord.Client({});
+const client = new Discord.Client();
 
 // Get other libraries
 const fuzz = require('fuzzball');
@@ -140,13 +140,13 @@ activeRaids.makeRaid = function makeRaid(id, time, poke, location, owner, guests
  */
 activeRaids.removeRaid = async function removeRaid(id) {
     Promise.all(activeRaids.get(id).channels.map(
-        //TODO:  Add message deletion here!!
-        (botmessage) => {
-            channels.get(botmessage[0]).messages.get(botmessage[1]).delete()
-        }
-        )).then(/* when all messages are deleted */   )
+            //TODO:  Add message deletion here!!
+            (botmessage) => {
+                channels.get(botmessage[0]).messages.get(botmessage[1]).delete()
+            }
+        )).then( /* when all messages are deleted */ )
         .catch((err) => console.err(err))
-        .finally(activeRaids.delete(id) )
+        .finally(activeRaids.delete(id))
     await storage.removeItem(id); // remove the raid from disk
     return activeRaids;
 }
@@ -208,6 +208,7 @@ async function sendNew(message, parseArray) {
 
     //set up variables we'll need
     let options = {};
+    /**@type {Raid} */
     let raid = {};
     let msgstart = prfxLen + parseArray[0].length + 2 // length of "!raider new "
 
@@ -237,7 +238,12 @@ async function sendNew(message, parseArray) {
     if (!quietMode) {
         await message.channel.send({
             embed: raid.embed()
-        }).then(console.log(`Raid created by ${message.author} in ${message.channel}`));
+        }).then((post) => {
+                console.log(`Raid created by ${message.author} in ${message.channel}`);
+                raid.addMessage(post.channel, post, "info")
+            }
+
+        );
     }
     message.channel.send("**" + raid.time + "**" + " Raid (" + raid.id + ") created by " + message.author + " for **" +
             raid.poke.name + "** at **" + raid.location + "**" +
@@ -733,9 +739,18 @@ client.once('ready', async() => {
                     raid.locationComment = val.locationComment;
                     raid.expires = val.expires
                     val.attendees.forEach((att) => {
-                        raid.addUserToRaid(att, att.count);
-                    })
-                    raid.channels = val.channels;
+                            raid.addUserToRaid(att, att.count);
+                        })
+                        // TODO:  Populate the raid's channels/messages with IDs stored
+                        /*
+                        let messages = await Promise.all(val.channels.map(async(flatChan) => {
+                         let channel = client.channels.get(flatChan.channel)
+                         if (channel.type !== 'dm') {
+                             return channel.fetchMessage(flatChan.message)
+                         } else return new Promise((resolve) => resolve('dm'))
+                         }))
+                        messages.forEach((message) => raid.addMessage(message.channel, message))
+                        */
                     timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now())
                         //Fetch the messages for the raid so that we can delete them later
                     await Promise.all(raid.channels.map((chanMess) => {
