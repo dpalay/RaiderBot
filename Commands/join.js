@@ -18,7 +18,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
             // does raid exist
             if (activeRaids.has(ID)) {
                 let raid = activeRaids.get(ID);
-                if (raid.addToRaid(message.author, count) > 0) {
+                if (raid.addUserToRaid(message.author, count) > 0) {
                     await activeRaids.saveRaid(raid); // store the raid to disk
                     message.reply(`added to raid ${ID} owned by ${raid.owner.mention} 
                           Total confirmed is:** ${raid.total()}**`);

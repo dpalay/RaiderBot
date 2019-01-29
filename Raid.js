@@ -39,7 +39,7 @@ class Raid {
         this.owner = owner;
         this.expires = config.EXMon.includes(this.poke.id) ? Date.now() + config.timeoutEX : Date.now() + config.timeoutNormal;
         /** @type {BotMessage[]} */
-        this.channels = {};
+        this.channels = [];
         /** @type {Discord.Collection<string,Attendee>} */
         this.attendees = new Discord.Collection();
         //  this.potential = {};  //TODO:  "Maybe" a raid; potentially joining
@@ -94,8 +94,8 @@ class Raid {
 
     /**
      * Adds a user and guests to the raid
-     * @param {Discord.User | Discord.Snowflake} user 
-     * @param {int} count 
+     * @param {Discord.User | Discord.Snowflake | {id: string, username: string, count: number, mention?: string}} user 
+     * @param {number} count 
      * @returns 0 if fail, user's count if success
      */
     // add a user to the raid
@@ -106,7 +106,7 @@ class Raid {
             // if the count is different
             if (att.count != count) {
                 if (count == 0) {
-                    removeFromRaid(user);
+                    this.removeFromRaid(user);
                 } else {
                     att.count = count;
                 }
@@ -163,7 +163,7 @@ class Raid {
     listAttendees() {
         let str = ""
         this.attendees.forEach((attendee) => {
-            str += `\t\t${attendee.here ? "✔" : "" }${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`
+            str += `\t\t${attendee.here ? "✅" : "" }${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`
         })
         return str;
     }
@@ -230,4 +230,20 @@ class Raid {
 
 }
 
-module.exports = Raid
+module.exports = Raid;
+
+
+/**
+ * A flattened raid object
+ * @typedef {object} FlattenedRaid
+ * @property {string} id
+ * @property {string} time
+ * @property {string} location
+ * @property {string} gym
+ * @property {string} locationComment
+ * @property {{id: number, name: string}} poke
+ * @property {{id: string}} owner
+ * @property {number} expires
+ * @property {{channel:string, message:string, type: string}[]} channels
+ * @property {{id: string, count: number,  mention:string , here: boolean, username: string}[]} attendees
+ */

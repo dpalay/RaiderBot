@@ -572,11 +572,11 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
             case "4⃣":
             case "5⃣":
                 // add user to the raid
-                raid.addUserToRaid(user, emojis.indexOf(messageReaction.emoji))
+                raid.addUserToRaid(user, emojis.indexOf(messageReaction.emoji.name))
                 break;
-            case "✔":
+            case "✅":
                 //TODO:  move this to the raid / attendee objects
-                raid.attendees.get(user.id).here = true;
+                raid.attendees.get(user.id).here = !raid.attendees.get(user.id).here;
                 break;
             case "▶":
                 raid.messageRaid(messageReaction.message.channel, `${user} has started the raid!`, client)
@@ -693,6 +693,10 @@ client.on('message', message => {
         case "special":
             sendSpecial(message, parseArray);
             break;
+        case "activeraids":
+            console.log(activeRaids)
+            break;
+
         default:
             break;
     }
@@ -733,28 +737,56 @@ client.once('ready', async() => {
                     // remove the raid to disk
                     await storage.removeItem(key);
                 } else {
-                    let owner = await client.fetchUser(val.owner.id);
-                    let raid = new Raid(key, val.time, val.poke.id, val.location, owner, val.owner.count);
-                    raid.gym = val.gym;
-                    raid.locationComment = val.locationComment;
-                    raid.expires = val.expires
-                    val.attendees.forEach((att) => {
+                    // If it's not the pointer, then it's a flattened raid
+                    /** @type {FlattenedRaid} */
+                    let flatRaid = val;
+
+                    // Set the owner of the raid.  need to get the user from Discord.
+                    let owner;
+                    try {
+                        owner = await client.fetchUser(flatRaid.owner.id);
+                    } catch (error) {
+                        console.log(`Tried to set the owner, but couldn't find that user in Discord.  Assuming ownership of the raid`)
+                        owner = ME;
+                    }
+
+                    // Create the Raid object
+                    let raid = new Raid(key, flatRaid.time, flatRaid.poke.id, flatRaid.location, owner);
+
+                    // Set the other few pieces of the raid that aren't actually handled by the constructor.  (WHY??)
+                    raid.gym = flatRaid.gym;
+                    raid.locationComment = flatRaid.locationComment;
+                    raid.expires = flatRaid.expires
+
+                    // Add each user to the raid
+                    flatRaid.attendees.forEach((att) => {
                             raid.addUserToRaid(att, att.count);
                         })
-                        // TODO:  Populate the raid's channels/messages with IDs stored
-                        /*
-                        let messages = await Promise.all(val.channels.map(async(flatChan) => {
-                         let channel = client.channels.get(flatChan.channel)
-                         if (channel.type !== 'dm') {
-                             return channel.fetchMessage(flatChan.message)
-                         } else return new Promise((resolve) => resolve('dm'))
-                         }))
-                        messages.forEach((message) => raid.addMessage(message.channel, message))
-                        */
+                    let messageGetPromises = flatRaid.channels
+                    .filter((flatchan) => {
+                        let channel = client.channels.get(flatchan.channel)
+                        return channel instanceof Discord.TextChannel && channel.permissionsFor(ME).has('MANAGE_MESSAGES')
+                        })
+                    .map((flatchan) => {
+                        let channel = client.channels.get(flatchan.channel)
+                        return channel.fetchMessage(flatchan.message)
+                    })
+                    try {
+                        /**@type {Discord.Message[]} */
+                        let messages = await Promise.all(messageGetPromises)
+                        messages.map((message)=> {
+                            return {
+                                message: message,
+                                type: flatRaid.channels.find((flatchan) => flatchan.message === message.id).type
+                            }
+                        }).forEach((messagetype) => raid.addMessage(messagetype.message.channel,messagetype.message,  messagetype.type))
+                    } catch (error) {
+                        console.log(error)
+                    }
                     timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now())
                         //Fetch the messages for the raid so that we can delete them later
                     await Promise.all(raid.channels.map((chanMess) => {
-                        client.channels.get(chanMess[0]).fetchMessage(chanMess[1])
+                        chanMess.channel.fetchMessage(chanMess.message)
                     }))
                     activeRaids.set(key, raid);
                 }
@@ -769,3 +801,18 @@ client.once('ready', async() => {
 console.log("Logging in!");
 // connect
 client.login(config.token);
+
+
+/**
+ * @typedef {object} FlattenedRaid
+ * @property {string} id
+ * @property {string} time
+ * @property {string} location
+ * @property {string} gym
+ * @property {string} locationComment
+ * @property {{id: number, name: string}} poke
+ * @property {{id: string}} owner
+ * @property {number} expires
+ * @property {{channel:string, message:string, type: 'info' | 'reply' | 'unknown'}[]} channels
+ * @property {{id: string, count: number,  mention:string , here: boolean, username: string}[]} attendees
+ */
