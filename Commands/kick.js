@@ -14,14 +14,23 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
         if (activeRaids.has(ID)) {
             if (activeRaids.get(ID).authorized(message, "Message")) {
                 let raid = activeRaids.get(ID);
-                if (message.mentions.users.length > 0) {
-                    for (let i = 0; i < message.mentions.users.length; i++) {
-                        raid.removeFromRaid(message.mentions.users[i]);
+                if (message.mentions.users.size > 0) {
+                    for (const user of message.mentions.users.array()) {
+                        if(raid.removeFromRaid(user)){
+                            console.log(`${user} removed from raid ${raid.id}`);
+                            raid.updateInfo();
+                        } else {
+                            console.log(`User wasn't in the raid`);
+                        }
                     }
-                    await storeRaid(raid); // store the raid to disk
+                    try {
+                        await storeRaid(raid); // store the raid to disk
+                    } catch (error) {
+                        console.error(error);
+                    }
                     message.reply("Users have been removed from the raid. **Total confirmed is: " + raid.total() + "**")
                 } else {
-                    message.reply("Sorry, I couldn't understand your request.  I think you were trying `!raid kick <Raid ID> @user`")
+                    message.reply("Sorry, I couldn't understand your request.  I think you were trying `!command kick <Raid ID> @user`")
                 }
             } else {
                 message.reply("You must be the owner of a raid to kick someone from it.")

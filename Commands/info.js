@@ -19,9 +19,10 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                 //   message.reply(raid.toString());
             message.channel.send({
                 embed: raid.embed()
-            }).then((reply) => {
+            }).then((raidMessage) => {
                 console.log(`Raid ${ID} information sent to ${message.author.username} in #${message.channel}`)
-                raid.addMessage(reply.channel, reply)
+                raid.addMessage(raidMessage.channel, raidMessage, "info")
+                activeRaids.addCountReaction(raidMessage)
             }).catch((err) => console.error(`Raid ${ID} info not sent! ${err}`));
         } else {
             message.reply(`Couldn't find Raid ${ID}.`)

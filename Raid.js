@@ -3,6 +3,7 @@ const pokemon = require('./pokemon.js')
 const Discord = require('discord.js')
 const Attendee = require('./Attendee.js')
 const BotMessage = require('./BotMessage.js')
+const Moment = require('moment')
 let config = {};
 
 
@@ -80,7 +81,7 @@ class Raid {
      * @param {Discord.Message} message 
      * @param {"info" | "reply" | "unknown" } type
      */
-    addMessage(channel, message, type = "info") {
+    addMessage(channel, message, type = "unknown") {
         this.channels.push(new BotMessage(channel, message, type))
     };
 
@@ -110,16 +111,23 @@ class Raid {
                 } else {
                     att.count = count;
                 }
-                return count;
+                this.updateInfo();
             }
-            return 0;
+            else count = 0;
         } else {
-            this.attendees.set(user.id, new Attendee(user.id, user.username, user.toString(), count))
-            return count;
+            this.attendees.set(user.id, new Attendee(user.id, user.username, user.mention, count))
+            this.updateInfo();
         }
+        return count;
     };
 
 
+
+    updateInfo() {
+        this.channels.filter((botChan) => { return botChan.type === "info"; }).forEach((botChan) => {
+            botChan.message.edit({ embed: this.embed() }).catch((error)=> console.error(error));
+        }, this);
+    }
 
     /**
      * Removes the user from the raid
@@ -135,7 +143,7 @@ class Raid {
      */
     total() {
         var sum = 0;
-        this.attendees.forEach((val) => { sum += val.count });
+        this.attendees.forEach((val) => { sum += parseInt(val.count)});
         return sum;
         //return this.attendees.reduce((acc, val) => { return acc + val.count }, 0);
 
@@ -165,29 +173,51 @@ class Raid {
     listAttendees() {
         let str = ""
         this.attendees.forEach((attendee) => {
-            str += `\t\t${attendee.here ? "✅" : "❌" }${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`
+            str += `\t\t${attendee.here ? "✅" : "❓" }${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`
         })
         return str;
     }
 
     /** @returns {string} the @mentions of all the attendees as a string. */
     atAttendees() {
-        return this.attendees.map((attendee) => {
-                attendee.mention
-            })
-            .join(", ")
+        return this.attendees.map((attendee) => attendee.mention).join(", ")
     }
 
     /**
      * 
      * @param {Discord.Client} client 
-     * @param {Attendee} attendee 
+     * @param {Attendee | Discord.User} attendee 
      */
-    toggleHere(client, attendee) {
-        attendee.here = !attendee.here
-        this.channels.forEach((botChan) => {
-            this.messageRaid(botChan.channel, `${attendee} is ${attendee.here ? "" : "not actually"} here`, client, false)
-        }, this)
+    toggleHere(client, attendeeOrUser) {
+        /** @type {Attendee} */
+        let attendee;
+        if(attendeeOrUser instanceof Discord.User){
+            attendee = this.attendees.get(attendeeOrUser.id);
+        }
+        else {
+            attendee = attendeeOrUser;
+        }
+        if (attendee && attendee.id && this.attendees.has(attendee.id))
+        {
+            attendee.here = !attendee.here
+            
+            /*this.getUniqueChannelList().forEach((botChan) => {
+                this.messageRaid(botChan, `${attendee} is ${attendee.here ? "" : "not actually"} here`, client, false)
+            }, this)*/
+            this.updateInfo();
+        }
+        else{
+            this.addUserToRaid(attendeeOrUser);
+            this.toggleHere(client,attendeeOrUser)
+        }
+    }
+
+    getUniqueChannelList() {
+        let botChannels = [];
+        for (const botChan of this.channels) {
+            botChannels = botChan.buildlist(botChannels);
+        }
+        return botChannels
     }
 
     /**
@@ -195,7 +225,8 @@ class Raid {
      * @param {Discord.Client} client 
      */
     sendStart(client, user) {
-        this.messageRaid(messageReaction.message.channel, `${user} has signaled to start the raid!`, client, true)
+        if(this.userInRaid(user))
+        this.messageRaid(channel, `${user} has signaled to start the raid!`, client, true)
     }
 
     embed() {

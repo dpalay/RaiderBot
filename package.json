@@ -30,8 +30,10 @@
         "big-integer": "^1.6.40",
         "discord.js": "^11.4.2",
         "fuzzball": "^0.13.6",
+        "moment": "^2.24.0",
+        "node": "^11.8.0",
         "node-persist": "^2.1.0",
-        "npm": "^6.6.0",
+        "npm": "^6.7.0",
         "pmx": "^1.6.7",
         "underscore": "^1.9.1"
     },

@@ -18,5 +18,4 @@ class Attendee {
         return this.mention;
     };
 }
-
 module.exports = Attendee

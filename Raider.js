@@ -32,6 +32,9 @@ const eventsToDisable = ['channelCreate', 'channelDelete', 'channelPinsUpdate', 
     'roleCreate', 'roleDelete', 'roleUpdate', 'typingStart', 'typingStop', 'userNoteUpdate', 'userUpdate', 'voiceStateUpdate'
 ];
 
+function debug(content){
+    if (isdebug) console.log(content)
+}
 
 // Set up discord.js client
 const Discord = require('discord.js');
@@ -91,7 +94,7 @@ helpembed.addField("Inactivate", "\tInactivates (deletes) a raid. **_You must be
  * Adds the list of emojis as reactions to a message.
  * @param {Discord.Message} message 
  */
-async function addCountReaction(message) {
+activeRaids.addCountReaction = async function addCountReaction(message) {
     for (let i in emojis) {
         try {
             console.log(emojis[i])
@@ -102,6 +105,8 @@ async function addCountReaction(message) {
     }
 }
 
+
+
 /**
  * Saves a flattened raid object to the disk with enough 
  * information to be able to re-load the raid 
@@ -109,13 +114,13 @@ async function addCountReaction(message) {
  * @param {Raid} raid The raid to save to the disk.
  */
 activeRaids.saveRaid = async function saveRaid(raid) {
-    console.log(`Saving Raid ${raid.id} to disk`);
+    debug(`Saving Raid ${raid.id} to disk`);
     try {
         await storage.setItem(raid.id, raid.flatten(), { ttl: raid.expires });
     } catch (error) {
         console.error(error)
     }
-    console.log(raid);
+    debug(raid);
 };
 
 
@@ -146,10 +151,9 @@ activeRaids.removeRaid = async function removeRaid(id) {
     Promise.all(activeRaids.get(id).channels.map(
             //TODO:  Add message deletion here!!
             (botmessage) => {
-                botmessage.message.delete();
+                botmessage.message.delete().catch((err)=> console.error(err));
             }
         )).then( /* when all messages are deleted */ )
-        .catch((err) => console.err(err))
         .finally(activeRaids.delete(id))
     await storage.removeItem(id); // remove the raid from disk
     return activeRaids;
@@ -240,15 +244,15 @@ async function sendNew(message, parseArray) {
     //FIXME: Check the time and find the next instance of that time
     raid = activeRaids.makeRaid(CreateRaidID(), parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
     if (!quietMode) {
-        await message.channel.send({
+        await message.channel.send(`Raid: (${raid.id})`,{
             embed: raid.embed()
-        }).then((post) => {
-                console.log(`Raid created by ${message.author} in ${message.channel}`);
-                raid.addMessage(post.channel, post, "info")
-            }
-
-        );
+        }).then((raidMessage) => {
+                debug(`Raid created by ${message.author} in ${message.channel}`);
+                addCountReaction(message);
+                raid.addMessage(raidMessage.channel, raidMessage, "info");
+        });
     }
+    /*
     message.channel.send("**" + raid.time + "**" + " Raid (" + raid.id + ") created by " + message.author + " for **" +
             raid.poke.name + "** at **" + raid.location + "**" +
             nl + "Others can join this raid by typing `!raider join " + raid.id + "` or by clicking the reaction buttons below")
@@ -257,6 +261,7 @@ async function sendNew(message, parseArray) {
             addCountReaction(message)
         })
         .catch(console.error);
+    */
 }
 
 //!raider transfer raidID @newperson
@@ -563,13 +568,18 @@ function sendSpecial(message, parseArray) {
 client.on('messageReactionAdd', async(messageReaction, user) => {
     //TODO: Better logic.  The author shouldn't just be Raider, the message should be a raid message
     if (user !== ME && messageReaction.message.author === ME) {
-        console.log(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
-        let id = messageReaction.message.content.match(/Raid \((.*)\)/)[1]
+        debug(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
+        let id
+        try {
+            id = messageReaction.message.content.match(/Raid \((.*)\)/)
+            if (id && id.length > 0) id = id[1];
+            id = id || messageReaction.message.embeds[0].fields[0].name.split(" ")[1]
+        } catch (error) {
+            console.error(error);
+        } 
         let raid = activeRaids.get(id)
         switch (messageReaction.emoji.name) {
             case "❌":
-                raid.removeFromRaid(user)
-                break;
             case "1⃣":
             case "2⃣":
             case "3⃣":
@@ -580,15 +590,15 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
                 break;
             case "✅":
                 //TODO:  move this to the raid / attendee objects
-                raid.toggleHere(client, raid.attendees.get(user.id));
+                raid.toggleHere(client, user);
                 break;
             case "▶":
-
+                raid.sendStart(client,user.id)
                 break;
         }
         await activeRaids.saveRaid(raid);
         messageReaction.remove(user).then((messageReaction) => {
-            console.log(`removed ${user.username}'s reaction`)
+            debug(`removed ${user.username}'s reaction`)
                 //messageReaction.message.edit(messageReaction.message.content + "\n\t" + user.username + ": " + messageReaction.emoji.name)
         })
     }
@@ -599,7 +609,7 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
 
 //When a message is posted
 client.on('message', message => {
-    if (message.author.bot) return;
+ //   if (message.author.bot) return;
     if (message.content.toLowerCase().indexOf(prefix.toLowerCase()) !== 0) return;
 
 
@@ -667,23 +677,24 @@ client.on('message', message => {
             sendUpdate(message, parseArray);
             break;
 
-            // get info about raid
-        case "info":
-            sendInfo(message, parseArray);
-            break;
-
+                   
             // Merge two raids
-        case "merge":
+            case "merge":
             message.reply("This command isn't implemented yet.  Sorry!");
             break;
-
+            
+        case "info":
         case "join":
         case "terminate":
         case "list":
         case "myraids":
         case "kick":
-            let runcommand = require(`./Commands/${command}.js`)
-            runcommand.run(client, message, activeRaids, parseArray);
+            try {
+                let runcommand = require(`./Commands/${command}.js`);
+                runcommand.run(client, message, activeRaids, parseArray);
+            } catch (error) {
+                debug(error);
+            }
             break;
 
         case "message":
@@ -738,6 +749,7 @@ client.once('ready', async() => {
         } else {
             if (val.expires <= Date.now()) {
                 // remove the raid to disk
+                //TODO:  clear out the raid's old messages
                 await storage.removeItem(key);
             } else {
                 // If it's not the pointer, then it's a flattened raid
@@ -759,51 +771,59 @@ client.once('ready', async() => {
                 // Set the other few pieces of the raid that aren't actually handled by the constructor.  (WHY??)
                 raid.gym = flatRaid.gym;
                 raid.locationComment = flatRaid.locationComment;
-                raid.expires = flatRaid.expires
+                raid.expires = flatRaid.expires;
 
                 // Add each user to the raid
                 flatRaid.attendees.forEach((att) => {
                     raid.addUserToRaid(att, att.count);
+                    raid.toggleHere(client, att);
                 });
 
                 // Cache the messages and add them to the raid
                 let messageGetPromises = flatRaid.channels
                     // Take the flattened BotMessage objects that were saved, filter to only be the ones that the client can find
                     .filter((flatchan) => {
-                        let channel = client.channels.get(flatchan.channel)
-                        return channel instanceof Discord.TextChannel && channel.permissionsFor(ME).has('MANAGE_MESSAGES')
+                        let channel = client.channels.get(flatchan.channel);
+                        return channel instanceof Discord.TextChannel && channel.permissionsFor(ME).has('MANAGE_MESSAGES');
                     })
                     // For all the channels that we could find (and that we can edit), build array of Promises for fetching each message
                     .map((flatchan) => {
-                        let channel = client.channels.get(flatchan.channel)
-                        return channel.fetchMessage(flatchan.message)
-                    })
+                        let channel = client.channels.get(flatchan.channel);
+                        return channel.fetchMessage(flatchan.message);
+                    });
                     // Wait for all of the Promises to complete in parallel. 
                 try {
                     /**@type {Discord.Message[]} */
-                    let messages = await Promise.all(messageGetPromises)
+                    let messages = await Promise.all(messageGetPromises);
                         // For each of the resulting messages, return an array of objects with message and type of message
                     messages.map((message) => {
                             return {
                                 message: message,
                                 type: flatRaid.channels.find((flatchan) => flatchan.message === message.id).type
-                            }
+                            };
                         })
                         // Then add each of those messages back to the raid.  PHEW! 
-                        .forEach((messagetype) => raid.addMessage(messagetype.message.channel, messagetype.message, messagetype.type))
+                        .forEach((messagetype) => raid.addMessage(messagetype.message.channel, messagetype.message, messagetype.type));
                 } catch (error) {
                     //Oops, something went wrong.
-                    console.log("Something went wrong adding the raid's messages back to the raid")
-                    console.log("****Error: ")
-                    console.log(error)
-                    console.log('****Raid:')
-                    console.log(raid)
-                    console.log('****Value from disk')
-                    console.log(val)
+                    console.log("Something went wrong adding the raid's messages back to the raid");
+                    console.log("****Error: ");
+                    console.log(error);
+                    console.log('****Raid:');
+                    console.log(raid);
+                    console.log('****Value from disk');
+                    console.log(val);
                 }
 
                 // Set the Timeouts to delete the raids when they're done
                 timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now())
+
+                //update the raids
+                try {
+                    raid.updateInfo();
+                } catch (error) {
+                    console.log(error);
+                }
 
                 //Finally, add the raid to the activeRaids
                 activeRaids.set(key, raid);
@@ -816,7 +836,9 @@ client.once('ready', async() => {
 
 console.log("Logging in!");
 // connect
-client.login(token);
+client.login(token)
+.then(debug("logging into discord.  Getting everything ready"))
+.catch((err)=>console.error(err));
 
 
 /**

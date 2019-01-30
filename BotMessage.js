@@ -25,5 +25,20 @@ class BotMessage {
         return { channel: this.channel.id, message: this.message.id, type: this.type }
     }
 
+    /**
+     * 
+     * @param {Discord.Snowflake[]} list   
+     * @return {Discord.Snowflake[]} 
+     */
+    buildlist(list){
+        if (list.includes(this.channel)){
+            return list
+        }
+        else{
+            return list.concat(this.channel);
+        }
+    }
+
+
 }
 module.exports = BotMessage;
