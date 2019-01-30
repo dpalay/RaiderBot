@@ -130,6 +130,7 @@ class Raid {
     }
 
     /**
+     * Calculates how many people are in the raid
      * @returns {Number} the total count of attendees registered for the raid
      */
     total() {
@@ -141,6 +142,7 @@ class Raid {
     }
 
     /**
+     * writes out a string for the raid
      * @returns {String} stringified version of the Raid
      */
     toString() {
@@ -159,22 +161,41 @@ class Raid {
         return str;
     }
 
-    /** returns the @mentions of all the attendees as a string. */
+    /** @returns {string} the roster of attendees with icon for here or not */
     listAttendees() {
         let str = ""
         this.attendees.forEach((attendee) => {
-            str += `\t\t${attendee.here ? "✅" : "" }${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`
+            str += `\t\t${attendee.here ? "✅" : "❌" }${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`
         })
         return str;
     }
 
+    /** @returns {string} the @mentions of all the attendees as a string. */
     atAttendees() {
-        let str = "";
-        this.attendees.forEach((attendee) => {
-            str += attendee.mention + ", ";
-        });
-        str.substr(0, str.length - 2);
-        return str;
+        return this.attendees.map((attendee) => {
+                attendee.mention
+            })
+            .join(", ")
+    }
+
+    /**
+     * 
+     * @param {Discord.Client} client 
+     * @param {Attendee} attendee 
+     */
+    toggleHere(client, attendee) {
+        attendee.here = !attendee.here
+        this.channels.forEach((botChan) => {
+            this.messageRaid(botChan.channel, `${attendee} is ${attendee.here ? "" : "not actually"} here`, client, false)
+        }, this)
+    }
+
+    /**
+     * 
+     * @param {Discord.Client} client 
+     */
+    sendStart(client, user) {
+        this.messageRaid(messageReaction.message.channel, `${user} has signaled to start the raid!`, client, true)
     }
 
     embed() {
@@ -215,15 +236,23 @@ class Raid {
         }
     };
 
-    async messageRaid(channel, fwdmessage, client) {
+    async messageRaid(channel, fwdmessage, client, alert = false) {
 
-        await channel.send(`${this.atAttendees()}\n${fwdmessage}`);
-        this.attendees.forEach(async(attendee) => {
-            client.users.get(attendee.id).createDM().then(
-                (dm) => {
-                    dm.send("Message from one of your raids in the " + channel + " channel")
-                });
-        });
+        try {
+            await channel.send(`${this.atAttendees()}\n${fwdmessage}`)
+        } catch (error) {
+            console.log(error)
+        }
+        if (alert) {
+            this.attendees.forEach((attendee) => {
+                client.users.get(attendee.id).createDM()
+                    .then(
+                        (dm) => {
+                            dm.send("Message from one of your raids in the " + channel + " channel")
+                        })
+                    .catch((error) => console.log(error));
+            });
+        }
     };
 
 

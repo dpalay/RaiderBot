@@ -1,10 +1,10 @@
 const Discord = require('discord.js')
-
-/**
- * @property {Discord.Message} message
- * @property {Discord.Channel} channel
- * @property { 'info' | 'reply' | 'unknown'}
- */
+    //FIXME:  Need to make these store many messages for each channel.  Right now if it has 2 messages from the same channel, it will reply twice.
+    /**
+     * @property {Discord.Message} message
+     * @property {Discord.Channel} channel
+     * @property { 'info' | 'reply' | 'unknown'}
+     */
 class BotMessage {
     /**
      * 
