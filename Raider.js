@@ -32,7 +32,7 @@ const eventsToDisable = ['channelCreate', 'channelDelete', 'channelPinsUpdate', 
     'roleCreate', 'roleDelete', 'roleUpdate', 'typingStart', 'typingStop', 'userNoteUpdate', 'userUpdate', 'voiceStateUpdate'
 ];
 
-function debug(content){
+function debug(content) {
     if (isdebug) console.log(content)
 }
 
@@ -94,7 +94,7 @@ helpembed.addField("Inactivate", "\tInactivates (deletes) a raid. **_You must be
  * Adds the list of emojis as reactions to a message.
  * @param {Discord.Message} message 
  */
-activeRaids.addCountReaction = async function addCountReaction(message) {
+async function addCountReaction(message) {
     for (let i in emojis) {
         try {
             console.log(emojis[i])
@@ -104,6 +104,7 @@ activeRaids.addCountReaction = async function addCountReaction(message) {
         }
     }
 }
+activeRaids.addCountReaction = addCountReaction;
 
 
 
@@ -151,7 +152,7 @@ activeRaids.removeRaid = async function removeRaid(id) {
     Promise.all(activeRaids.get(id).channels.map(
             //TODO:  Add message deletion here!!
             (botmessage) => {
-                botmessage.message.delete().catch((err)=> console.error(err));
+                botmessage.message.delete().catch((err) => console.error(err));
             }
         )).then( /* when all messages are deleted */ )
         .finally(activeRaids.delete(id))
@@ -215,7 +216,6 @@ async function sendNew(message, parseArray) {
     }
 
     //set up variables we'll need
-    let options = {};
     /**@type {Raid} */
     let raid = {};
     let msgstart = prfxLen + parseArray[0].length + 2 // length of "!raider new "
@@ -244,12 +244,12 @@ async function sendNew(message, parseArray) {
     //FIXME: Check the time and find the next instance of that time
     raid = activeRaids.makeRaid(CreateRaidID(), parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
     if (!quietMode) {
-        await message.channel.send(`Raid: (${raid.id})`,{
+        await message.channel.send(`Raid: (${raid.id})`, {
             embed: raid.embed()
         }).then((raidMessage) => {
-                debug(`Raid created by ${message.author} in ${message.channel}`);
-                addCountReaction(message);
-                raid.addMessage(raidMessage.channel, raidMessage, "info");
+            debug(`Raid created by ${message.author} in ${message.channel}`);
+            addCountReaction(raidMessage);
+            raid.addMessage(raidMessage.channel, raidMessage, "info");
         });
     }
     /*
@@ -567,7 +567,7 @@ function sendSpecial(message, parseArray) {
 
 client.on('messageReactionAdd', async(messageReaction, user) => {
     //TODO: Better logic.  The author shouldn't just be Raider, the message should be a raid message
-    if (user !== ME && messageReaction.message.author === ME) {
+    if (user != ME && messageReaction.message.author === ME) {
         debug(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
         let id
         try {
@@ -576,7 +576,7 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
             id = id || messageReaction.message.embeds[0].fields[0].name.split(" ")[1]
         } catch (error) {
             console.error(error);
-        } 
+        }
         let raid = activeRaids.get(id)
         switch (messageReaction.emoji.name) {
             case "❌":
@@ -593,7 +593,7 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
                 raid.toggleHere(client, user);
                 break;
             case "▶":
-                raid.sendStart(client,user.id)
+                raid.sendStart(client, user.id)
                 break;
         }
         await activeRaids.saveRaid(raid);
@@ -602,14 +602,12 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
                 //messageReaction.message.edit(messageReaction.message.content + "\n\t" + user.username + ": " + messageReaction.emoji.name)
         })
     }
-
-
 })
 
 
 //When a message is posted
 client.on('message', message => {
- //   if (message.author.bot) return;
+    //   if (message.author.bot) return;
     if (message.content.toLowerCase().indexOf(prefix.toLowerCase()) !== 0) return;
 
 
@@ -677,12 +675,12 @@ client.on('message', message => {
             sendUpdate(message, parseArray);
             break;
 
-                   
+
             // Merge two raids
-            case "merge":
+        case "merge":
             message.reply("This command isn't implemented yet.  Sorry!");
             break;
-            
+
         case "info":
         case "join":
         case "terminate":
@@ -791,11 +789,11 @@ client.once('ready', async() => {
                         let channel = client.channels.get(flatchan.channel);
                         return channel.fetchMessage(flatchan.message);
                     });
-                    // Wait for all of the Promises to complete in parallel. 
+                // Wait for all of the Promises to complete in parallel. 
                 try {
                     /**@type {Discord.Message[]} */
                     let messages = await Promise.all(messageGetPromises);
-                        // For each of the resulting messages, return an array of objects with message and type of message
+                    // For each of the resulting messages, return an array of objects with message and type of message
                     messages.map((message) => {
                             return {
                                 message: message,
@@ -837,8 +835,8 @@ client.once('ready', async() => {
 console.log("Logging in!");
 // connect
 client.login(token)
-.then(debug("logging into discord.  Getting everything ready"))
-.catch((err)=>console.error(err));
+    .then(debug("logging into discord.  Getting everything ready"))
+    .catch((err) => console.error(err));
 
 
 /**
