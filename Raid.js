@@ -85,6 +85,8 @@ class Raid {
         this.channels.push(new BotMessage(channel, message, type))
     };
 
+
+
     /**
      * 
      * @param {Discord.User} user 
@@ -95,7 +97,7 @@ class Raid {
 
     /**
      * Adds a user and guests to the raid
-     * @param {Discord.User | Discord.Snowflake | {id: string, username: string, count: number, mention?: string}} user 
+     * @param {Discord.User | {id: string, username: string, count: number, mention?: string}} user 
      * @param {number} count 
      * @returns 0 if fail, user's count if success
      */
@@ -115,7 +117,7 @@ class Raid {
             }
             else count = 0;
         } else {
-            this.attendees.set(user.id, new Attendee(user.id, user.username, user.mention, count))
+            this.attendees.set(user.id, new Attendee(user.id, user.username, user.mention || `<@${user.id}>`, count))
             this.updateInfo();
         }
         return count;

@@ -9,9 +9,13 @@ const Raid = require('../Raid.js')
  */
 module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (parseArray[1]) {
+         // handle the comma after RaidID
+         if (parseArray[1].trim().search(",") >= 0) {
+            parseArray[1] = parseArray[1].split(",")[0];
+        }
         let ID = parseArray[1].toUpperCase();
         if (activeRaids.has(ID)) {
-            if (activeRaids.get(ID).authorized(message, "Message")) {
+            if (activeRaids.get(ID).authorized(message)) {
                 let raid = activeRaids.get(ID);
                 let sendlist = raid.atAttendees();
 

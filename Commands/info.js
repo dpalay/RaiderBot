@@ -12,6 +12,9 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     console.log("\tmessage:" + message.content);
     console.log("\tparseArray: " + parseArray.toString())
     if (parseArray[1]) {
+        if (parseArray[1].trim().search(",") >= 0) {
+            parseArray[1] = parseArray[1].split(",")[0];
+        }
         let ID = parseArray[1].toUpperCase();
         if (activeRaids.has(ID)) {
             let raid = activeRaids.get(ID);

@@ -10,9 +10,13 @@ const Raid = require('../Raid.js')
 
 module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (parseArray[1]) {
-        let ID = parseArray[1].endsWith(',') ? parseArray[1].substring(0, 2).toUpperCase() : parseArray[1].toUpperCase();
+         // handle the comma after RaidID
+         if (parseArray[1].trim().search(",") >= 0) {
+            parseArray[1] = parseArray[1].split(",")[0];
+        }
+        let ID = parseArray[1].toUpperCase();
         if (activeRaids.has(ID)) {
-            if (activeRaids.get(ID).authorized(message, "Message")) {
+            if (activeRaids.get(ID).authorized(message)) {
                 let raid = activeRaids.get(ID);
                 if (message.mentions.users.size > 0) {
                     for (const user of message.mentions.users.array()) {
@@ -24,7 +28,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                         }
                     }
                     try {
-                        await storeRaid(raid); // store the raid to disk
+                        await activeRaids.saveRaid(raid); // store the raid to disk
                     } catch (error) {
                         console.error(error);
                     }

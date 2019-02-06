@@ -11,8 +11,12 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     console.log(`sendJoin from ${message.author.username}#${message.author.discriminator} in ${message.channel.name}`);
     console.log(message.content);
     if (parseArray[1]) {
-        let ID = parseArray[1].endsWith(',') ? parseArray[1].substring(0, 2).toUpperCase() : parseArray[1].toUpperCase();
-        let count = parseInt(parseArray[2]) ? parseInt(parseArray[2]) : 1;
+         // handle the comma after RaidID
+         if (parseArray[1].trim().search(",") >= 0) {
+            parseArray[1] = parseArray[1].split(",")[0];
+        }
+        let ID = parseArray[1].toUpperCase();
+        let count = parseInt(parseArray[2]) || 1;
         console.log(`\tID: ${ID}\tcount: ${count}\tparseArray:${parseArray.toString()}`)
         if (count >= 0) {
             // does raid exist
