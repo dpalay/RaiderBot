@@ -1,4 +1,3 @@
-
 const Discord = require('discord.js')
 const Raid = require('../Raid.js')
 
@@ -21,9 +20,10 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
         //if Raid exists.
         if (activeRaids.has(ID)) {
             let raid = activeRaids.get(ID);
-            if (userInRaid(user, raid) || message.author.id === '218550507659067392') {
-                let fwdmessage = message.content.substr(message.content.indexOf(",") + 1).trim();
-                raid.messageRaid(message.channel, fwdmessage);
+            if (raid.userInRaid(user) || message.author.id === '218550507659067392') {
+                //TODO:  FIX THIS.  (What if there's no comma!)
+                let fwdmessage = parseArray.slice(2).join(" ");
+                raid.messageRaid(message.channel, `Message from ${message.author} to Raid ${raid.id}:\n${fwdmessage}`);
             } else {
                 message.author.createDM().then(
                     (dm) => {

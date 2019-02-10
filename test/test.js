@@ -60,34 +60,34 @@ describe("Raid", function() {
             expect(raidtest.userInRaid(users.user2)).to.not.exist
             expect(raidtest.userInRaid(users.user3)).to.not.exist
         })
-        describe('Raid.addToRaid Add user to raid', function() {
+        describe('Raid.addUserToRaid Add user to raid', function() {
             it('should add a user to the raid', function() {
-                raidtest.addToRaid(users.user2)
+                raidtest.addUserToRaid(users.user2)
                 expect(raidtest.userInRaid(users.user1)).to.exist
                 expect(raidtest.userInRaid(users.user2)).to.exist
                 expect(raidtest.userInRaid(users.user3)).to.not.exist
             })
             it('should not duplicate a user who is already in the raid', function() {
-                raidtest.addToRaid(users.user2)
+                raidtest.addUserToRaid(users.user2)
                 let size = raidtest.attendees.size;
-                raidtest.addToRaid(users.user2)
+                raidtest.addUserToRaid(users.user2)
                 expect(raidtest.userInRaid(users.user1)).to.exist
                 expect(raidtest.userInRaid(users.user2)).to.exist
                 expect(raidtest.userInRaid(users.user3)).to.not.exist
                 expect(size).to.equal(raidtest.attendees.size, 'they should be the same size')
             })
         })
-        describe('Raid.addToRaid Change guests for a user', function() {
+        describe('Raid.addUserToRaid Change guests for a user', function() {
             it('should increase the number of guests', function() {
                 let count = raidtest.total();
 
-                raidtest.addToRaid(users.user1, users.user1.count + 2)
+                raidtest.addUserToRaid(users.user1, users.user1.count + 2)
                 expect(count).to.be.lessThan(raidtest.total());
             })
         })
         describe('Raid.removeFromRaid Remove user from raid', function() {
             it('should remove a user from the raid', function() {
-                raidtest.addToRaid(users.user2)
+                raidtest.addUserToRaid(users.user2)
                 let bool = raidtest.removeFromRaid(users.user2)
                 expect(bool).to.be.true;
                 expect(raidtest.userInRaid(users.user1)).to.exist

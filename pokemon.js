@@ -2,8 +2,6 @@ const constants = require('./constant.json');
 const names = constants.pokelist;
 const fuzz = require('fuzzball');
 
-
-
 /**
  * WHO'S THAT POKEMON!?
  * Function to try to guess which pokemon the user is trying to type in

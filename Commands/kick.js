@@ -10,8 +10,8 @@ const Raid = require('../Raid.js')
 
 module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (parseArray[1]) {
-         // handle the comma after RaidID
-         if (parseArray[1].trim().search(",") >= 0) {
+        // handle the comma after RaidID
+        if (parseArray[1].trim().search(",") >= 0) {
             parseArray[1] = parseArray[1].split(",")[0];
         }
         let ID = parseArray[1].toUpperCase();
@@ -20,7 +20,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                 let raid = activeRaids.get(ID);
                 if (message.mentions.users.size > 0) {
                     for (const user of message.mentions.users.array()) {
-                        if(raid.removeFromRaid(user)){
+                        if (raid.removeFromRaid(user)) {
                             console.log(`${user} removed from raid ${raid.id}`);
                             raid.updateInfo();
                         } else {
@@ -34,13 +34,13 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                     }
                     message.reply("Users have been removed from the raid. **Total confirmed is: " + raid.total() + "**")
                 } else {
-                    message.reply("Sorry, I couldn't understand your request.  I think you were trying `!command kick <Raid ID> @user`")
+                    message.reply("Sorry, I couldn't understand your request.  I think you were trying `!<command> kick <Raid ID> @user`")
                 }
             } else {
                 message.reply("You must be the owner of a raid to kick someone from it.")
             }
         } else {
-            message.reply("Sorry, I couldn't understand your request.  I think you were trying `!raid kick <Raid ID> @user`")
+            message.reply("Sorry, I couldn't understand your request.  I think you were trying `!<command> kick <Raid ID> @user`")
         }
     }
 

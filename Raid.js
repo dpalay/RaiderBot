@@ -6,8 +6,8 @@ const BotMessage = require('./BotMessage.js')
 const Moment = require('moment')
 let config = {};
 
-
 // Check for config file
+/*
 if (process.argv[2]) {
     let configfile = './' + process.argv[2]
     config = require(configfile);
@@ -15,9 +15,10 @@ if (process.argv[2]) {
     config = require('./tester.json')
     console.error("No config file given.  start with node Raider.js configFileName")
 }
+*/
+config = require('./tester.json')
 
 class Raid {
-
     /**
      * Raid object that represents a raid event.  Creating one of these implies that a group of people will be heading to a gym to take on a raid.
      * @param {String} id 2-Character ID that will represent the raid in the ActiveRaids array in the main program
@@ -35,6 +36,7 @@ class Raid {
         this.gym = location;
         this.locationComment = "";
         this.poke = {};
+        this.setPokemon(pokemon.interpretPoke(poke))
         this.poke.id = pokemon.interpretPoke(poke);
         this.poke.name = pokelist[this.poke.id - 1] ? pokelist[this.poke.id - 1] : poke;
         this.owner = owner;
@@ -85,10 +87,12 @@ class Raid {
         this.channels.push(new BotMessage(channel, message, type))
     };
 
-
+    setPokemon(poke) {
+        this.poke.id = pokemon.interpretPoke(poke);
+        this.poke.name = pokelist[this.poke.id - 1] ? pokelist[this.poke.id - 1] : poke;
+    }
 
     /**
-     * 
      * @param {Discord.User} user 
      */
     userInRaid(user) {
@@ -101,7 +105,6 @@ class Raid {
      * @param {number} count 
      * @returns 0 if fail, user's count if success
      */
-    // add a user to the raid
     addUserToRaid(user, count = 1) {
         // check if the user is already in the raid
         let att = this.attendees.get(user.id)
@@ -114,8 +117,7 @@ class Raid {
                     att.count = count;
                 }
                 this.updateInfo();
-            }
-            else count = 0;
+            } else count = 0;
         } else {
             this.attendees.set(user.id, new Attendee(user.id, user.username, user.mention || `<@${user.id}>`, count))
             this.updateInfo();
@@ -127,7 +129,7 @@ class Raid {
 
     updateInfo() {
         this.channels.filter((botChan) => { return botChan.type === "info"; }).forEach((botChan) => {
-            botChan.message.edit({ embed: this.embed() }).catch((error)=> console.error(error));
+            botChan.message.edit({ embed: this.embed() }).catch((error) => console.error(error));
         }, this);
     }
 
@@ -145,7 +147,7 @@ class Raid {
      */
     total() {
         var sum = 0;
-        this.attendees.forEach((val) => { sum += parseInt(val.count)});
+        this.attendees.forEach((val) => { sum += parseInt(val.count) });
         return sum;
         //return this.attendees.reduce((acc, val) => { return acc + val.count }, 0);
 
@@ -193,24 +195,17 @@ class Raid {
     toggleHere(client, attendeeOrUser) {
         /** @type {Attendee} */
         let attendee;
-        if(attendeeOrUser instanceof Discord.User){
+        if (attendeeOrUser instanceof Discord.User) {
             attendee = this.attendees.get(attendeeOrUser.id);
-        }
-        else {
+        } else {
             attendee = attendeeOrUser;
         }
-        if (attendee && attendee.id && this.attendees.has(attendee.id))
-        {
+        if (attendee && attendee.id && this.attendees.has(attendee.id)) {
             attendee.here = !attendee.here
-            
-            /*this.getUniqueChannelList().forEach((botChan) => {
-                this.messageRaid(botChan, `${attendee} is ${attendee.here ? "" : "not actually"} here`, client, false)
-            }, this)*/
             this.updateInfo();
-        }
-        else{
+        } else {
             this.addUserToRaid(attendeeOrUser);
-            this.toggleHere(client,attendeeOrUser)
+            this.toggleHere(client, attendeeOrUser)
         }
     }
 
@@ -226,9 +221,9 @@ class Raid {
      * 
      * @param {Discord.Client} client 
      */
-    sendStart(client, user) {
-        if(this.userInRaid(user))
-        this.messageRaid(channel, `${user} has signaled to start the raid!`, client, true)
+    sendStart(client, user, channel) {
+        if (this.userInRaid(user))
+            this.messageRaid(channel, `${user} has signaled to start the raid!`, client, true)
     }
 
     embed() {
@@ -250,8 +245,9 @@ class Raid {
         str += `**Pokemon: **#${this.poke.id} ${this.poke.name}
             Self-destructs at: ${new Date(this.expires).toLocaleTimeString()}
             **Total Attendees: **${this.total()}
-             **Attendee List:**: 
+             **Attendee List:** 
              ${this.listAttendees()}`
+            //**Links:**`
         emb.addField("Raid " + this.id, str);
         return emb;
     };
@@ -270,9 +266,8 @@ class Raid {
     };
 
     async messageRaid(channel, fwdmessage, client, alert = false) {
-
         try {
-            await channel.send(`${this.atAttendees()}\n${fwdmessage}`)
+            await channel.send(`${this.atAttendees()}\n\n${fwdmessage}`)
         } catch (error) {
             console.log(error)
         }

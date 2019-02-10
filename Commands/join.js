@@ -11,8 +11,8 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     console.log(`sendJoin from ${message.author.username}#${message.author.discriminator} in ${message.channel.name}`);
     console.log(message.content);
     if (parseArray[1]) {
-         // handle the comma after RaidID
-         if (parseArray[1].trim().search(",") >= 0) {
+        // handle the comma after RaidID
+        if (parseArray[1].trim().search(",") >= 0) {
             parseArray[1] = parseArray[1].split(",")[0];
         }
         let ID = parseArray[1].toUpperCase();
@@ -24,8 +24,6 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                 let raid = activeRaids.get(ID);
                 if (raid.addUserToRaid(message.author, count) > 0) {
                     await activeRaids.saveRaid(raid); // store the raid to disk
-                    message.reply(`added to raid ${ID} owned by ${raid.owner.mention} 
-                          Total confirmed is:** ${raid.total()}**`);
                 }
             } else {
                 message.reply("Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids.")
