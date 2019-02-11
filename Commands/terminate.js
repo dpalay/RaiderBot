@@ -1,16 +1,17 @@
 const Discord = require('discord.js')
 const Raid = require('../Raid.js')
+const ActiveRaid = require('../ActiveRaid.js')
 
 /**
  * @param {Discord.Client} client
  * @param {Discord.Message} message
- * @param {Discord.Collection<any,Raid>} activeRaids
+ * @param {ActiveRaid} activeRaids
  * @param {Array<String>} parseArray
  */
 module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (parseArray[1]) {
-         // handle the comma after RaidID
-         if (parseArray[1].trim().search(",") >= 0) {
+        // handle the comma after RaidID
+        if (parseArray[1].trim().search(",") >= 0) {
             parseArray[1] = parseArray[1].split(",")[0];
         }
         let ID = parseArray[1].toUpperCase();
@@ -25,7 +26,9 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
 
                 message.channel.send(
                     `${sendlist}
-            Raid ${ID} destroyed. Thank you for using Raider!`);
+            Raid ${ID} destroyed. Thank you for using Raider!`).then((message) => {
+                    setTimeout(() => message.delete(), 2000)
+                });
             } else {
                 message.reply("Either the raid doesn't exist, or you're not the owner.")
             }

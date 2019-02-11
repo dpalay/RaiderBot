@@ -35,6 +35,13 @@ const eventsToDisable = ['channelCreate', 'channelDelete', 'channelPinsUpdate', 
     'roleCreate', 'roleDelete', 'roleUpdate', 'typingStart', 'typingStop', 'userNoteUpdate', 'userUpdate', 'voiceStateUpdate'
 ];
 
+
+
+// Set up discord.js client
+const Discord = require('discord.js');
+const client = new Discord.Client({ disabledEvents: eventsToDisable });
+
+
 function debug(content) {
     if (isdebug) console.log(content)
 }
@@ -53,11 +60,6 @@ if (isdebug) {
         value: () => activeRaids.size
     });
 }
-
-// Set up discord.js client
-const Discord = require('discord.js');
-const client = new Discord.Client({ disabledEvents: eventsToDisable });
-
 /**
  * @param {Discord.Channel | Discord.Message} messageOrChannel 
  */

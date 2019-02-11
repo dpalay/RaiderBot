@@ -1,11 +1,11 @@
-
 const Discord = require('discord.js')
 const Raid = require('../Raid.js')
+const ActiveRaid = require('../ActiveRaid.js')
 
 /**
  * @param {Discord.Client} client
  * @param {Discord.Message} message
- * @param {Discord.Collection<any,Raid>} activeRaids
+ * @param {ActiveRaid} activeRaids
  * @param {Array<String>} parseArray
  */
 module.exports.run = async(client, message, activeRaids, parseArray) => {
@@ -16,7 +16,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     //set up variables we'll need
     /**@type {Raid} */
     let raid = {};
-    let msgstart = activeRaids.prefix.length +  parseArray[0].length + 2 // length of "!raider new "
+    let msgstart = activeRaids.prefix.length + parseArray[0].length + 2 // length of "!raider new "
 
 
     // no comma
@@ -44,11 +44,13 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (!activeRaids.quietMode) {
         await message.channel.send(`Raid: (${raid.id})`, {
             embed: raid.embed()
-        }).then((raidMessage) => {
+        }).then(async(raidMessage) => {
             console.debug(`Raid created by ${message.author} in ${message.channel}`);
-            activeRaids.addCountReaction(raidMessage);
+            await activeRaids.addCountReaction(raidMessage);
+            raidMessage.pin().catch((err) => console.error(err))
             raid.addMessage(raidMessage.channel, raidMessage, "info");
-            
+
+
         });
     }
     activeRaids.saveRaid(raid)

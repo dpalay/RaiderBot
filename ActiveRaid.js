@@ -66,7 +66,10 @@ class ActiveRaid extends Discord.Collection {
                     botmessage.message.delete().catch((err) => console.error(err));
                 }
             )).then( /* when all messages are deleted */ )
-            .finally(this.delete(id))
+            .finally(() => {
+                this.delete(id);
+                clearTimeout(this.timeOuts[id]);
+            });
         await this.storage.removeItem(id); // remove the raid from disk
         return this;
     }
