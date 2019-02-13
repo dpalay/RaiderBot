@@ -1,8 +1,12 @@
 const Raid = require('../Raid.js')
-    //const Attendee = require('../Attendee.js')
+const Attendee = require('../Attendee.js')
+const ActiveRaid = require('../ActiveRaid.js')
+const TestClient = require('./mocks/client.js')
+const TestStorage = require('./mocks/storage.js')
+const TestMessage = require('./mocks/messages.js')
     //const Discord = require('discord.js')
 const poke = require('../pokemon.js').interpretPoke
-const users = require('./users.js')
+const users = require('./mocks/users.js')
 
 //var assert = require('chai').assert;
 var expect = require('chai').expect;
@@ -102,6 +106,16 @@ describe("Raid", function() {
                 expect(raidtest.userInRaid(users.user3)).to.not.exist
             })
         })
+    })
+    describe("ActiveRaids", function() {
+        describe("Creating ActiveRaid", function() {
+            let activeRaid = new ActiveRaid(new TestClient, new TestStorage, { pointer: 0, quietMode: false, prefix: "!test" })
+            activeRaid.processMessage(TestMessage["message1"])
+            it('should have a raid', function() {
+                expect(activeRaid.size > 0);
+            })
+        })
+
     })
     describe("Authorized to change raid", function() {
         describe("Message", function() {
