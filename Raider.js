@@ -3,13 +3,16 @@ let config = {};
 
 // Check for config file
 if (process.argv[2]) {
-    let configfile = './' + process.argv[2]
-    config = require(configfile);
+    try {
+        let configfile = './' + process.argv[2]
+        config = require(configfile);
+    } catch (error) {
+        config = require('./tester.json')
+    }
 } else {
     config = require('./tester.json')
     console.error("No config file given.  start with node Raider.js configFileName")
 }
-//config = require('./tester.json')
 
 const { raidChannels, quietMode, storageDir, prefix, token, debug: isdebug } = config
 var { id: ME } = config
