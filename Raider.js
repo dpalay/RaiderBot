@@ -2,7 +2,6 @@ const Raid = require('./Raid.js');
 let config = {};
 
 // Check for config file
-/*
 if (process.argv[2]) {
     let configfile = './' + process.argv[2]
     config = require(configfile);
@@ -10,8 +9,7 @@ if (process.argv[2]) {
     config = require('./tester.json')
     console.error("No config file given.  start with node Raider.js configFileName")
 }
-*/
-config = require('./tester.json')
+//config = require('./tester.json')
 
 const { raidChannels, quietMode, storageDir, prefix, token, debug: isdebug } = config
 var { id: ME } = config
@@ -86,6 +84,7 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
         } catch (error) {
             console.error(error);
         }
+        /** @type {Raid} */
         let raid = activeRaids.get(id)
         switch (messageReaction.emoji.name) {
             case "❌":
@@ -101,9 +100,9 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
                 //TODO:  move this to the raid / attendee objects
                 raid.toggleHere(client, user);
                 break;
-                /*case "▶":
+            case "▶":
                 raid.sendStart(client, user, messageReaction.message.channel)
-                break;*/
+                break;
         }
         await activeRaids.saveRaid(raid);
         messageReaction.remove(user).then((messageReaction) => {
@@ -117,24 +116,7 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
 client.on('message', message => {
     //   if (message.author.bot) return;
     if (message.content.toLowerCase().indexOf(activeRaids.prefix.toLowerCase()) !== 0) return;
-
-
-    // This is the best way to define args. Trust me.
-    let parseArray = message.content.substring(activeRaids.prefix.length).trim().split(" ");
-    const args = message.content.slice(activeRaids.prefix.length).trim().split(/ +/g);
-    let command = args.shift().toLowerCase();
-    if (command.trim().search(",") >= 0) {
-        command = command.split(",")[0];
-    }
-    try {
-        let runcommand = require(`./Commands/${commands[command]}.js`);
-        runcommand.run(client, message, activeRaids, parseArray);
-    } catch (error) {
-        message.author.createDM((dm) => {
-            dm.send(`Hey there, I didn't understand which command you were trying to use in ${message.channel}. Try \`${activeRaids.prefix} help\` for a list of commands.`)
-        })
-        debug(error);
-    }
+    activeRaids.processMessage(message)
 });
 
 // Connected!

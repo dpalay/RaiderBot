@@ -21,7 +21,6 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
         if (activeRaids.has(ID)) {
             let raid = activeRaids.get(ID);
             if (raid.userInRaid(user) || message.author.id === '218550507659067392') {
-                //TODO:  FIX THIS.  (What if there's no comma!)
                 let fwdmessage = parseArray.slice(2).join(" ");
                 raid.messageRaid(message.channel, `Message from ${message.author} to Raid ${raid.id}:\n${fwdmessage}`);
             } else {

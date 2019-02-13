@@ -1,5 +1,4 @@
 const Discord = require('discord.js')
-    //FIXME:  Need to make these store many messages for each channel.  Right now if it has 2 messages from the same channel, it will reply twice.
     /**
      * @property {Discord.Message} message
      * @property {Discord.Channel} channel
@@ -30,11 +29,10 @@ class BotMessage {
      * @param {Discord.Snowflake[]} list   
      * @return {Discord.Snowflake[]} 
      */
-    buildlist(list){
-        if (list.includes(this.channel)){
+    buildlist(list) {
+        if (list.includes(this.channel)) {
             return list
-        }
-        else{
+        } else {
             return list.concat(this.channel);
         }
     }

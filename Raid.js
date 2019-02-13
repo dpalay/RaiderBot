@@ -7,7 +7,6 @@ const Moment = require('moment')
 let config = {};
 
 // Check for config file
-/*
 if (process.argv[2]) {
     let configfile = './' + process.argv[2]
     config = require(configfile);
@@ -15,8 +14,8 @@ if (process.argv[2]) {
     config = require('./tester.json')
     console.error("No config file given.  start with node Raider.js configFileName")
 }
-*/
-config = require('./tester.json')
+
+//config = require('./tester.json')
 
 class Raid {
     /**
@@ -97,6 +96,19 @@ class Raid {
      */
     userInRaid(user) {
         return this.attendees.get(user.id)
+    };
+
+    /**
+     * Checks if the user owns the raid (or is me).  Used in things like transfering, merging, and inactivating raids
+     * @returns True if the message is owned by this raid's owner, if the user is this raid's owner, or if it's from the admin.
+     * @param {Discord.Message | Discord.User} messageOrUser 
+     */
+    authorized(messageOrUser) {
+        if (messageOrUser instanceof Discord.Message) {
+            return (this.owner.id === messageOrUser.author.id || messageOrUser.author.id === '218550507659067392') // Admin :)
+        } else if (messageOrUser instanceof Discord.User) {
+            return (this.owner.id === messageOrUser.id || messageOrUser.id === '218550507659067392')
+        }
     };
 
     /**
@@ -222,7 +234,7 @@ class Raid {
      * @param {Discord.Client} client 
      */
     sendStart(client, user, channel) {
-        if (this.userInRaid(user))
+        if (this.authorized(user))
             this.messageRaid(channel, `${user} has signaled to start the raid!`, client, true)
     }
 
@@ -244,25 +256,14 @@ class Raid {
         }
         str += `**Pokemon: **#${this.poke.id} ${this.poke.name}
             Self-destructs at: ${new Date(this.expires).toLocaleTimeString()}
-            **Total Attendees: **${this.total()}
-             **Attendee List:** 
-             ${this.listAttendees()}`
+            **Total Attendees: **${this.total()}\n`
+        str += `${this.listAttendees()}`
+        str += `\n✅: "Here!"
+                #⃣: How many are you bringing?
+                ❌: leave the raid **Attendee List:** `
             //**Links:**`
         emb.addField("Raid " + this.id, str);
         return emb;
-    };
-
-    /**
-     * Checks if the user owns the raid (or is me).  Used in things like transfering, merging, and inactivating raids
-     * @returns True if the message is owned by this raid's owner, if the user is this raid's owner, or if it's from the admin.
-     * @param {Discord.Message | Discord.User} messageOrUser 
-     */
-    authorized(messageOrUser) {
-        if (messageOrUser instanceof Discord.Message) {
-            return (this.owner.id === messageOrUser.author.id || messageOrUser.author.id === '218550507659067392') // Admin :)
-        } else if (messageOrUser instanceof Discord.User) {
-            return (this.owner.id === messageOrUser.id || messageOrUser.id === '218550507659067392')
-        }
     };
 
     async messageRaid(channel, fwdmessage, client, alert = false) {

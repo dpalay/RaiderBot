@@ -39,7 +39,6 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
         message.channel.send("Sorry, " + message.author + ". I couldn't understand your request.  Perhaps you used the wrong syntax?")
         return;
     }
-    //FIXME:  "XY".  activeRaids needs a .nextID
     raid = activeRaids.makeRaid(activeRaids.nextID(), parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
     if (!activeRaids.quietMode) {
         await message.channel.send(`Raid: (${raid.id})`, {

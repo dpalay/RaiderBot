@@ -1,5 +1,5 @@
 const Discord = require('discord.js')
-const { emojis, randomIds, pokelist } = require('./constant.json');
+const { emojis, randomIds, pokelist, commands } = require('./constant.json');
 const Raid = require('./Raid.js')
 const BotMessage = require('./BotMessage.js')
 
@@ -61,7 +61,6 @@ class ActiveRaid extends Discord.Collection {
      */
     async removeRaid(id) {
         Promise.all(this.get(id).channels.map(
-                //TODO:  Add message deletion here!!
                 (botmessage) => {
                     botmessage.message.delete().catch((err) => console.error(err));
                 }
@@ -102,6 +101,30 @@ class ActiveRaid extends Discord.Collection {
                 console.error(err);
             }
         }
+    }
+
+    /**
+     * 
+     * @param {Discord.Message} message 
+     */
+    processMessage(message) {
+        // This is the best way to define args. Trust me.
+        let parseArray = message.content.substring(this.prefix.length).trim().split(" ");
+        const args = message.content.slice(this.prefix.length).trim().split(/ +/g);
+        let command = args.shift().toLowerCase();
+        if (command.trim().search(",") >= 0) {
+            command = command.split(",")[0];
+        }
+        try {
+            let runcommand = require(`./Commands/${commands[command]}.js`);
+            runcommand.run(this.client, message, this, parseArray);
+        } catch (error) {
+            message.author.createDM((dm) => {
+                dm.send(`Hey there, I didn't understand which command you were trying to use in ${message.channel}. Try \`${this.prefix} help\` for a list of commands.`)
+            })
+            console.log(error);
+        }
+
     }
 }
 
