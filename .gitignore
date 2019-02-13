@@ -17,3 +17,9 @@ tester\.json
 raider\.json
 
 \.vscode/
+
+TesterData/
+
+coverage/
+
+\.nyc_output/
