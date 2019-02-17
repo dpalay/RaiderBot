@@ -6,6 +6,7 @@
     "raidChannels": ["Comma", "Delimited" "list", "of channel", "Ids for the raider to report on", "Probably will leave this all blank"],
     "quietMode": "true or false, without quotes, depending on if you want the raid to make a full embed when someone creates a new raid, or just a brief text message",
     "timeoutNormal": 7200000,
-    "timeoutEX": 259200000
-
+    "timeoutEX": 259200000,
+    "debug": true,
+    "EXMon": ["386"]
 }
