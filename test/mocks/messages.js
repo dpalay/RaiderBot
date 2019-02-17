@@ -1,4 +1,3 @@
-const { user1, user2, user3 } = require('./users.js')
 class testMessage {
 
     /**
@@ -7,9 +6,10 @@ class testMessage {
      * @param {string} user Username for the user
      * @param {number} content the number they're bringing to the raid
      */
-    constructor(id, user, content) {
+    constructor(id, author, channel, content) {
         this.id = id;
-        this.user = user;
+        this.author = author;
+        this.channel = channel;
         this.content = content;
     }
 
@@ -17,8 +17,17 @@ class testMessage {
         return content
     }
 
+    reply() {
+        return true;
+    }
+
+    react() {
+        return true;
+    }
+
+    pin() {
+        return Promise.resolve(true);
+    }
 }
 
-module.exports = {
-    message1: new testMessage("message1", user1, "!test new 1,2,3"),
-}
+module.exports = testMessage;

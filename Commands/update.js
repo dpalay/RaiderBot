@@ -40,11 +40,9 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                             raid.messageRaid(message.channel, "The Pokemon for raid " + ID + " has been update to " + raid.poke.name, client)
                             break;
                         case "time":
-                            //TODO: Add timeOuts to the activeRaids   
                             clearTimeout(activeRaids.timeOuts[raid.id]);
                             let time = cleanString(parseArray[3])
                             raid.time = time;
-                            //raid.expires = raid.poke.id != '150' ? Date.now() + 7200000 : Date.now() + 36000000; //TODO: better expiration
                             activeRaids.timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now())
                             console.log("\tUpdated Time to " + raid.time)
                             raid.messageRaid(message.channel, "The time for raid " + ID + " has been updated to " + raid.time, client)

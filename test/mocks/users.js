@@ -25,5 +25,6 @@ class testUser {
 module.exports = {
     user1: new testUser("123", "user1", 1),
     user2: new testUser("324", "user2", 2),
-    user3: new testUser("757", "user3", 3)
+    user3: new testUser("757", "user3", 3),
+    bot: new testUser("ME", "DevBot", 0)
 }

@@ -77,13 +77,11 @@ const activeRaids = new ActiveRaid(client, storage, { pointer: 0, quietMode: qui
 
 client.on('messageReactionAdd', async(messageReaction, user) => {
     //TODO: Better logic.  The author shouldn't just be Raider, the message should be a raid message
-    if (user != ME && messageReaction.message.author === ME) {
+    if (user != ME && messageReaction.message.author === ME && messageReaction.message.embeds.length > 0) {
         debug(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
         let id
         try {
-            id = messageReaction.message.content.match(/Raid \((.*)\)/)
-            if (id && id.length > 0) id = id[1];
-            id = id || messageReaction.message.embeds[0].fields[0].name.split(" ")[1]
+            id = messageReaction.message.embeds[0].fields[0].name.split(" ")[1]
         } catch (error) {
             console.error(error);
         }
@@ -161,7 +159,7 @@ client.once('ready', async() => {
                 // Add each user to the raid
                 flatRaid.attendees.forEach((att) => {
                     raid.addUserToRaid(att, att.count);
-                    raid.toggleHere(client, att);
+                    raid.attendees.get(att.id).here = att.here
                 });
 
                 // Cache the messages and add them to the raid
