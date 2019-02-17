@@ -1,4 +1,3 @@
-
 const Discord = require('discord.js')
 const Raid = require('../Raid.js')
 
@@ -18,25 +17,25 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
             parseArray[1] = parseArray[1].split(",")[0];
         }
         let ID = parseArray[1].toUpperCase();
-    //if raid exists
-    if (activeRaids.has(ID)) {
-        let raid = activeRaids.get(ID)
-            // try to remove user to the raid
-        if (raid.removeFromRaid(message.author)) {
-            message.reply(" removed from raid " + ID + " **Total confirmed is: " + raid.total() + "**")
-            activeRaids.storeRaid(raid) // store the raid to disk
-        } else {
-            message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendLeave() function")
+        //if raid exists
+        if (activeRaids.has(ID)) {
+            let raid = activeRaids.get(ID)
+                // try to remove user to the raid
+            if (raid.removeFromRaid(message.author)) {
+                message.reply(" removed from raid " + ID + " **Total confirmed is: " + raid.total() + "**")
+                activeRaids.saveRaid(raid) // store the raid to disk
+            } else {
+                message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendLeave() function")
+            }
+        }
+        //raid doesn't exist
+        else {
+            message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.")
+        }
+        if (message.channel.type === 'text') {
+            message.delete().catch(console.error)
         }
     }
-    //raid doesn't exist
-    else {
-        message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.")
-    }
-    if (message.channel.type === 'text') {
-        message.delete().catch(console.error)
-    }
-}
 }
 
 module.exports.help = {

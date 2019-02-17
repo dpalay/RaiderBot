@@ -41,16 +41,21 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     }
     raid = activeRaids.makeRaid(activeRaids.nextID(), parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
     if (!activeRaids.quietMode) {
-        await message.channel.send(`Raid: (${raid.id})`, {
-            embed: raid.embed()
-        }).then(async(raidMessage) => {
-            console.debug(`Raid created by ${message.author} in ${message.channel}`);
-            await activeRaids.addCountReaction(raidMessage);
-            raidMessage.pin().catch((err) => console.error(err))
-            raid.addMessage(raidMessage.channel, raidMessage, "info");
+        try {
+            await message.channel.send(`Raid: (${raid.id})`, {
+                embed: raid.embed()
+            }).then(async(raidMessage) => {
+                console.debug(`Raid created by ${message.author} in ${message.channel}`);
+                await activeRaids.addCountReaction(raidMessage);
+                raidMessage.pin().catch((err) => console.error(err))
+                raid.addMessage(raidMessage.channel, raidMessage, "info");
 
 
-        });
+            })
+        } catch (error) {
+            console.error(error);
+        }
+
     }
     activeRaids.saveRaid(raid)
 }

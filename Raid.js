@@ -8,8 +8,12 @@ let config = {};
 
 // Check for config file
 if (process.argv[2]) {
-    let configfile = './' + process.argv[2]
-    config = require(configfile);
+    try {
+        let configfile = './' + process.argv[2]
+        config = require(configfile);
+    } catch (error) {
+        config = require('./tester.json')
+    }
 } else {
     config = require('./tester.json')
     console.error("No config file given.  start with node Raider.js configFileName")
@@ -130,7 +134,7 @@ class Raid {
                 }
                 this.updateInfo();
             } else count = 0;
-        } else {
+        } else if (parseInt(count) > 0) {
             this.attendees.set(user.id, new Attendee(user.id, user.username, user.mention || `<@${user.id}>`, count))
             this.updateInfo();
         }
@@ -179,9 +183,9 @@ class Raid {
             str += `\tGym:${this.gym}\n`
         }
         str += `\tOrganizer: ${this.owner}\n`;
+        str += `\tTotal Attendees: ${this.total()}`
         str += `\tAttendees:`
         str += this.listAttendees()
-        str += `\tTotal Attendees: ${this.total()}`
         return str;
     }
 
@@ -254,13 +258,10 @@ class Raid {
         if (this.gym != this.location) {
             str += `**Gym: **: ${this.gym}\n`
         }
-        str += `**Pokemon: **#${this.poke.id} ${this.poke.name}
-            Self-destructs at: ${new Date(this.expires).toLocaleTimeString()}
+        str += `**Pokemon: **${this.poke.name}
             **Total Attendees: **${this.total()}\n`
-        str += `${this.listAttendees()}`
-        str += `\n✅: "Here!"
-                #⃣: How many are you bringing?
-                ❌: leave the raid **Attendee List:** `
+        str += this.listAttendees()
+        str += "\n#⃣: How many are you bringing?\n❌: leave the raid\n✅: \"Here!\""
             //**Links:**`
         emb.addField("Raid " + this.id, str);
         return emb;
@@ -277,7 +278,7 @@ class Raid {
                 client.users.get(attendee.id).createDM()
                     .then(
                         (dm) => {
-                            dm.send("Message from one of your raids in the " + channel + " channel")
+                            dm.send("Message from one of your raids in the " + channel + " channel").catch(error => console.log(error))
                         })
                     .catch((error) => console.log(error));
             });
