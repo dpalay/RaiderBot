@@ -239,7 +239,7 @@ class Raid {
      */
     sendStart(client, user) {
         if (this.authorized(user)) {
-            this.messageRaid(`${user} has signaled to start the raid!`, client, true)
+            this.messageRaid(`${user} has signaled to start the ${this.time} ${this.poke.name} raid at ${this.location}!`, client, true)
         }
     }
 
