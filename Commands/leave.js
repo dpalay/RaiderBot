@@ -14,7 +14,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (parseArray[1]) {
         // handle the comma after RaidID
         if (parseArray[1].trim().search(",") >= 0) {
-            parseArray[1] = parseArray[1].split(",")[0];
+            parseArray.splice(1, 1, ...parseArray[1].split(","))
         }
         let ID = parseArray[1].toUpperCase();
         //if raid exists
