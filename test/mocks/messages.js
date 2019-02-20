@@ -28,6 +28,10 @@ class testMessage {
     pin() {
         return Promise.resolve(true);
     }
+
+    delete() {
+        return Promise.resolve(true);
+    }
 }
 
 module.exports = testMessage;

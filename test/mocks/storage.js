@@ -4,6 +4,9 @@ class testStorage {
 
     }
 
+    removeItem() {
+        return Promise.resolve(true);
+    }
     setItem() {
         return Promise.resolve(true);
     }
