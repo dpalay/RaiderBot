@@ -115,7 +115,7 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
 
 //When a message is posted
 client.on('message', message => {
-    //   if (message.author.bot) return;
+    if (message.author.bot) return;
     if (message.content.toLowerCase().indexOf(activeRaids.prefix.toLowerCase()) !== 0) return;
     activeRaids.processMessage(message)
 });
