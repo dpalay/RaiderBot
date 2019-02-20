@@ -282,7 +282,6 @@ class Raid {
                 client.users.get(attendee.id).createDM()
                     .then(
                         (dm) => {
-
                             dm.send(`Message from raid ${this.id} in the ${this.channels.map((botchan) => botchan.channel.toString()).join(", ")} channel(s)`).catch(error => console.log(error))
                         })
                     .catch((error) => console.log(error));
