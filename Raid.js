@@ -270,7 +270,7 @@ class Raid {
 
     async messageRaid(fwdmessage, client, alert = false) {
         try {
-            this.getUniqueChannelList.forEach(async(channel) => {
+            this.getUniqueChannelList().forEach(async(channel) => {
                 let message = await channel.send(`${this.atAttendees()}\n\n${fwdmessage}`);
                 message.delete(5 * 60 * 1000) // delete the message after 5 minutes
             });
@@ -283,7 +283,7 @@ class Raid {
                     .then(
                         (dm) => {
 
-                            dm.send(`Message from raid ${this.id} in the ${channels.map((channel) => channel.toString()).join(", ")} channel(s)`).catch(error => console.log(error))
+                            dm.send(`Message from raid ${this.id} in the ${this.channels.map((botchan) => botchan.channel.toString()).join(", ")} channel(s)`).catch(error => console.log(error))
                         })
                     .catch((error) => console.log(error));
             });
