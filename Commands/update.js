@@ -37,7 +37,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                             let poke = cleanString(parseArray[3])
                             raid.setPokemon(poke)
                             console.log("\tUpdating Pokemon to " + raid.poke.name)
-                            raid.messageRaid(message.channel, "The Pokemon for raid " + ID + " has been update to " + raid.poke.name, client)
+                            raid.messageRaid("The Pokemon for raid " + ID + " has been update to " + raid.poke.name, client)
                             break;
                         case "time":
                             clearTimeout(activeRaids.timeOuts[raid.id]);
@@ -45,17 +45,17 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                             raid.time = time;
                             activeRaids.timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now())
                             console.log("\tUpdated Time to " + raid.time)
-                            raid.messageRaid(message.channel, "The time for raid " + ID + " has been updated to " + raid.time, client)
+                            raid.messageRaid("The time for raid " + ID + " has been updated to " + raid.time, client)
                             break;
                         case "gym":
                             raid.gym = parseArray.slice(3).join(" ");
                             console.log("\tUpdated Gym to " + raid.gym)
-                            raid.messageRaid(message.channel, "The gym for raid " + ID + " has been updated to " + raid.gym, client)
+                            raid.messageRaid("The gym for raid " + ID + " has been updated to " + raid.gym, client)
                             break;
                         case "location":
                             raid.location = parseArray.slice(3).join(" ");
                             console.log("\tUpdated location to " + raid.location)
-                            raid.messageRaid(message.channel, "The location for raid " + ID + " has been updated to " + raid.location, client)
+                            raid.messageRaid("The location for raid " + ID + " has been updated to " + raid.location, client)
                             break;
                         case "expire":
                         case "expiration":

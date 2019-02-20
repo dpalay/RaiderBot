@@ -102,7 +102,7 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
                 raid.toggleHere(client, user);
                 break;
             case "▶":
-                raid.sendStart(client, user, messageReaction.message.channel)
+                raid.sendStart(client, user)
                 break;
         }
         await activeRaids.saveRaid(raid);

@@ -237,9 +237,10 @@ class Raid {
      * 
      * @param {Discord.Client} client 
      */
-    sendStart(client, user, channel) {
-        if (this.authorized(user))
-            this.messageRaid(channel, `${user} has signaled to start the raid!`, client, true)
+    sendStart(client, user) {
+        if (this.authorized(user)) {
+            this.messageRaid(`${user} has signaled to start the raid!`, client, true)
+        }
     }
 
     embed() {
@@ -267,9 +268,12 @@ class Raid {
         return emb;
     };
 
-    async messageRaid(channel, fwdmessage, client, alert = false) {
+    async messageRaid(fwdmessage, client, alert = false) {
         try {
-            await channel.send(`${this.atAttendees()}\n\n${fwdmessage}`)
+            this.getUniqueChannelList.forEach(async(channel) => {
+                let message = await channel.send(`${this.atAttendees()}\n\n${fwdmessage}`);
+                message.delete(5 * 60 * 1000) // delete the message after 5 minutes
+            });
         } catch (error) {
             console.log(error)
         }
@@ -278,7 +282,8 @@ class Raid {
                 client.users.get(attendee.id).createDM()
                     .then(
                         (dm) => {
-                            dm.send("Message from one of your raids in the " + channel + " channel").catch(error => console.log(error))
+
+                            dm.send(`Message from raid ${this.id} in the ${channels.map((channel) => channel.toString()).join(", ")} channel(s)`).catch(error => console.log(error))
                         })
                     .catch((error) => console.log(error));
             });

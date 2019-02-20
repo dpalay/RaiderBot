@@ -22,7 +22,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
             let raid = activeRaids.get(ID);
             if (raid.userInRaid(user) || message.author.id === '218550507659067392') {
                 let fwdmessage = parseArray.slice(2).join(" ");
-                raid.messageRaid(message.channel, `Message from ${message.author} to Raid ${raid.id}:\n${fwdmessage}`);
+                raid.messageRaid(`Message from ${message.author} to Raid ${raid.id}:\n${fwdmessage}`);
             } else {
                 message.author.createDM().then(
                     (dm) => {
