@@ -50,7 +50,6 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
             case "leave":
             case "merge":
             case "update":
-
             case "info":
             case "list":
             default:

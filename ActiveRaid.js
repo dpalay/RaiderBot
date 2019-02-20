@@ -69,7 +69,11 @@ class ActiveRaid extends Discord.Collection {
                 this.delete(id);
                 clearTimeout(this.timeOuts[id]);
             });
-        await this.storage.removeItem(id); // remove the raid from disk
+        try {
+            await this.storage.removeItem(id); // remove the raid from disk
+        } catch (error) {
+            console.log(error)
+        }
         return this;
     }
 
