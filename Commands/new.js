@@ -44,13 +44,11 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
         try {
             await message.channel.send(`Raid: (${raid.id})`, {
                 embed: raid.embed()
-            }).then(async(raidMessage) => {
+            }).then((raidMessage) => {
                 console.debug(`Raid created by ${message.author} in ${message.channel}`);
-                await activeRaids.addCountReaction(raidMessage);
-                raidMessage.pin().catch((err) => console.error(err))
                 raid.addMessage(raidMessage.channel, raidMessage, "info");
-
-
+                raidMessage.pin().catch((err) => console.error(err))
+                activeRaids.addCountReaction(raidMessage);
             })
         } catch (error) {
             console.error(error);
