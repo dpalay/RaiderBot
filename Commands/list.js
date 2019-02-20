@@ -25,7 +25,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                 **Location:** ${raid.location}
                 **Pokemon:** #${raid.poke.id} ${raid.poke.name}
                 **Attendees:** ${raid.total()}
-                \`!raider info ${raid.id}\``, true);
+                **Channels:**${raid.getUniqueChannelList().map((channel) => channel.toString()).join(", ")}`, true);
         })
     }
     //message.reply({embed: emb});
