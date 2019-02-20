@@ -105,11 +105,15 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
                 raid.sendStart(client, user)
                 break;
         }
-        await activeRaids.saveRaid(raid);
+        try {
+            await activeRaids.saveRaid(raid);
+        } catch (error) {
+            console.error(error)
+        }
         messageReaction.remove(user).then((messageReaction) => {
             debug(`removed ${user.username}'s reaction`)
                 //messageReaction.message.edit(messageReaction.message.content + "\n\t" + user.username + ": " + messageReaction.emoji.name)
-        })
+        }).catch((err) => console.error(err))
     }
 })
 
