@@ -26,9 +26,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
 
                 message.channel.send(
                     `${sendlist}
-            Raid ${ID} destroyed. Thank you for using Raider!`).then((message) => {
-                    setTimeout(() => message.delete(), 2000)
-                });
+            Raid ${ID} destroyed. Thank you for using Raider!`).then((message) => message.delete(2000));
             } else {
                 message.reply("Either the raid doesn't exist, or you're not the owner.")
             }
