@@ -115,16 +115,20 @@ class ActiveRaid extends Discord.Collection {
         if (command.trim().search(",") >= 0) {
             command = command.split(",")[0];
         }
-        try {
-            let runcommand = require(`./Commands/${commands[command]}.js`);
-            runcommand.run(this.client, message, this, parseArray);
-        } catch (error) {
-            message.author.createDM((dm) => {
-                dm.send(`Hey there, I didn't understand which command you were trying to use in ${message.channel}. Try \`${this.prefix} help\` for a list of commands.`)
-            })
-            console.log(error);
+        if (commands[command]) {
+            try {
+                let runcommand = require(`./Commands/${commands[command]}.js`);
+                runcommand.run(this.client, message, this, parseArray);
+            } catch (error) {
+                message.author.createDM((dm) => {
+                    dm.send(`Hey there, I didn't understand which command you were trying to use in ${message.channel}. Try \`${this.prefix} help\` for a list of commands.`)
+                })
+                console.log(error);
+            }
+        } else {
+            console.warn(message.content)
+            console.warn("Unknown command")
         }
-
     }
 }
 
