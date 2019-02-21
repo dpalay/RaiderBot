@@ -33,9 +33,6 @@ class testMessage {
         return Promise.resolve(this);
     }
 
-    delete() {
-        return Promise.resolve(true);
-    }
 }
 
 module.exports = testMessage;
