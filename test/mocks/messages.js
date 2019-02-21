@@ -26,7 +26,11 @@ class testMessage {
     }
 
     pin() {
-        return Promise.resolve(true);
+        return Promise.resolve(this);
+    }
+
+    delete() {
+        return Promise.resolve(this);
     }
 }
 
