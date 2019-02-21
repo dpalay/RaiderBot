@@ -262,10 +262,10 @@ class Raid {
         str += `**Pokemon: **[${this.poke.name}](https://pokemongo.gamepress.gg/raid-boss-counter/${this.poke.name}-raid-counter-guide)
             **Total Attendees: **${this.total()}`
             //**Links:**`
-        emb.addField("Raid " + this.id, str);
-        //TODO:  Fix listattendees for if the string is too long.
-        emb.addField("Attendees:", this.listAttendees())
-        emb.addField("Instructions", "#⃣: How many are you bringing?\n❌: leave the raid\n✅: \"Here!\"")
+        emb.addField("Raid " + this.id, str, true);
+        emb.addField("Instructions", "#⃣: How many are you bringing?\n❌: leave the raid\n✅: \"Here!\"\n▶: Send start (only the raid's creator)", true)
+            //TODO:  Fix listattendees for if the string is too long.
+        emb.addField("Attendees:", this.listAttendees() || "None")
         return emb;
     };
 
