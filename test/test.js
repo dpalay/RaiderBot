@@ -32,7 +32,8 @@ describe("Pokemon", function() {
 })
 
 describe("Raid", function() {
-    let raidtest = {};
+    /** @type {Raid} */
+    let raidtest;
     describe("Raid Creation", function() {
         describe('#new Creating the raid', function() {
             raidtest = new Raid("CD", "1:00", 150, "here", users.user1);
@@ -40,6 +41,18 @@ describe("Raid", function() {
                 expect(raidtest.id).to.be.a('string')
                 expect(raidtest.id).to.have.lengthOf(2, 'Should be 2 digit string')
             });
+            it('should not have any channels', function() {
+                expect(raidtest.getUniqueChannelList()).to.be.empty
+            })
+            describe("Add a message to the raid", function() {
+                before("", function() {
+                    raidtest.addMessage(general, new TestMessage("tm id", users.bot, general, "message content"))
+                })
+
+                it("should have a unique channel", function() {
+                    expect(raidtest.getUniqueChannelList()).to.have.a.lengthOf(1)
+                })
+            })
         });
 
         describe("#new Creating the raid with 2 guests for 1 user", function() {
@@ -148,103 +161,105 @@ describe("Raid", function() {
                 it("Should not have the author registered as 'here'", function() {
                     expect(raid.attendees.get(message.author.id).here).to.be.false
                 })
+                describe(`User2: !test join VW, 1`, function() {
+                    before(function() {
+                        message = new TestMessage("join raid", users.user2, general, `!test join VW, 1`)
+                        raid = activeRaid.first();
+                        activeRaid.processMessage(message)
+                    })
+                    it('should still have a single raid', function() {
+                        expect(activeRaid.size, "Should only have 1 raid").to.equal(1);
+                    })
+                    it("should have multiple attendees", function() {
+                        expect(raid.total()).to.equal(2);
+                    })
+                    describe(`User3: !test join VW 4`, function() {
+                        before(function() {
+                            message = new TestMessage("Join raid with multiple", users.user3, general, `!test join VW 4`);
+                            raid = activeRaid.first();
+                            count = raid.total();
+                            activeRaid.processMessage(message)
+                        })
+                        it("should have a new member", function() {
+                            expect(count).to.be.lessThan(raid.total());
+                            expect(raid.total()).equals(6);
+                        })
+                        it("Should have user2", function() {
+                            expect(raid.userInRaid(users.user2)).to.exist;
+                        })
+                        it("Should have user3", function() {
+                            expect(raid.userInRaid(users.user3)).to.exist;
+                        })
+                        describe(`User3: !test leave VW`, function() {
+                            before(function() {
+                                message = new TestMessage("Leave the raid", users.user3, general, `!test leave VW`);
+                                raid = activeRaid.first();
+                                count = raid.total();
+                                activeRaid.processMessage(message);
+                            })
+                            it("should no longer have as many attendees", function() {
+                                expect(count).to.be.greaterThan(raid.total());
+                                expect(raid.total()).equals(2);
+                            })
+                            it("Should have user2", function() {
+                                expect(raid.userInRaid(users.user2)).to.exist;
+                            })
+                            it("Should not have user3", function() {
+                                expect(raid.userInRaid(users.user3)).to.not.exist;
+                            })
+                            describe("User1: !test new 2:00, mewtwo, Heritage Church, 3", function() {
+                                before(function() {
+                                    message = new TestMessage("new raid", users.user1, general, "!test new 2:00, mewtwo, Heritage Church, 3");
+                                    activeRaid.processMessage(message);
+                                    raid = activeRaid.get("TP")
+                                })
+                                it('should have 2 raids', function() {
+                                    expect(activeRaid.size).to.equal(2);
+                                })
+                                it("Should be for MewTwo", function() {
+                                    expect(raid.poke.name).to.equal("Mewtwo")
+                                })
+                                it("Should be at 'Heritage Church'", function() {
+                                    expect(raid.location).to.equal("Heritage Church")
+                                })
+                                it('Should have 3 attendees', function() {
+                                    expect(raid.attendees.size).to.equal(1);
+                                    expect(raid.total()).to.equal(3);
+                                })
+                                it("Should have the author as the attendee", function() {
+                                    expect(raid.userInRaid(message.author)).to.exist;
+                                })
+                                it("Should not have the author registered as 'here'", function() {
+                                    expect(raid.attendees.get(message.author.id).here).to.be.false
+                                })
+                                describe(`User3: !test join, TP,4`, function() {
+                                    before(function() {
+                                        message = new TestMessage("Join raid with multiple", users.user3, general, `!test join, TP,4`);
+                                        raid = activeRaid.get("TP")
+                                        count = raid.total();
+                                        activeRaid.processMessage(message)
+                                    })
+                                    it("should have a new member", function() {
+                                        expect(count).to.be.lessThan(raid.total());
+                                        expect(raid.total()).equals(7);
+                                    })
+                                    it("Should have user1", function() {
+                                        expect(raid.userInRaid(users.user1)).to.exist;
+                                    })
+                                    it("Should not have user2", function() {
+                                        expect(raid.userInRaid(users.user2)).to.not.exist;
+                                    })
+                                    it("Should have user3", function() {
+                                        expect(raid.userInRaid(users.user3)).to.exist;
+                                    })
+                                })
+                            })
+
+                        })
+                    })
+                })
             })
-            describe(`User2: !test join VW, 1`, function() {
-                before(function() {
-                    message = new TestMessage("join raid", users.user2, general, `!test join VW, 1`)
-                    raid = activeRaid.first();
-                    activeRaid.processMessage(message)
-                })
-                it('should still have a single raid', function() {
-                    expect(activeRaid.size, "Should only have 1 raid").to.equal(1);
-                })
-                it("should have multiple attendees", function() {
-                    expect(raid.total()).to.equal(2);
-                })
-            })
-            describe(`User3: !test join VW 4`, function() {
-                before(function() {
-                    message = new TestMessage("Join raid with multiple", users.user3, general, `!test join VW 4`);
-                    raid = activeRaid.first();
-                    count = raid.total();
-                    activeRaid.processMessage(message)
-                })
-                it("should have a new member", function() {
-                    expect(count).to.be.lessThan(raid.total());
-                    expect(raid.total()).equals(6);
-                })
-                it("Should have user2", function() {
-                    expect(raid.userInRaid(users.user2)).to.exist;
-                })
-                it("Should have user3", function() {
-                    expect(raid.userInRaid(users.user3)).to.exist;
-                })
-            })
-            describe(`User3: !test leave VW`, function() {
-                before(function() {
-                    message = new TestMessage("Leave the raid", users.user3, general, `!test leave VW`);
-                    raid = activeRaid.first();
-                    count = raid.total();
-                    activeRaid.processMessage(message);
-                })
-                it("should no longer have as many attendees", function() {
-                    expect(count).to.be.greaterThan(raid.total());
-                    expect(raid.total()).equals(2);
-                })
-                it("Should have user2", function() {
-                    expect(raid.userInRaid(users.user2)).to.exist;
-                })
-                it("Should not have user3", function() {
-                    expect(raid.userInRaid(users.user3)).to.not.exist;
-                })
-            })
-            describe("User1: !test new 2:00, mewtwo, Heritage Church, 3", function() {
-                before(function() {
-                    message = new TestMessage("new raid", users.user1, general, "!test new 2:00, mewtwo, Heritage Church, 3");
-                    activeRaid.processMessage(message);
-                    raid = activeRaid.get("TP")
-                })
-                it('should have 2 raids', function() {
-                    expect(activeRaid.size).to.equal(2);
-                })
-                it("Should be for MewTwo", function() {
-                    expect(raid.poke.name).to.equal("Mewtwo")
-                })
-                it("Should be at 'Heritage Church'", function() {
-                    expect(raid.location).to.equal("Heritage Church")
-                })
-                it('Should have 3 attendees', function() {
-                    expect(raid.attendees.size).to.equal(1);
-                    expect(raid.total()).to.equal(3);
-                })
-                it("Should have the author as the attendee", function() {
-                    expect(raid.userInRaid(message.author)).to.exist;
-                })
-                it("Should not have the author registered as 'here'", function() {
-                    expect(raid.attendees.get(message.author.id).here).to.be.false
-                })
-            })
-            describe(`User3: !test join, TP,4`, function() {
-                before(function() {
-                    message = new TestMessage("Join raid with multiple", users.user3, general, `!test join, TP,4`);
-                    raid = activeRaid.get("TP")
-                    count = raid.total();
-                    activeRaid.processMessage(message)
-                })
-                it("should have a new member", function() {
-                    expect(count).to.be.lessThan(raid.total());
-                    expect(raid.total()).equals(7);
-                })
-                it("Should have user1", function() {
-                    expect(raid.userInRaid(users.user1)).to.exist;
-                })
-                it("Should not have user2", function() {
-                    expect(raid.userInRaid(users.user2)).to.not.exist;
-                })
-                it("Should have user3", function() {
-                    expect(raid.userInRaid(users.user3)).to.exist;
-                })
-            })
+
 
         })
 
