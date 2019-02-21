@@ -47,13 +47,12 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
             }).then((raidMessage) => {
                 console.debug(`Raid created by ${message.author} in ${message.channel}`);
                 raid.addMessage(raidMessage.channel, raidMessage, "info");
-                raidMessage.pin().then((message) => {
-                    message.channel.awaitMessages((m) => {
-                        return m.system && m.type === 'PINS_ADD' && m.author.id === client.user.id
-                    }, { maxMatches: 1 }).then((pinmessage) => {
-                        pinmessage.first().delete().catch((error) => console.error(error))
-                    }).catch((error) => console.error(error))
-                }).catch((err) => console.error(err))
+                raidMessage.channel.awaitMessages((m) => {
+                    return m.system && m.type === 'PINS_ADD' && m.author.id === client.user.id
+                }, { maxMatches: 1 }).then((pinmessage) => {
+                    pinmessage.first().delete().catch((error) => console.error(error))
+                }).catch((error) => console.error(error))
+                raidMessage.pin().catch((err) => console.error(err))
                 activeRaids.addCountReaction(raidMessage);
             })
         } catch (error) {
