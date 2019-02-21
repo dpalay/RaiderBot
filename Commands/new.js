@@ -51,7 +51,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                     message.channel.awaitMessages((m) => {
                         return m.system && m.type === 'PINS_ADD' && m.author.id === client.user.id
                     }, { maxMatches: 1 }).then((pinmessage) => {
-                        pinmessage.delete().catch((error) => console.errror(error))
+                        pinmessage.first().delete().catch((error) => console.errror(error))
                     }).catch((error) => console.error(error))
                 }).catch((err) => console.error(err))
                 activeRaids.addCountReaction(raidMessage);
