@@ -14,7 +14,7 @@ if (process.argv[2]) {
     console.error("No config file given.  start with node Raider.js configFileName")
 }
 
-const { raidChannels, quietMode, storageDir, prefix, token, debug: isdebug } = config
+const { raidChannels, activeRaidChannel, quietMode, storageDir, prefix, token, debug: isdebug } = config
 var { id: ME } = config
 
 //import { emojis, randomIds, pokelist } from "./constant.json";
@@ -107,6 +107,7 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
         }
         try {
             await activeRaids.saveRaid(raid);
+            activeRaids.updatePost();
         } catch (error) {
             console.error(error)
         }
@@ -128,9 +129,10 @@ client.on('message', message => {
 client.once('ready', async() => {
     client.user.setActivity(activeRaids.prefix + ' help | More info')
     ME = client.user
+    await activeRaids.getChannelAndMessage(activeRaidChannel);
     console.log("Loading saved Raids")
         // load the stored raids into memory
-    storage.forEach(async(key, val) => {
+    await storage.forEach(async(key, val) => {
         if (key === "pointer") {
             activeRaids.pointer == val
         } else {
@@ -217,6 +219,7 @@ client.once('ready', async() => {
             }
         }
     });
+    activeRaids.updatePost();
     console.log('Raider is ready!');
 });
 

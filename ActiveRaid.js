@@ -71,6 +71,7 @@ class ActiveRaid extends Discord.Collection {
             });
         try {
             await this.storage.removeItem(id); // remove the raid from disk
+            this.updatePost();
         } catch (error) {
             console.log(error)
         }
@@ -107,11 +108,43 @@ class ActiveRaid extends Discord.Collection {
         }
     }
 
+    async getChannelAndMessage(activeRaidChannel) {
+        this.activeRaidChannel = this.client.channels.get(activeRaidChannel)
+        let activeRaidMessages = await this.activeRaidChannel.fetchMessages();
+        this.activeRaidMessage = activeRaidMessages.filter((message) =>
+            message.author.id == this.client.user.id).first()
+    }
+
+    async updatePost() {
+        let emb = new Discord.RichEmbed();
+        emb.setTitle("Active Raids!")
+        emb.setColor(0xEE6600).setTimestamp().setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
+        emb.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
+        if (this.size == 0) {
+            emb.setDescription("There are no currently active raids.\nTry `!raider new <time>, <poke>, <location>` to start a new one.");
+        } else {
+            emb.setDescription("These are the currently active raids:")
+            this.forEach((raid) => {
+                emb.addField(raid.id, `**Owner: ** ${raid.owner}
+                **Time:** ${raid.time} 
+                **Location:** ${raid.location}
+                **Pokemon:** #${raid.poke.id} ${raid.poke.name}
+                **Attendees:** ${raid.total()}
+                **Channels:**${raid.getUniqueChannelList().map((channel) => channel.toString()).join(", ")}`, true);
+            })
+        }
+        if (this.activeRaidMessage) {
+            this.activeRaidMessage.edit(emb).catch(err => console.error(err));
+        } else {
+            this.activeRaidChannel.send(emb).then((message) => this.activeRaidMessage = message).catch(err => console.error(err));
+        }
+    }
+
     /**
      * 
      * @param {Discord.Message} message 
      */
-    processMessage(message) {
+    async processMessage(message) {
         // This is the best way to define args. Trust me.
         let parseArray = message.content.substring(this.prefix.length).trim().split(" ");
         const args = message.content.slice(this.prefix.length).trim().split(/ +/g);
@@ -122,7 +155,8 @@ class ActiveRaid extends Discord.Collection {
         if (commands[command]) {
             try {
                 let runcommand = require(`./Commands/${commands[command]}.js`);
-                runcommand.run(this.client, message, this, parseArray);
+                await runcommand.run(this.client, message, this, parseArray);
+                this.updatePost();
             } catch (error) {
                 message.author.createDM((dm) => {
                     dm.send(`Hey there, I didn't understand which command you were trying to use in ${message.channel}. Try \`${this.prefix} help\` for a list of commands.`)
