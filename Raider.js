@@ -111,7 +111,6 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
         }
         try {
             await activeRaids.saveRaid(raid);
-            activeRaids.updatePost();
         } catch (error) {
             console.error(error)
         }
