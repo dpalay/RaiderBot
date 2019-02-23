@@ -110,40 +110,51 @@ class ActiveRaid extends Discord.Collection {
 
     async getChannelAndMessage(activeRaidChannel) {
         this.activeRaidChannel = this.client.channels.get(activeRaidChannel)
-        let activeRaidMessages = await this.activeRaidChannel.fetchMessages();
-        this.activeRaidMessage = activeRaidMessages.filter((message) =>
-            message.author.id == this.client.user.id).first();
-        if (this.activeRaidMessage.reactions.size == 0) {
-            this.activeRaidMessage.react("♻");
+        if (this.activeRaidChannel instanceof Discord.TextBasedChannel) {
+            try {
+                let activeRaidMessages = await this.activeRaidChannel.fetchMessages();
+                this.activeRaidMessage = activeRaidMessages.filter((message) =>
+                    message.author.id == this.client.user.id).first();
+                if (this.activeRaidMessage.reactions.size == 0) {
+                    this.activeRaidMessage.react("♻");
+                }
+            } catch (error) {
+                console.error(error)
+            }
         }
     }
 
     async updatePost() {
-        let emb = new Discord.RichEmbed();
-        emb.setTitle("Active Raids!")
-        emb.setColor(0xEE6600).setTimestamp().setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
-        emb.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
-        if (this.size == 0) {
-            emb.setDescription("There are no currently active raids.\nTry `!raider new <time>, <poke>, <location>` to start a new one.");
-            emb.setFooter("press ♻ to refresh the list of active raids.");
-        } else {
-            emb.setDescription("These are the currently active raids:")
-            this.forEach((raid) => {
-                emb.addField(raid.id, `**Owner: ** ${raid.owner}
-                **Time:** ${raid.time} 
-                **Location:** ${raid.location}
-                **Pokemon:** #${raid.poke.id} ${raid.poke.name}
-                **Attendees:** ${raid.total()}
-                **Channels:**${raid.getUniqueChannelList().map((channel) => channel.toString()).join(", ")}`, true);
-            })
-        }
-        if (this.activeRaidMessage) {
-            this.activeRaidMessage.edit(emb).catch(err => console.error(err));
-        } else {
-            this.activeRaidChannel.send(emb).then((message) => {
-                this.activeRaidMessage = message;
-                this.activeRaidMessage.react("♻");
-            }).catch(err => console.error(err));
+        if (this.activeRaidChannel instanceof Discord.TextBasedChannel && this.activeRaidChannel.permissionsFor(this.client.user).has('MANAGE_MESSAGES')) {
+            let emb = new Discord.RichEmbed();
+            emb.setTitle("Active Raids!")
+            emb.setColor(0xEE6600).setTimestamp().setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
+            emb.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
+            if (this.size == 0) {
+                emb.setDescription("There are no currently active raids.\nTry `!raider new <time>, <poke>, <location>` to start a new one.");
+                emb.setFooter("press ♻ to refresh the list of active raids.");
+            } else {
+                emb.setDescription("These are the currently active raids:")
+                this.forEach((raid) => {
+                    emb.addField(raid.id, `**Owner: ** ${raid.owner}
+                    **Time:** ${raid.time} 
+                    **Location:** ${raid.location}
+                    **Pokemon:** #${raid.poke.id} ${raid.poke.name}
+                    **Attendees:** ${raid.total()}
+                    **Channels:**${raid.getUniqueChannelList().map((channel) => channel.toString()).join(", ")}`, true);
+                })
+            }
+            if (this.activeRaidMessage) {
+                this.activeRaidMessage.edit(emb).catch(err => console.error(err));
+                if (this.activeRaidMessage.reactions.size == 0) {
+                    this.activeRaidMessage.react("♻");
+                }
+            } else {
+                this.activeRaidChannel.send(emb).then((message) => {
+                    this.activeRaidMessage = message;
+                    this.activeRaidMessage.react("♻");
+                }).catch(err => console.error(err));
+            }
         }
     }
 
