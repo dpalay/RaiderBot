@@ -110,7 +110,7 @@ class ActiveRaid extends Discord.Collection {
 
     async getChannelAndMessage(activeRaidChannel) {
         this.activeRaidChannel = this.client.channels.get(activeRaidChannel)
-        if (this.activeRaidChannel instanceof Discord.TextBasedChannel) {
+        if (this.activeRaidChannel instanceof Discord.TextChannel) {
             try {
                 let activeRaidMessages = await this.activeRaidChannel.fetchMessages();
                 this.activeRaidMessage = activeRaidMessages.filter((message) =>
@@ -125,7 +125,7 @@ class ActiveRaid extends Discord.Collection {
     }
 
     async updatePost() {
-        if (this.activeRaidChannel instanceof Discord.TextBasedChannel && this.activeRaidChannel.permissionsFor(this.client.user).has('MANAGE_MESSAGES')) {
+        if (this.activeRaidChannel instanceof Discord.TextChannel && this.activeRaidChannel.permissionsFor(this.client.user).has('MANAGE_MESSAGES')) {
             let emb = new Discord.RichEmbed();
             emb.setTitle("Active Raids!")
             emb.setColor(0xEE6600).setTimestamp().setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
