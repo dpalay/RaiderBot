@@ -14,7 +14,7 @@ if (process.argv[2]) {
     console.error("No config file given.  start with node Raider.js configFileName")
 }
 
-const { raidChannels, quietMode, storageDir, prefix, token, debug: isdebug } = config
+const { raidChannels, activeRaidChannel, quietMode, storageDir, prefix, token, debug: isdebug } = config
 var { id: ME } = config
 
 //import { emojis, randomIds, pokelist } from "./constant.json";
@@ -76,8 +76,12 @@ const ActiveRaid = require('./ActiveRaid.js');
 const activeRaids = new ActiveRaid(client, storage, { pointer: 0, quietMode: quietMode, prefix: prefix })
 
 client.on('messageReactionAdd', async(messageReaction, user) => {
+    if (user != ME && messageReaction.message.author == ME && messageReaction.message.channel.id == activeRaidChannel) {
+        activeRaids.updatePost()
+        messageReaction.remove(user).catch((err) => console.error(err))
+    }
     //TODO: Better logic.  The author shouldn't just be Raider, the message should be a raid message
-    if (user != ME && messageReaction.message.author === ME && messageReaction.message.embeds.length > 0) {
+    else if (user != ME && messageReaction.message.author === ME && messageReaction.message.embeds.length > 0) {
         debug(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
         let id
         try {
@@ -128,11 +132,12 @@ client.on('message', message => {
 client.once('ready', async() => {
     client.user.setActivity(activeRaids.prefix + ' help | More info')
     ME = client.user
+    await activeRaids.getChannelAndMessage(activeRaidChannel);
     console.log("Loading saved Raids")
         // load the stored raids into memory
-    storage.forEach(async(key, val) => {
+    await storage.forEach(async(key, val) => {
         if (key === "pointer") {
-            activeRaids.pointer == val
+            activeRaids.pointer = val
         } else {
             if (val.expires <= Date.now()) {
                 // remove the raid to disk
