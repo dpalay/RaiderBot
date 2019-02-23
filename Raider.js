@@ -138,7 +138,7 @@ client.once('ready', async() => {
         // load the stored raids into memory
     await storage.forEach(async(key, val) => {
         if (key === "pointer") {
-            activeRaids.pointer == val
+            activeRaids.pointer = val
         } else {
             if (val.expires <= Date.now()) {
                 // remove the raid to disk
