@@ -53,7 +53,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                     pinmessage.first().delete().catch((error) => console.error(error))
                 }).catch((error) => console.error(error))
                 raidMessage.pin().catch((err) => console.error(err))
-                activeRaids.addCountReaction(raidMessage);
+                activeRaids.addCountReaction(raidMessage).then(activeRaids.updatePost()).catch((error) => console.error(error));
             })
         } catch (error) {
             console.error(error);
