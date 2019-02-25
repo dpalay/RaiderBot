@@ -1,22 +1,22 @@
 const { pokelist } = require('./constant.json');
-const pokemon = require('./pokemon.js')
-const Discord = require('discord.js')
-const Attendee = require('./Attendee.js')
-const BotMessage = require('./BotMessage.js')
-const Moment = require('moment')
+const pokemon = require('./pokemon.js');
+const Discord = require('discord.js');
+const Attendee = require('./Attendee.js');
+const BotMessage = require('./BotMessage.js').default;
+
 let config = {};
 
 // Check for config file
 if (process.argv[2]) {
     try {
-        let configfile = './' + process.argv[2]
+        let configfile = './' + process.argv[2];
         config = require(configfile);
     } catch (error) {
-        config = require('./tester.json')
+        config = require('./tester.json');
     }
 } else {
-    config = require('./tester.json')
-    console.error("No config file given.  start with node Raider.js configFileName")
+    config = require('./tester.json');
+    console.error("No config file given.  start with node Raider.js configFileName");
 }
 
 //config = require('./tester.json')
@@ -39,7 +39,7 @@ class Raid {
         this.gym = location;
         this.locationComment = "";
         this.poke = {};
-        this.setPokemon(pokemon.interpretPoke(poke))
+        this.setPokemon(pokemon.interpretPoke(poke));
         this.poke.id = pokemon.interpretPoke(poke);
         this.poke.name = pokelist[this.poke.id - 1] ? pokelist[this.poke.id - 1] : poke;
         this.owner = owner;
@@ -74,7 +74,7 @@ class Raid {
                     mention: attendee.mention,
                     here: attendee.here,
                     username: attendee.username
-                }
+                };
             })
         };
         return raid;
@@ -87,7 +87,7 @@ class Raid {
      * @param {"info" | "reply" | "unknown" } type
      */
     addMessage(channel, message, type = "unknown") {
-        this.channels.push(new BotMessage(channel, message, type))
+        this.channels.push(new BotMessage(channel, message, type));
     };
 
     setPokemon(poke) {
@@ -99,7 +99,7 @@ class Raid {
      * @param {Discord.User} user 
      */
     userInRaid(user) {
-        return this.attendees.get(user.id)
+        return this.attendees.get(user.id);
     };
 
     /**
@@ -109,9 +109,9 @@ class Raid {
      */
     authorized(messageOrUser) {
         if (messageOrUser instanceof Discord.Message) {
-            return (this.owner.id === messageOrUser.author.id || messageOrUser.author.id === '218550507659067392') // Admin :)
+            return (this.owner.id === messageOrUser.author.id || messageOrUser.author.id === '218550507659067392'); // Admin :)
         } else if (messageOrUser instanceof Discord.User) {
-            return (this.owner.id === messageOrUser.id || messageOrUser.id === '218550507659067392')
+            return (this.owner.id === messageOrUser.id || messageOrUser.id === '218550507659067392');
         }
     };
 
@@ -123,7 +123,7 @@ class Raid {
      */
     addUserToRaid(user, count = 1) {
         // check if the user is already in the raid
-        let att = this.attendees.get(user.id)
+        let att = this.attendees.get(user.id);
         if (att) {
             // if the count is different
             if (att.count != count) {
@@ -135,7 +135,7 @@ class Raid {
                 this.updateInfo();
             } else count = 0;
         } else if (parseInt(count) > 0) {
-            this.attendees.set(user.id, new Attendee(user.id, user.username, user.mention || `<@${user.id}>`, count))
+            this.attendees.set(user.id, new Attendee(user.id, user.username, user.mention || `<@${user.id}>`, count));
             this.updateInfo();
         }
         return count;
@@ -154,7 +154,7 @@ class Raid {
      * @param {Discord.User} user user to remove from the raid
      */
     removeFromRaid(user) {
-        return this.attendees.delete(user.id)
+        return this.attendees.delete(user.id);
     }
 
     /**
@@ -163,7 +163,7 @@ class Raid {
      */
     total() {
         var sum = 0;
-        this.attendees.forEach((val) => { sum += parseInt(val.count) });
+        this.attendees.forEach((val) => { sum += parseInt(val.count); });
         return sum;
         //return this.attendees.reduce((acc, val) => { return acc + val.count }, 0);
 
@@ -174,33 +174,33 @@ class Raid {
      * @returns {String} stringified version of the Raid
      */
     toString() {
-        let str = ""
+        let str = "";
         str += `**Raid ID: ${this.id}**\n`;
         str += `\tTime: ${this.time}\n`;
         str += `\tPokemon: #${ this.poke.id} ${this.poke.name}\n`;
         str += `\tLocation: ${this.location}\n`;
         if (this.gym != this.location) {
-            str += `\tGym:${this.gym}\n`
+            str += `\tGym:${this.gym}\n`;
         }
         str += `\tOrganizer: ${this.owner}\n`;
-        str += `\tTotal Attendees: ${this.total()}`
-        str += `\tAttendees:`
-        str += this.listAttendees()
+        str += `\tTotal Attendees: ${this.total()}`;
+        str += `\tAttendees:`;
+        str += this.listAttendees();
         return str;
     }
 
     /** @returns {string} the roster of attendees with icon for here or not */
     listAttendees() {
-        let str = ""
+        let str = "";
         this.attendees.forEach((attendee) => {
-            str += `\t\t${attendee.here ? "✅" : "❓" }${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`
-        })
+            str += `\t\t${attendee.here ? "✅" : "❓" }${attendee.count}\t - ${attendee.username}\t - ${attendee.mention}\n`;
+        });
         return str;
     }
 
     /** @returns {string} the @mentions of all the attendees as a string. */
     atAttendees() {
-        return this.attendees.map((attendee) => attendee.mention).join(", ")
+        return this.attendees.map((attendee) => attendee.mention).join(", ");
     }
 
     /**
@@ -217,11 +217,11 @@ class Raid {
             attendee = attendeeOrUser;
         }
         if (attendee && attendee.id && this.attendees.has(attendee.id)) {
-            attendee.here = !attendee.here
+            attendee.here = !attendee.here;
             this.updateInfo();
         } else {
             this.addUserToRaid(attendeeOrUser);
-            this.toggleHere(client, attendeeOrUser)
+            this.toggleHere(client, attendeeOrUser);
         }
     }
 
@@ -230,7 +230,7 @@ class Raid {
         for (const botChan of this.channels) {
             botChannels = botChan.buildlist(botChannels);
         }
-        return botChannels
+        return botChannels;
     }
 
     /**
@@ -239,7 +239,7 @@ class Raid {
      */
     sendStart(client, user) {
         if (this.authorized(user)) {
-            this.messageRaid(`${user} has signaled to start the ${this.time} ${this.poke.name} raid at ${this.location}!`, client, true)
+            this.messageRaid(`${user} has signaled to start the ${this.time} ${this.poke.name} raid at ${this.location}!`, client, true);
         }
     }
 
@@ -248,24 +248,24 @@ class Raid {
         emb.setTitle("Raid Information");
         emb.setColor(0xEE6600).setTimestamp();
         if (pokelist[this.poke.id]) {
-            emb.setAuthor("RaiderBot_" + this.poke.name, "https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png")
-            emb.setThumbnail("https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png")
+            emb.setAuthor("RaiderBot_" + this.poke.name, "https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png");
+            emb.setThumbnail("https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png");
         } else {
-            emb.setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
-            emb.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg")
+            emb.setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg");
+            emb.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg");
         }
         let str = `**Time: ** ${this.time}
-            **Location: **${this.location}\n`
+            **Location: **${this.location}\n`;
         if (this.gym != this.location) {
-            str += `**Gym: **: ${this.gym}\n`
+            str += `**Gym: **: ${this.gym}\n`;
         }
         str += `**Pokemon: **[${this.poke.name}](https://pokemongo.gamepress.gg/raid-boss-counter/${this.poke.name}-raid-counter-guide)
-            **Total Attendees: **${this.total()}`
-            //**Links:**`
+            **Total Attendees: **${this.total()}`;
+        //**Links:**`
         emb.addField("Raid " + this.id, str, true);
-        emb.addField("Instructions", "#⃣: How many are you bringing?\n❌: leave the raid\n✅: \"Here!\"\n▶: Send start (only the raid's creator)", true)
-            //TODO:  Fix listattendees for if the string is too long.
-        emb.addField("Attendees:", this.listAttendees() || "None")
+        emb.addField("Instructions", "#⃣: How many are you bringing?\n❌: leave the raid\n✅: \"Here!\"\n▶: Send start (only the raid's creator)", true);
+        //TODO:  Fix listattendees for if the string is too long.
+        emb.addField("Attendees:", this.listAttendees() || "None");
         return emb;
     };
 
@@ -273,17 +273,17 @@ class Raid {
         try {
             this.getUniqueChannelList().forEach(async(channel) => {
                 let message = await channel.send(`${this.atAttendees()}\n\n${fwdmessage}`);
-                message.delete(5 * 60 * 1000) // delete the message after 5 minutes
+                message.delete(5 * 60 * 1000); // delete the message after 5 minutes
             });
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
         if (alert) {
             this.attendees.forEach((attendee) => {
                 client.users.get(attendee.id).createDM()
                     .then(
                         (dm) => {
-                            dm.send(`Message from raid ${this.id} in the ${this.channels.map((botchan) => botchan.channel.toString()).join(", ")} channel(s)`).catch(error => console.log(error))
+                            dm.send(`Message from raid ${this.id} in the ${this.channels.map((botchan) => botchan.channel.toString()).join(", ")} channel(s)`).catch(error => console.log(error));
                         })
                     .catch((error) => console.log(error));
             });

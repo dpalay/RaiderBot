@@ -1,5 +1,6 @@
-const Discord = require('discord.js')
-const Raid = require('../Raid.js')
+/* eslint-disable no-unused-vars */
+const Discord = require('discord.js');
+const Raid = require('../Raid.js');
 
 /**
  * @param {Discord.Client} client
@@ -13,11 +14,11 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (parseArray[1]) {
         // handle the comma after RaidID
         if (parseArray[1].trim().search(",") >= 0) {
-            parseArray.splice(1, 1, ...parseArray[1].split(","))
+            parseArray.splice(1, 1, ...parseArray[1].split(","));
         }
         let ID = parseArray[1].toUpperCase();
         let count = parseInt(parseArray[2]) || 1;
-        console.log(`\tID: ${ID}\tcount: ${count}\tparseArray:${parseArray.toString()}`)
+        console.log(`\tID: ${ID}\tcount: ${count}\tparseArray:${parseArray.toString()}`);
         if (count >= 0) {
             // does raid exist
             if (activeRaids.has(ID)) {
@@ -26,20 +27,20 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                     await activeRaids.saveRaid(raid); // store the raid to disk
                 }
             } else {
-                message.reply("Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids.")
+                message.reply("Either that raid doesn't exist, or I couldn't process the command.  Type `!raider list` for a list of active raids.");
             }
         } else {
             message.reply(`I didn't understand ${count}. This wasn't a positive number I could recognize.  Try again?`);
         }
     } else {
-        message.reply(`I didn't see you supply any sort of ID for the raid you'd like to join. Try again?`)
+        message.reply(`I didn't see you supply any sort of ID for the raid you'd like to join. Try again?`);
     }
     if (message.channel.type == 'text') {
-        message.delete().catch(console.error)
+        message.delete().catch(console.error);
     }
-}
+};
 module.exports.help = {
     name: "join",
     description: "joins the raid with yourself or with guests",
     usage: "join <ID>"
-}
+};

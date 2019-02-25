@@ -20,14 +20,14 @@ exports.interpretPoke = function interpretPoke(poke) {
         pokeID = parseInt(poke.substring(1));
     } else if (parseInt(poke) >= 0) {
         //console.log("==\tStarted with a number greater than 0")
-        pokeID = parseInt(poke)
+        pokeID = parseInt(poke);
     } else {
         //console.log("==\tBegin fuzzy search")
         let options = {
             scorer: fuzz.token_set_ratio
         };
-        let match = fuzz.extract(poke, names, options)[0]
-            //console.log("==\t" + match)
+        let match = fuzz.extract(poke, names, options)[0];
+        //console.log("==\t" + match)
         if (match[1] >= 85) { // pretty sure we figured it out
             //console.log("==\tHigh Enough Score")
             pokeID = match[2] + 1; //index, but Pokemon start at a non-zero index (Bulbasaur = 1, not 0)
@@ -37,4 +37,4 @@ exports.interpretPoke = function interpretPoke(poke) {
         }
     }
     return pokeID;
-}
+};

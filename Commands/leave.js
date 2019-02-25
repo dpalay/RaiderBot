@@ -1,5 +1,6 @@
-const Discord = require('discord.js')
-const Raid = require('../Raid.js')
+/* eslint-disable no-unused-vars */
+const Discord = require('discord.js');
+const Raid = require('../Raid.js');
 
 /**
  * @param {Discord.Client} client
@@ -14,32 +15,32 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (parseArray[1]) {
         // handle the comma after RaidID
         if (parseArray[1].trim().search(",") >= 0) {
-            parseArray.splice(1, 1, ...parseArray[1].split(","))
+            parseArray.splice(1, 1, ...parseArray[1].split(","));
         }
         let ID = parseArray[1].toUpperCase();
         //if raid exists
         if (activeRaids.has(ID)) {
-            let raid = activeRaids.get(ID)
-                // try to remove user to the raid
+            let raid = activeRaids.get(ID);
+            // try to remove user to the raid
             if (raid.removeFromRaid(message.author)) {
-                message.reply(" removed from raid " + ID + " **Total confirmed is: " + raid.total() + "**")
-                activeRaids.saveRaid(raid) // store the raid to disk
+                message.reply(" removed from raid " + ID + " **Total confirmed is: " + raid.total() + "**");
+                activeRaids.saveRaid(raid); // store the raid to disk
             } else {
-                message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendLeave() function")
+                message.reply("Well that's odd... This should be unreachable.  Paging @Thanda, your code broke in the sendLeave() function");
             }
         }
         //raid doesn't exist
         else {
-            message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.")
+            message.reply(": Either that raid doesn't exist, or I couldn't process the command.  Type ```\n!raider list\n```\nfor a list of active raids.");
         }
         if (message.channel.type === 'text') {
-            message.delete().catch(console.error)
+            message.delete().catch(console.error);
         }
     }
-}
+};
 
 module.exports.help = {
     name: "leave",
     description: "Removes the user from the raid",
     usage: "leave <ID>"
-}
+};

@@ -4,29 +4,27 @@ let config = {};
 // Check for config file
 if (process.argv[2]) {
     try {
-        let configfile = './' + process.argv[2]
+        let configfile = './' + process.argv[2];
         config = require(configfile);
     } catch (error) {
-        config = require('./tester.json')
+        config = require('./tester.json');
     }
 } else {
-    config = require('./tester.json')
-    console.error("No config file given.  start with node Raider.js configFileName")
+    config = require('./tester.json');
+    console.error("No config file given.  start with node Raider.js configFileName");
 }
 
-const { raidChannels, activeRaidChannel: activeRaidChannelID, quietMode, storageDir, prefix, token, debug: isdebug } = config
-var { id: ME } = config
+const { activeRaidChannel: activeRaidChannelID, quietMode, storageDir, prefix, token, debug: isdebug } = config;
+var { id: ME } = config;
 
 //import { emojis, randomIds, pokelist } from "./constant.json";
-const { emojis, randomIds, pokelist, commands } = require('./constant.json');
-
-const enmap = require('enmap')
+const { emojis } = require('./constant.json');
 
 // Set up persistant file storage
 const storage = require('node-persist');
 storage.initSync({
     dir: storageDir,
-})
+});
 
 // EVENTS TO DISABLE TO SAVE MEMORY AND CPU
 const eventsToDisable = ['channelCreate', 'channelDelete', 'channelPinsUpdate', 'channelUpdate', 'clientUserGuildSettingsUpdate', 'clientUserSettingsUpdate',
@@ -44,7 +42,7 @@ const client = new Discord.Client({ disabledEvents: eventsToDisable });
 
 
 function debug(content) {
-    if (isdebug) console.log(content)
+    if (isdebug) console.log(content);
 }
 
 if (isdebug) {
@@ -54,8 +52,9 @@ if (isdebug) {
 } else {
     //Comment this out if you are not using pm2 and keymetrics.io.  But really, why aren't you using them?  They're awesome!
     // Set up Metric for Keymetrics.io
-    let probe = require('pmx').probe()
+    let probe = require('pmx').probe();
 
+    // eslint-disable-next-line no-unused-vars
     let numRaids = probe.metric({
         name: "# of raids",
         value: () => activeRaids.size
@@ -66,14 +65,14 @@ if (isdebug) {
  */
 client.canEdit = function(messageOrChannel) {
     if (messageOrChannel instanceof Discord.Message) {
-        return messageOrChannel.channel instanceof Discord.TextChannel && messageOrChannel.channel.permissionsFor(ME).has('MANAGE_MESSAGES')
+        return messageOrChannel.channel instanceof Discord.TextChannel && messageOrChannel.channel.permissionsFor(ME).has('MANAGE_MESSAGES');
     } else if (messageOrChannel instanceof Discord.Channel) {
-        return messageOrChannel instanceof Discord.TextChannel && messageOrChannel.permissionsFor(ME).has('MANAGE_MESSAGES')
+        return messageOrChannel instanceof Discord.TextChannel && messageOrChannel.permissionsFor(ME).has('MANAGE_MESSAGES');
     }
-}
+};
 
 const ActiveRaid = require('./ActiveRaid.js');
-const activeRaids = new ActiveRaid(client, storage, { pointer: 0, quietMode: quietMode, prefix: prefix })
+const activeRaids = new ActiveRaid(client, storage, { pointer: 0, quietMode: quietMode, prefix: prefix });
 
 client.on('messageReactionAdd', async(messageReaction, user) => {
     if (user != ME &&
@@ -81,21 +80,21 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
         messageReaction.message.channel.id == activeRaidChannelID &&
         client.canEdit(messageReaction.message)) {
         if (messageReaction.emoji.name == "♻") {
-            activeRaids.updatePost()
+            activeRaids.updatePost();
         }
-        messageReaction.remove(user).catch((err) => console.error(err))
+        messageReaction.remove(user).catch((err) => console.error(err));
     }
     //TODO: Better logic.  The author shouldn't just be Raider, the message should be a raid message
     else if (user != ME && messageReaction.message.author === ME && messageReaction.message.embeds.length > 0) {
-        debug(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`)
-        let id
+        debug(`${user.username} added a reaction of ${messageReaction.emoji.name} to ${messageReaction.message.content}`);
+        let id;
         try {
-            id = messageReaction.message.embeds[0].fields[0].name.split(" ")[1]
+            id = messageReaction.message.embeds[0].fields[0].name.split(" ")[1];
         } catch (error) {
             console.error(error);
         }
         /** @type {Raid} */
-        let raid = activeRaids.get(id)
+        let raid = activeRaids.get(id);
         switch (messageReaction.emoji.name) {
             case "❌":
             case "1⃣":
@@ -104,45 +103,45 @@ client.on('messageReactionAdd', async(messageReaction, user) => {
             case "4⃣":
             case "5⃣":
                 // add user to the raid
-                raid.addUserToRaid(user, emojis.indexOf(messageReaction.emoji.name))
+                raid.addUserToRaid(user, emojis.indexOf(messageReaction.emoji.name));
                 break;
             case "✅":
                 //TODO:  move this to the raid / attendee objects
                 raid.toggleHere(client, user);
                 break;
             case "▶":
-                raid.sendStart(client, user)
+                raid.sendStart(client, user);
                 break;
         }
         try {
             await activeRaids.saveRaid(raid);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
+        // eslint-disable-next-line no-unused-vars
         messageReaction.remove(user).then((messageReaction) => {
-            debug(`removed ${user.username}'s reaction`)
-                //messageReaction.message.edit(messageReaction.message.content + "\n\t" + user.username + ": " + messageReaction.emoji.name)
-        }).catch((err) => console.error(err))
+            debug(`removed ${user.username}'s reaction`);
+        }).catch((err) => console.error(err));
     }
-})
+});
 
 //When a message is posted
 client.on('message', message => {
     if (message.author.bot) return;
     if (message.content.toLowerCase().indexOf(activeRaids.prefix.toLowerCase()) !== 0) return;
-    activeRaids.processMessage(message)
+    activeRaids.processMessage(message);
 });
 
 // Connected!
 client.once('ready', async() => {
-    client.user.setActivity(activeRaids.prefix + ' help | More info')
-    ME = client.user
+    client.user.setActivity(activeRaids.prefix + ' help | More info');
+    ME = client.user;
     await activeRaids.getChannelAndMessage(activeRaidChannelID);
-    console.log("Loading saved Raids")
-        // load the stored raids into memory
+    console.log("Loading saved Raids");
+    // load the stored raids into memory
     await storage.forEach(async(key, val) => {
         if (key === "pointer") {
-            activeRaids.pointer = val
+            activeRaids.pointer = val;
         } else {
             if (val.expires <= Date.now()) {
                 // remove the raid to disk
@@ -158,7 +157,7 @@ client.once('ready', async() => {
                 try {
                     owner = await client.fetchUser(flatRaid.owner.id);
                 } catch (error) {
-                    console.log(`Tried to set the owner, but couldn't find that user in Discord.  Assuming ownership of the raid`)
+                    console.log(`Tried to set the owner, but couldn't find that user in Discord.  Assuming ownership of the raid`);
                     owner = ME;
                 }
 
@@ -173,7 +172,7 @@ client.once('ready', async() => {
                 // Add each user to the raid
                 flatRaid.attendees.forEach((att) => {
                     raid.addUserToRaid(att, att.count);
-                    raid.attendees.get(att.id).here = att.here
+                    raid.attendees.get(att.id).here = att.here;
                 });
 
                 // Cache the messages and add them to the raid
@@ -213,7 +212,7 @@ client.once('ready', async() => {
                 }
 
                 // Set the Timeouts to delete the raids when they're done
-                activeRaids.timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now())
+                activeRaids.timeOuts[raid.id] = setTimeout(() => activeRaids.removeRaid(raid.id), raid.expires - Date.now());
 
                 //update the raids
                 try {

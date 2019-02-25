@@ -1,5 +1,6 @@
-const Discord = require('discord.js')
-const Raid = require('../Raid.js')
+/* eslint-disable no-unused-vars */
+const Discord = require('discord.js');
+const Raid = require('../Raid.js');
 
 /**
  * @param {Discord.Client} client
@@ -12,7 +13,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (parseArray[1]) {
         // handle the comma after RaidID
         if (parseArray[1].trim().search(",") >= 0) {
-            parseArray.splice(1, 1, ...parseArray[1].split(","))
+            parseArray.splice(1, 1, ...parseArray[1].split(","));
         }
         let ID = parseArray[1].toUpperCase();
         if (activeRaids.has(ID)) {
@@ -32,22 +33,22 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
                     } catch (error) {
                         console.error(error);
                     }
-                    message.reply("Users have been removed from the raid. **Total confirmed is: " + raid.total() + "**")
+                    message.reply("Users have been removed from the raid. **Total confirmed is: " + raid.total() + "**");
                 } else {
-                    message.reply("Sorry, I couldn't understand your request.  I think you were trying `!<command> kick <Raid ID> @user`")
+                    message.reply("Sorry, I couldn't understand your request.  I think you were trying `!<command> kick <Raid ID> @user`");
                 }
             } else {
-                message.reply("You must be the owner of a raid to kick someone from it.")
+                message.reply("You must be the owner of a raid to kick someone from it.");
             }
         } else {
-            message.reply("Sorry, I couldn't understand your request.  I think you were trying `!<command> kick <Raid ID> @user`")
+            message.reply("Sorry, I couldn't understand your request.  I think you were trying `!<command> kick <Raid ID> @user`");
         }
     }
 
-}
+};
 
 module.exports.help = {
     name: "kick",
     description: "Kicks a list of users from the raid",
     usage: "kick <@user> [, <@user>, ...]"
-}
+};

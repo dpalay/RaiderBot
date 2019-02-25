@@ -1,9 +1,10 @@
-const Discord = require('discord.js')
-    /**
-     * @property {Discord.Message} message
-     * @property {Discord.Channel} channel
-     * @property { 'info' | 'reply' | 'unknown'}
-     */
+// eslint-disable-next-line no-unused-vars
+const Discord = require('discord.js');
+/**
+ * @property {Discord.Message} message
+ * @property {Discord.Channel} channel
+ * @property { 'info' | 'reply' | 'unknown'}
+ */
 class BotMessage {
     /**
      * 
@@ -21,7 +22,7 @@ class BotMessage {
      * @returns 
      */
     flatten() {
-        return { channel: this.channel.id, message: this.message.id, type: this.type }
+        return { channel: this.channel.id, message: this.message.id, type: this.type };
     }
 
     /**
@@ -31,7 +32,7 @@ class BotMessage {
      */
     buildlist(list) {
         if (list.includes(this.channel)) {
-            return list
+            return list;
         } else {
             return list.concat(this.channel);
         }

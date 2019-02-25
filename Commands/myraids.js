@@ -1,5 +1,6 @@
-const Discord = require('discord.js')
-const Raid = require('../Raid.js')
+/* eslint-disable no-unused-vars */
+const Discord = require('discord.js');
+const Raid = require('../Raid.js');
 
 /**
  * @param {Discord.Client} client
@@ -13,17 +14,17 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
             if (raid.userInRaid(message.author, raid)) {
                 dm.send({
                     embed: raid.embed()
-                })
+                });
             }
-        })
-    })
+        });
+    });
     if (message.channel.type == 'text') {
-        message.delete().catch(console.error)
+        message.delete().catch(console.error);
     }
-}
+};
 
 module.exports.help = {
     name: "my raids",
     description: "sends the list of raids that the user is a part of",
     usage: "myraids"
-}
+};

@@ -1,5 +1,6 @@
-const Discord = require('discord.js')
-const Raid = require('../Raid.js')
+/* eslint-disable no-unused-vars */
+const Discord = require('discord.js');
+const Raid = require('../Raid.js');
 
 /**
  * @param {Discord.Client} client
@@ -13,7 +14,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     if (parseArray[1]) {
         // handle the comma after RaidID
         if (parseArray[1].trim().search(",") >= 0) {
-            parseArray.splice(1, 1, ...parseArray[1].split(","))
+            parseArray.splice(1, 1, ...parseArray[1].split(","));
         }
         let ID = parseArray[1].toUpperCase();
         let user = message.author;
@@ -36,10 +37,10 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     } else {
         message.reply("I couldn't understand your request. Try again with `!raider send <RaidID>, Message`");
     }
-}
+};
 
 module.exports.help = {
     name: "message",
     description: "sends a message to the raid",
     usage: "message <id> the rest of the message"
-}
+};
