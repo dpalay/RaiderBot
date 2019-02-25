@@ -4,6 +4,7 @@ const ActiveRaid = require('../ActiveRaid.js')
 const TestClient = require('./mocks/client.js')
 const TestStorage = require('./mocks/storage.js')
 const TestMessage = require('./mocks/messages.js')
+const sinon = require('sinon')
     //const Discord = require('discord.js')
 const poke = require('../pokemon.js').interpretPoke
 const users = require('./mocks/users.js')
@@ -18,7 +19,6 @@ before('Set the raid', function() {
      raidtest = new Raid("CD", "1:00", 150, "here", users.userInRaid);
  })
 */
-
 describe("Pokemon", function() {
     describe("Matching", function() {
         it('should return the right ID for the right pokemon', function() {
@@ -252,6 +252,48 @@ describe("Raid", function() {
                                     it("Should have user3", function() {
                                         expect(raid.userInRaid(users.user3)).to.exist;
                                     })
+                                    describe(`User3: !test join, TP,4`, function() {
+                                        before(function() {
+                                            message = new TestMessage("Join raid with multiple", users.user3, general, `!test join, TP,4`);
+                                            raid = activeRaid.get("TP")
+                                            count = raid.total();
+                                            activeRaid.processMessage(message)
+                                        })
+                                        it("should not have a new member", function() {
+                                            expect(count).to.equal(raid.total());
+                                            expect(raid.total()).equals(7);
+                                        })
+                                        it("Should have user1", function() {
+                                            expect(raid.userInRaid(users.user1)).to.exist;
+                                        })
+                                        it("Should not have user2", function() {
+                                            expect(raid.userInRaid(users.user2)).to.not.exist;
+                                        })
+                                        it("Should have user3", function() {
+                                            expect(raid.userInRaid(users.user3)).to.exist;
+                                        })
+                                        describe(`User2: !test join, TP, 3`, function() {
+                                            before(function() {
+                                                message = new TestMessage("Join raid with multiple", users.user2, general, `!test join, TP,4`);
+                                                raid = activeRaid.get("TP")
+                                                count = raid.total();
+                                                activeRaid.processMessage(message)
+                                            })
+                                            it("Should have user1", function() {
+                                                expect(raid.userInRaid(users.user1)).to.exist;
+                                            })
+                                            it("Should have user2", function() {
+                                                expect(raid.userInRaid(users.user2)).to.exist;
+                                            })
+                                            it("Should have user3", function() {
+                                                expect(raid.userInRaid(users.user3)).to.exist;
+                                            })
+                                            it("should have a new member", function() {
+                                                expect(count).to.be.lessThan(raid.total());
+                                                expect(raid.total()).equals(11);
+                                            })
+                                        })
+                                    })
                                 })
                             })
 
@@ -263,5 +305,67 @@ describe("Raid", function() {
 
         })
 
+    })
+    describe("Creating ActiveRaid 2", function() {
+        before(function() {
+            activeRaid = new ActiveRaid(new TestClient, new TestStorage, { pointer: 0, quietMode: false, prefix: "!test" })
+        })
+        it("Shouldn't have any raids", function() {
+            expect(activeRaid.size).to.equal(0)
+        })
+        describe("User1: !test new 1:00 tyranitar ,at the gym", function() {
+            before(function() {
+                message = new TestMessage("new raid", users.user1, general, "!test new 1:00 ,tyranitar ,at the gym");
+                activeRaid.processMessage(message);
+                raid = activeRaid.first();
+            })
+            it('should have a raid', function() {
+                expect(activeRaid.size).to.equal(1);
+            })
+            it("Should be for 1:00", function() {
+                expect(raid.time).to.equal("1:00")
+            })
+            it("Should be for Tyranitar", function() {
+                expect(raid.poke.name).to.equal("Tyranitar")
+            })
+            it("Should be 'at the gym'", function() {
+                expect(raid.location).to.equal("at the gym")
+            })
+            it('Should have 1 attendee', function() {
+                expect(raid.attendees.size).to.equal(1);
+                expect(raid.total()).to.equal(1);
+            })
+            it("Should have the author as the attendee", function() {
+                expect(raid.userInRaid(message.author)).to.exist;
+            })
+            it("Should not have the author registered as 'here'", function() {
+                expect(raid.attendees.get(message.author.id).here).to.be.false
+            })
+            describe(`User1 updating: !test update VW poke, Charmander`, function() {
+                before(function() {
+                    message = new TestMessage("Join raid with multiple", users.user1, general, `!test update VW poke, Charmander`);
+                    raid = activeRaid.first();
+                    let stubbedAuthorized = sinon.stub(raid, "authorized").callsFake((mess) => mess.author == raid.owner)
+                    activeRaid.processMessage(message)
+                    stubbedAuthorized.reset()
+                })
+                it('should have a raid', function() {
+                    expect(activeRaid.size).to.equal(1);
+                })
+                it("Should be for 1:00", function() {
+                    expect(raid.time).to.equal("1:00")
+                })
+                it("Should be for Charmander", function() {
+                    expect(raid.poke.name).to.equal("Charmander")
+                })
+                it("Should be 'at the gym'", function() {
+                    expect(raid.location).to.equal("at the gym")
+                })
+                it('Should have 1 attendee', function() {
+                    expect(raid.attendees.size).to.equal(1);
+                    expect(raid.total()).to.equal(1);
+                })
+            })
+        })
     })
 })

@@ -32,6 +32,9 @@ class testChannel {
         return new Promise((res, rej) => { setTimeout(() => res(new TestMessage("replyID", bot, this, msg)), 300) });
     }
 
+    awaitMessages() {
+        return new Promise((res, rej) => { setTimeout(() => res(new TestMessage("awaitedMessages", bot, this, "msg")), 300) })
+    }
 }
 
 module.exports = {
