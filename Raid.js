@@ -2,7 +2,7 @@ const { pokelist } = require('./constant.json');
 const pokemon = require('./pokemon.js');
 const Discord = require('discord.js');
 const Attendee = require('./Attendee.js');
-const BotMessage = require('./BotMessage.js').default;
+const BotMessage = require('./BotMessage.js');
 
 let config = {};
 
