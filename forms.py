@@ -32,8 +32,8 @@ def check_for_update():
     return True
 
 def is_unique_form(pokemon, name):
-    bad = ['SHADOW', 'PURIFIED', 'FALL_2019', 'COPY_2019']
-    if any(f'{pokemon}_{form}' == name for form in bad):
+    ignored_forms = ['SHADOW', 'PURIFIED', 'FALL_2019', 'COPY_2019']
+    if any(f'{pokemon}_{form}' == name for form in ignored_forms):
         return False
     return True
 
@@ -44,18 +44,24 @@ def parse_forms():
     for x in gm:
         pokemon = dict()
         if x['templateId'].startswith('FORMS'):
-            pokemon_id = int(x['templateId'].split('_')[1][1:])
+            pokemon_id = str(int(x['templateId'].split('_')[1][1:])).zfill(3)
             pokemon['name'] = x['formSettings']['pokemon']
-            pokemon['forms'] = []
+            pokemon['forms'] = dict()
             if 'forms' in x['formSettings']: # some pokemon don't have any shadow forms
                 for form in x['formSettings']['forms']:
                     if is_unique_form(pokemon['name'], form['form']):
                         cleaned_name = form['form'].replace(f"{pokemon['name']}_", '')
-                        pokemon['forms'].append(cleaned_name)
+                        if 'assetBundleValue' in form:
+                            pokemon['forms'][cleaned_name] = str(form['assetBundleValue'])
+                        elif 'assetBundleSuffix' in form:
+                            pokemon['forms'][cleaned_name] = str(form['assetBundleSuffix'])
+                        else:
+                            pokemon['forms'][cleaned_name] = '00'
             else:
-                pokemon['forms'] = ['NORMAL']
+                pokemon['forms'] = {'NORMAL':'00'}
             pokemon['has_forms'] = len(pokemon['forms']) != 1
             new_forms[pokemon_id] = pokemon
+
     with open('forms.json', 'r') as f:
         file = json.load(f)
         if file['pokemon'] != new_forms:
