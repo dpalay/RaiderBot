@@ -23,3 +23,5 @@ TesterData/
 coverage/
 
 \.nyc_output/
+
+testing.js
