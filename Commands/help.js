@@ -69,6 +69,6 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
 
 module.exports.help = {
     name: "help",
-    description: "sends ussage information",
+    description: "sends usage information",
     usage: "help"
 };
