@@ -74,44 +74,54 @@ This is the much simpler option for many, but would not be free.  I have a VPS w
 The recommended method of running RaiderBot is to host it yourself on a server capable of running Node applications.  There's quite a bit of setup involved, but I've done what I can to simplify this.
 For now, I'm assuming you're running this on some local machine or a remote server that you have shell access (and thus can treat it like local).
 __Note about Heroku:__ I did not design this with hosting elsewhere in mind.  I did work on a heroku build for a little, but couldn't get it stable.  If you want to go that route, consider yourself warned.
+
 #### Install Node and NPM
 There's tons of documentation on how to install node and npm.  I may flesh out this section later, but for now, you should get them installed.
+
 #### Install Git
 This one's actually optional but HIGHLY recommended.  If you're going to do all the rest of this, you probably want to pull from this repository.  If you have git, you can watch this repository for updates and bring them into your own copy with very little effort.
 I personally recommend [GitKraken](https://www.gitkraken.com/) for this.  They don't give me anything to say that, although I wish they did.  I'll modify these sentences if that ever changes.
+
 #### Install a code editor
 Another optional.  You've probably got something already, but having a dedicated code editor is really helpful. I use [VS Code](https://code.visualstudio.com/) and love it.
+
 #### Pull the Repo to the local machine
 If everything else is set up, this is where it actually starts to get easier, but it DOES assume you know how to use the command prompt in your OS (Windows, OSX, or *nix)
 1. Create and open a directory for RaiderBot.  
 2. run `git init` in that directory to create an empty repository
 3. run `git pull https://github.com/dpalay/RaiderBot`
 Congratulations.  You should know have all of RaiderBot's files in the directory.
+
 #### Install dependencies
 It's time to get some things put in!
 1. run `npm install` in the directory with the files.  
   * This will install all of the dependencies for Raiderbot locally.  Raiderbot uses several other libraries
+
 #### Create a bot
-Head on over to [Discord's Bot creation page](https://discordapp.com/developers/applications/me) and make yourself a shiney new bot! For now, I suggest 1 bot per Discord server ("Guild", in Discord speak)
-1. Click on "New App" and give your bot a good name.  Pick a fun picture to represent it and creat it!
-2. **Important step** Your "App" isn't a bot yet.  To do that, you need to click the "Create a Bot User" button on the page that opens up.
-3. Take a look at the Client ID and the Token.  We'll need those for the next few steps.
-4. Time to invite the bot to your server.  You can only do this for **servers you own**.  Head over to https://discordapi.com/permissions.html#93184 and enter your Client ID from step 3.  Then, click the link provided on the page.
-5. Select the right server to add the bot to, and Double-check that everything looks right.  Once it does, Authorize the bot to join the server.
+Head on over to [Discord's Bot creation page](https://discordapp.com/developers/applications/me) and make yourself a shiny new bot! For now, I suggest 1 bot per Discord server ("Guild", in Discord speak)
+1. Click on "New Application" and give your bot a good name.  Pick a fun picture to represent it and creat it!
+2. On this page, here is an item labeled "Client ID". You'll need this for a future step.
+3. **Important step**: Your "App" isn't a bot yet.  To do that, you need go to the "Bot" tab on the left, and click "Add Bot".
+4. One this page, there is an item labeled "Token". You'll need this for a future step.
+5. Now that you have a Bot created, you need to specify permissions. Click on the "OAuth2" tab, which is right above the "Bot" tab.  Under "Scopes", check `bot`. Under "General Permissions", check `View Channels`. Under "Text Permissions", check `Send Messages`, `Manage Messages`, `Embed Links`, `Read Message History`, and `Add Reactions`.
+6. Time to invite the bot to your server.  You can only do this for **servers you own**. Copy the link inside the "Scopes" box and open it in a new tab. 
+7. Select the right server to add the bot to, and Double-check that everything looks right.  Once it does, Authorize the bot to join the server.
+
 #### Update config.json
 1. One of the files in the repository is `config.json.example`.  Copy that file and name it just `config.json`.
-  * `config.json`is the file where we're going to be storing some VERY secret and important data.  **DO NOT POST YOUR config.json file to any websites or add ** 
+  * `config.json` is the file where we're going to be storing some VERY secret and important data.  **DO NOT POST YOUR config.json file to any websites**
 2. The sample `config.json.example` file contains placeholders for the information for you to put in, such as your discord Token and Bot's user ID. 
-3. Replace the `Your secret Token for this bot` with the token from step 3 of `Create a bot` above.  
-4. Replace the `The discord user id of the bot` with teh Client ID from step 3 of `Create a bot` above.
+3. Replace the `Your secret Token for this bot` with the token from step 4 of `Create a bot` above.  
+4. Replace the `The discord user id of the bot` with the Client ID from step 2 of `Create a bot` above.
 5. `raidChannels` will only be useful if you're using PokeAlarm's webhooks to post raids in your server, and is currently only if you use the same PA config that we're using on the Madison server.  If you're not doing that, then just leave this as `"raidChannels": []`
 6. Save your `config.json` file.
+
 #### Start the bot
 If you did everything up to this point, you should be all set.  There are two ways of starting the bot:  
-1. `node Raider.js`
+1. `node Raider.js config.json`
   * This is a great way to test changes to the bot, since the log outputs to the console.  However, if the bot crashes, then it does not reboot.
 2. `npm start`
-  * This actually launches another command: `pm2 start Raider.js`.  [PM2](https://www.npmjs.com/package/pm2) is a process management option designed for node.  It startst the process as a background process, and will automatically restart the process if it crashes.  Additionally, it comes with some pretty sick monitoring tools, and I'm currently adding integration into the [Dashboard](https://app.keymetrics.io/#/) it comes with.
+  * This actually launches another command: `pm2 start Raider.js`.  [PM2](https://www.npmjs.com/package/pm2) is a process management option designed for node.  It starts the process as a background process, and will automatically restart the process if it crashes.  Additionally, it comes with some pretty sick monitoring tools, and I'm currently adding integration into the [Dashboard](https://app.keymetrics.io/#/) it comes with.
 
 ## Final Thoughts
 That should be it.  This is the first project that I've done that would potentially be large-scale, so your patience is appreciated.  
