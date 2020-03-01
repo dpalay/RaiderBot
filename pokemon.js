@@ -54,15 +54,21 @@ exports.interpretForm = function interpretForm(poke, pokeID) {
     if (/\d/.test(poke)) { // if number in string
         return 'NORMAL';
     }
+    pokeIDStr = pokeID.toString().padStart(3, '0');
+    var currentForms = forms.pokemon[pokeIDStr]['forms']
     if (names[pokeID - 1].toUpperCase() === poke.toUpperCase()) { //exact name was typed
-        return 'NORMAL';
+        // console.log(currentForms)
+        if (Object.keys(currentForms).includes('NORMAL')) {
+            return 'NORMAL';
+        } else {
+            return Object.keys(currentForms)[0]
+        }
     }
 
-    pokeIDStr = pokeID.toString().padStart(3, '0');
     if (forms.pokemon[pokeIDStr]['has_forms'] == true) {
         let formList = [];
         var name = forms.pokemon[pokeIDStr]['name']
-        for (form in forms.pokemon[pokeIDStr]['forms']) {
+        for (form in currentForms) {
             formList.push(name + "_" + form);
         }
         let matches = fuzz.extract(poke, formList, {scorer: fuzz.token_sort_ratio})
