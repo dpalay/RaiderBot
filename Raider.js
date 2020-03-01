@@ -34,16 +34,26 @@ const eventsToDisable = ['channelCreate', 'channelDelete', 'channelPinsUpdate', 
     'roleCreate', 'roleDelete', 'roleUpdate', 'typingStart', 'typingStop', 'userNoteUpdate', 'userUpdate', 'voiceStateUpdate'
 ];
 
+function debug(content) {
+    if (isdebug) console.log(content);
+}
 
+//check for new game_master to get forms
+debug('Starting Python')
+var child_process = require('child_process'); //https://stackoverflow.com/questions/14332721/
+var child = child_process.spawnSync("python3", ['forms.py'], { encoding : 'utf8' });
+console.log(child.stdout);
+if (child.status == null || child.status !== 0) {
+    console.error('Python Error:', child.stderr);
+}
+if(child.error) {
+    console.error("ERROR: ", child.error);
+}
+debug('Done with Python')
 
 // Set up discord.js client
 const Discord = require('discord.js');
 const client = new Discord.Client({ disabledEvents: eventsToDisable });
-
-
-function debug(content) {
-    if (isdebug) console.log(content);
-}
 
 if (isdebug) {
     client.on("error", (e) => console.error(e));
@@ -162,7 +172,7 @@ client.once('ready', async() => {
                 }
 
                 // Create the Raid object
-                let raid = new Raid(key, flatRaid.time, flatRaid.poke.id, flatRaid.location, owner);
+                let raid = new Raid(key, flatRaid.time, flatRaid.poke.original_name, flatRaid.location, owner);
 
                 // Set the other few pieces of the raid that aren't actually handled by the constructor.  (WHY??)
                 raid.gym = flatRaid.gym;
