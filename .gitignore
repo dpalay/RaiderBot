@@ -1,7 +1,7 @@
-
 config\.json
 
 *.txt
+!requirements.txt
 
 *.log
 
@@ -24,6 +24,7 @@ coverage/
 
 \.nyc_output/
 
-game_master.json
-
 testing.js
+
+.python-version
+env/
