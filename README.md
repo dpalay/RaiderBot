@@ -95,7 +95,9 @@ Congratulations.  You should know have all of RaiderBot's files in the directory
 #### Install dependencies
 It's time to get some things put in!
 1. run `npm install` in the directory with the files.  
-  * This will install all of the dependencies for Raiderbot locally.  Raiderbot uses several other libraries
+  * This will install all of the node dependencies for Raiderbot locally. Raiderbot uses several other libraries
+2. run ` pip3 install -r requirements.txt` in the directory with the files.
+  * This assumes you have Python already installed. If not, you can install it from [here](https://www.python.org/downloads/), or using a package manager like `sudo apt install python3-pip` (Ubuntu) or `brew install python` (macOS).
 
 #### Create a bot
 Head on over to [Discord's Bot creation page](https://discordapp.com/developers/applications/me) and make yourself a shiny new bot! For now, I suggest 1 bot per Discord server ("Guild", in Discord speak)
@@ -124,4 +126,8 @@ If you did everything up to this point, you should be all set.  There are two wa
   * This actually launches another command: `pm2 start Raider.js`.  [PM2](https://www.npmjs.com/package/pm2) is a process management option designed for node.  It starts the process as a background process, and will automatically restart the process if it crashes.  Additionally, it comes with some pretty sick monitoring tools, and I'm currently adding integration into the [Dashboard](https://app.keymetrics.io/#/) it comes with.
 
 ## Final Thoughts
-That should be it.  This is the first project that I've done that would potentially be large-scale, so your patience is appreciated.  
+That should be it.  This is the first project that I've done that would potentially be large-scale, so your patience is appreciated.
+
+## Contributing
+
+ - Support for pokemon with multiple forms added by [Nicholas Beninato](https://github.com/beninato8)
