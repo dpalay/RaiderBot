@@ -1,10 +1,9 @@
-const { pokelist } = require('./constant.json');
+const { pokelist, shinyRate } = require('./constant.json');
 const pokemon = require('./pokemon.js');
 const Discord = require('discord.js');
 const Attendee = require('./Attendee.js');
 const BotMessage = require('./BotMessage.js');
 const forms = require('./forms.json');
-
 let config = {};
 
 // Check for config file
@@ -21,7 +20,9 @@ if (process.argv[2]) {
 }
 
 //config = require('./tester.json')
-
+if (typeof shinyRate != 'number') {
+    shinyRate = 0
+}
 
 class Raid {
     /**
@@ -109,6 +110,7 @@ class Raid {
         }
         this.poke.id = pokemon.interpretPoke(poke);
         this.poke.name = pokelist[this.poke.id - 1] ? pokelist[this.poke.id - 1] : poke;
+        this.poke.shiny = Math.random() * 100 < shinyRate
         if (this.poke.original_name.length == 0) {
             this.poke.original_name = this.poke.name;
         }
@@ -120,17 +122,20 @@ class Raid {
             pokeIDStr = pokeIDStr.padStart(3, '0');
             this.poke.img = pokeIDStr + '_' + forms.pokemon[pokeIDStr]['forms'][this.poke.form]
         }
+        if (this.poke.shiny) {
+            this.poke.img = this.poke.img + '_shiny'
+        }
         // console.log(this.poke)
         if (this.poke.form === 'NORMAL' && !([351, 386, 479].includes(this.poke.id))) { 
             //castform, rotom, deoxys have actual forms called "normal"
             this.poke.display_name = this.poke.name
         } else {
             if (this.poke.id == 150 && this.poke.form.toUpperCase() === 'A') {
-                this.poke.display_name = "Armored_Mewtwo"
+                this.poke.display_name = "Armored Mewtwo"
             } else if (this.poke.form.toUpperCase() === 'ALOLA') {
-                this.poke.display_name = 'Alolan_' + this.poke.name
+                this.poke.display_name = 'Alolan ' + this.poke.name
             } else {
-                this.poke.display_name = this.poke.name + '_' + toTitleCase(this.poke.form)
+                this.poke.display_name = this.poke.name + ' ' + toTitleCase(this.poke.form)
             }
         }
     }
@@ -284,7 +289,8 @@ class Raid {
     }
     embed() {
         let emb = new Discord.RichEmbed();
-        emb.setTitle("Raid Information");
+        // emb.setTitle("Raid Information");
+        emb.setTitle(this.poke.display_name + " Raid");
         emb.setColor(0xEE6600).setTimestamp();
 
         let default_url = "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg"
@@ -294,7 +300,7 @@ class Raid {
             let url_base = 'https://raw.githubusercontent.com/PokeMiners/pogo_assets/master/Images/Pokemon/pokemon_icon_';
             
             // console.log(url_base + this.poke.img + ".png")
-            emb.setAuthor("RaiderBot_" + this.poke.display_name, url_base + this.poke.img + ".png");
+            // emb.setAuthor(this.poke.display_name + " Raid", url_base + this.poke.img + ".png");
             emb.setThumbnail(url_base + this.poke.img + ".png");
         } else {
             emb.setAuthor("RaiderBot", default_url);
@@ -308,6 +314,8 @@ class Raid {
         // str += `**Pokemon: **[${this.poke.name}](https://pokemongo.gamepress.gg/raid-boss-counter/${this.poke.name}-raid-counter-guide)
         //     **Total Attendees: **${this.total()}`;
         if (this.poke.form === 'NORMAL') {
+            var raid_name = this.poke.name.toUpperCase()
+        } else if (['INCARNATE', 'ALTERED'].includes(this.poke.form)) {
             var raid_name = this.poke.name.toUpperCase()
         } else {
             var raid_name = this.poke.name.toUpperCase() + '_' + this.poke.form.toUpperCase() + '_FORM'
