@@ -1,6 +1,7 @@
 const constants = require('./constant.json');
 const names = constants.pokelist;
 const fuzz = require('fuzzball');
+const forms = require('./forms.json');
 
 /**
  * WHO'S THAT POKEMON!?
@@ -37,4 +38,42 @@ exports.interpretPoke = function interpretPoke(poke) {
         }
     }
     return pokeID;
+};
+
+/**
+ * Function to try to guess which form the user wants
+ * @param {String} poke - text the user typed to specify a pokemon and form
+ * @param {Number} pokeID - the ID of a pokemon
+ * @returns the ID of the pokemon they typed in
+ */
+exports.interpretForm = function interpretForm(poke, pokeID) {
+    // console.log(poke, pokeID)
+    if (pokeID == 150 && poke.toUpperCase().includes('A')) { //armored mewtwo
+        var poke = 'MEWTWO_A';
+    }
+    if (/\d/.test(poke)) { // if number in string
+        return 'NORMAL';
+    }
+    if (names[pokeID - 1].toUpperCase() === poke.toUpperCase()) { //exact name was typed
+        return 'NORMAL';
+    }
+
+    pokeIDStr = pokeID.toString().padStart(3, '0');
+    if (forms.pokemon[pokeIDStr]['has_forms'] == true) {
+        let formList = [];
+        var name = forms.pokemon[pokeIDStr]['name']
+        for (form in forms.pokemon[pokeIDStr]['forms']) {
+            formList.push(name + "_" + form);
+        }
+        let matches = fuzz.extract(poke, formList, {scorer: fuzz.token_sort_ratio})
+        let match = matches[0]
+        // console.log(matches)
+        if (match[1] >= 75) {
+            // console.log(forms.pokemon[pokeIDStr])
+            // console.log(forms.pokemon[pokeIDStr]['forms'][match[0].replace(name + '_', '')])
+            // console.log(match[0])
+            return match[0].replace(name.toUpperCase() + '_', '')
+        }
+    }
+    return 'NORMAL';
 };
