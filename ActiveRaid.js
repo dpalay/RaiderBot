@@ -114,7 +114,7 @@ class ActiveRaid extends Discord.Collection {
             try {
                 let activeRaidMessages = await this.activeRaidChannel.fetchMessages();
                 this.activeRaidMessage = activeRaidMessages.filter((message) =>
-                    message.author.id == this.client.user.id).first();
+                    message.author.id === this.client.user.id && !message.deleted).first();
                 if (this.activeRaidMessage && this.activeRaidMessage.reactions.size == 0) {
                     this.activeRaidMessage.react("♻");
                 }
