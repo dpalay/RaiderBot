@@ -3,6 +3,7 @@ const pokemon = require('./pokemon.js');
 const Discord = require('discord.js');
 const Attendee = require('./Attendee.js');
 const BotMessage = require('./BotMessage.js');
+const forms = require('./forms.json');
 
 let config = {};
 
@@ -21,6 +22,7 @@ if (process.argv[2]) {
 
 //config = require('./tester.json')
 
+
 class Raid {
     /**
      * Raid object that represents a raid event.  Creating one of these implies that a group of people will be heading to a gym to take on a raid.
@@ -33,15 +35,21 @@ class Raid {
      * @param {Number} guests How many people the creator is bringing
      */
     constructor(id, time, poke, location, owner, guests = 1) {
+        // console.log(poke)
         this.id = id;
         this.time = time;
         this.location = location;
         this.gym = location;
         this.locationComment = "";
         this.poke = {};
+        if (/^\d+$/.test(poke.toString())) {
+            this.poke.original_name = '';
+        } else {
+            this.poke.original_name = poke;
+        }
         this.setPokemon(pokemon.interpretPoke(poke));
-        this.poke.id = pokemon.interpretPoke(poke);
-        this.poke.name = pokelist[this.poke.id - 1] ? pokelist[this.poke.id - 1] : poke;
+        // this.poke.id = pokemon.interpretPoke(poke); //setPokemon() just is just these 2 lines (redundant?)
+        // this.poke.name = pokelist[this.poke.id - 1] ? pokelist[this.poke.id - 1] : poke;
         this.owner = owner;
         this.expires = config.EXMon.includes(this.poke.id) ? Date.now() + config.timeoutEX : Date.now() + config.timeoutNormal;
         /** @type {BotMessage[]} */
@@ -91,8 +99,40 @@ class Raid {
     };
 
     setPokemon(poke) {
+        function toTitleCase(str) {
+            return str.replace(
+                /\w\S*/g,
+                function(txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                }
+            );
+        }
         this.poke.id = pokemon.interpretPoke(poke);
         this.poke.name = pokelist[this.poke.id - 1] ? pokelist[this.poke.id - 1] : poke;
+        if (this.poke.original_name.length == 0) {
+            this.poke.original_name = this.poke.name;
+        }
+        this.poke.form = pokemon.interpretForm(this.poke.original_name, this.poke.id)
+        if (this.poke.id == 150 && this.poke.form.toUpperCase() === 'A') {
+            this.poke.img = 'pm0150_00_pgo_a'
+        } else {
+            let pokeIDStr = this.poke.id.toString();
+            pokeIDStr = pokeIDStr.padStart(3, '0');
+            this.poke.img = pokeIDStr + '_' + forms.pokemon[pokeIDStr]['forms'][this.poke.form]
+        }
+        // console.log(this.poke)
+        if (this.poke.form === 'NORMAL' && !([351, 386, 479].includes(this.poke.id))) { 
+            //castform, rotom, deoxys have actual forms called "normal"
+            this.poke.display_name = this.poke.name
+        } else {
+            if (this.poke.id == 150 && this.poke.form.toUpperCase() === 'A') {
+                this.poke.display_name = "Armored_Mewtwo"
+            } else if (this.poke.form.toUpperCase() === 'ALOLA') {
+                this.poke.display_name = 'Alolan_' + this.poke.name
+            } else {
+                this.poke.display_name = this.poke.name + '_' + toTitleCase(this.poke.form)
+            }
+        }
     }
 
     /**
@@ -239,28 +279,41 @@ class Raid {
      */
     sendStart(client, user) {
         if (this.authorized(user)) {
-            this.messageRaid(`${user} has signaled to start the ${this.time} ${this.poke.name} raid at ${this.location}!`, client, true);
+            this.messageRaid(`${user} has signaled to start the ${this.time} ${this.poke.display_name} raid at ${this.location}!`, client, true);
         }
     }
-
     embed() {
         let emb = new Discord.RichEmbed();
         emb.setTitle("Raid Information");
         emb.setColor(0xEE6600).setTimestamp();
+
+        let default_url = "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg"
         if (pokelist[this.poke.id]) {
-            emb.setAuthor("RaiderBot_" + this.poke.name, "https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png");
-            emb.setThumbnail("https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png");
+            // emb.setAuthor("RaiderBot_" + this.poke.name, "https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png");
+            // emb.setThumbnail("https://raw.githubusercontent.com/vutran/alfred-pokedex/master/data/sprites/" + (+this.poke.id) + ".png");
+            let url_base = 'https://raw.githubusercontent.com/PokeMiners/pogo_assets/master/Images/Pokemon/pokemon_icon_';
+            
+            // console.log(url_base + this.poke.img + ".png")
+            emb.setAuthor("RaiderBot_" + this.poke.display_name, url_base + this.poke.img + ".png");
+            emb.setThumbnail(url_base + this.poke.img + ".png");
         } else {
-            emb.setAuthor("RaiderBot", "https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg");
-            emb.setThumbnail("https://s-media-cache-ak0.pinimg.com/originals/ca/4d/a5/ca4da5848311d9a21361f7adfe3bbf55.jpg");
+            emb.setAuthor("RaiderBot", default_url);
+            emb.setThumbnail(default_url);
         }
         let str = `**Time: ** ${this.time}
             **Location: **${this.location}\n`;
         if (this.gym != this.location) {
             str += `**Gym: **: ${this.gym}\n`;
         }
-        str += `**Pokemon: **[${this.poke.name}](https://pokemongo.gamepress.gg/raid-boss-counter/${this.poke.name}-raid-counter-guide)
-            **Total Attendees: **${this.total()}`;
+        // str += `**Pokemon: **[${this.poke.name}](https://pokemongo.gamepress.gg/raid-boss-counter/${this.poke.name}-raid-counter-guide)
+        //     **Total Attendees: **${this.total()}`;
+        if (this.poke.form === 'NORMAL') {
+            var raid_name = this.poke.name.toUpperCase()
+        } else {
+            var raid_name = this.poke.name.toUpperCase() + '_' + this.poke.form.toUpperCase() + '_FORM'
+        }
+        str += `**Pokemon: **[${this.poke.display_name}](https://www.pokebattler.com/raids/${raid_name})
+             **Total Attendees: **${this.total()}`;
         //**Links:**`
         emb.addField("Raid " + this.id, str, true);
         emb.addField("Instructions", "#⃣: How many are you bringing?\n❌: leave the raid\n✅: \"Here!\"\n▶: Send start (only the raid's creator)", true);
