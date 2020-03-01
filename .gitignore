@@ -29,3 +29,5 @@ testing.js
 .python-version
 env/
 test.py
+
+game_master.json
