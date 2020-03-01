@@ -1,4 +1,4688 @@
 {
     "commit": "",
-    "pokemon": {}
+    "pokemon": {
+        "001": {
+            "name": "BULBASAUR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "002": {
+            "name": "IVYSAUR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "003": {
+            "name": "VENUSAUR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "004": {
+            "name": "CHARMANDER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "005": {
+            "name": "CHARMELEON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "006": {
+            "name": "CHARIZARD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "007": {
+            "name": "SQUIRTLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "008": {
+            "name": "WARTORTLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "009": {
+            "name": "BLASTOISE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "010": {
+            "name": "CATERPIE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "011": {
+            "name": "METAPOD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "012": {
+            "name": "BUTTERFREE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "013": {
+            "name": "WEEDLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "014": {
+            "name": "KAKUNA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "015": {
+            "name": "BEEDRILL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "016": {
+            "name": "PIDGEY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "017": {
+            "name": "PIDGEOTTO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "018": {
+            "name": "PIDGEOT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "019": {
+            "name": "RATTATA",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "020": {
+            "name": "RATICATE",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "021": {
+            "name": "SPEAROW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "022": {
+            "name": "FEAROW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "023": {
+            "name": "EKANS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "024": {
+            "name": "ARBOK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "025": {
+            "name": "PIKACHU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "026": {
+            "name": "RAICHU",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "027": {
+            "name": "SANDSHREW",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "028": {
+            "name": "SANDSLASH",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "029": {
+            "name": "NIDORAN_FEMALE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "030": {
+            "name": "NIDORINA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "031": {
+            "name": "NIDOQUEEN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "032": {
+            "name": "NIDORAN_MALE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "033": {
+            "name": "NIDORINO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "034": {
+            "name": "NIDOKING",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "035": {
+            "name": "CLEFAIRY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "036": {
+            "name": "CLEFABLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "037": {
+            "name": "VULPIX",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "038": {
+            "name": "NINETALES",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "039": {
+            "name": "JIGGLYPUFF",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "040": {
+            "name": "WIGGLYTUFF",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "041": {
+            "name": "ZUBAT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "042": {
+            "name": "GOLBAT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "043": {
+            "name": "ODDISH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "044": {
+            "name": "GLOOM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "045": {
+            "name": "VILEPLUME",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "046": {
+            "name": "PARAS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "047": {
+            "name": "PARASECT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "048": {
+            "name": "VENONAT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "049": {
+            "name": "VENOMOTH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "050": {
+            "name": "DIGLETT",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "051": {
+            "name": "DUGTRIO",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "052": {
+            "name": "MEOWTH",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "053": {
+            "name": "PERSIAN",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "054": {
+            "name": "PSYDUCK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "055": {
+            "name": "GOLDUCK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "056": {
+            "name": "MANKEY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "057": {
+            "name": "PRIMEAPE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "058": {
+            "name": "GROWLITHE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "059": {
+            "name": "ARCANINE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "060": {
+            "name": "POLIWAG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "061": {
+            "name": "POLIWHIRL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "062": {
+            "name": "POLIWRATH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "063": {
+            "name": "ABRA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "064": {
+            "name": "KADABRA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "065": {
+            "name": "ALAKAZAM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "066": {
+            "name": "MACHOP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "067": {
+            "name": "MACHOKE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "068": {
+            "name": "MACHAMP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "069": {
+            "name": "BELLSPROUT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "070": {
+            "name": "WEEPINBELL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "071": {
+            "name": "VICTREEBEL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "072": {
+            "name": "TENTACOOL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "073": {
+            "name": "TENTACRUEL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "074": {
+            "name": "GEODUDE",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "075": {
+            "name": "GRAVELER",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "076": {
+            "name": "GOLEM",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "077": {
+            "name": "PONYTA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "078": {
+            "name": "RAPIDASH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "079": {
+            "name": "SLOWPOKE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "080": {
+            "name": "SLOWBRO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "081": {
+            "name": "MAGNEMITE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "082": {
+            "name": "MAGNETON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "083": {
+            "name": "FARFETCHD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "084": {
+            "name": "DODUO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "085": {
+            "name": "DODRIO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "086": {
+            "name": "SEEL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "087": {
+            "name": "DEWGONG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "088": {
+            "name": "GRIMER",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "089": {
+            "name": "MUK",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "090": {
+            "name": "SHELLDER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "091": {
+            "name": "CLOYSTER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "092": {
+            "name": "GASTLY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "093": {
+            "name": "HAUNTER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "094": {
+            "name": "GENGAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "095": {
+            "name": "ONIX",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "096": {
+            "name": "DROWZEE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "097": {
+            "name": "HYPNO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "098": {
+            "name": "KRABBY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "099": {
+            "name": "KINGLER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "100": {
+            "name": "VOLTORB",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "101": {
+            "name": "ELECTRODE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "102": {
+            "name": "EXEGGCUTE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "103": {
+            "name": "EXEGGUTOR",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "104": {
+            "name": "CUBONE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "105": {
+            "name": "MAROWAK",
+            "forms": {
+                "NORMAL": "00",
+                "ALOLA": "61"
+            },
+            "has_forms": true
+        },
+        "106": {
+            "name": "HITMONLEE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "107": {
+            "name": "HITMONCHAN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "108": {
+            "name": "LICKITUNG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "109": {
+            "name": "KOFFING",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "110": {
+            "name": "WEEZING",
+            "forms": {
+                "NORMAL": "00",
+                "GALARIAN": "31"
+            },
+            "has_forms": true
+        },
+        "111": {
+            "name": "RHYHORN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "112": {
+            "name": "RHYDON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "113": {
+            "name": "CHANSEY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "114": {
+            "name": "TANGELA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "115": {
+            "name": "KANGASKHAN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "116": {
+            "name": "HORSEA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "117": {
+            "name": "SEADRA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "118": {
+            "name": "GOLDEEN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "119": {
+            "name": "SEAKING",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "120": {
+            "name": "STARYU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "121": {
+            "name": "STARMIE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "122": {
+            "name": "MR_MIME",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "123": {
+            "name": "SCYTHER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "124": {
+            "name": "JYNX",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "125": {
+            "name": "ELECTABUZZ",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "126": {
+            "name": "MAGMAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "127": {
+            "name": "PINSIR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "128": {
+            "name": "TAUROS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "129": {
+            "name": "MAGIKARP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "130": {
+            "name": "GYARADOS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "131": {
+            "name": "LAPRAS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "132": {
+            "name": "DITTO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "133": {
+            "name": "EEVEE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "134": {
+            "name": "VAPOREON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "135": {
+            "name": "JOLTEON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "136": {
+            "name": "FLAREON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "137": {
+            "name": "PORYGON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "138": {
+            "name": "OMANYTE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "139": {
+            "name": "OMASTAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "140": {
+            "name": "KABUTO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "141": {
+            "name": "KABUTOPS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "142": {
+            "name": "AERODACTYL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "143": {
+            "name": "SNORLAX",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "144": {
+            "name": "ARTICUNO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "145": {
+            "name": "ZAPDOS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "146": {
+            "name": "MOLTRES",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "147": {
+            "name": "DRATINI",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "148": {
+            "name": "DRAGONAIR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "149": {
+            "name": "DRAGONITE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "150": {
+            "name": "MEWTWO",
+            "forms": {
+                "NORMAL": "00",
+                "A": "pm0150_00_pgo_a"
+            },
+            "has_forms": true
+        },
+        "151": {
+            "name": "MEW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "152": {
+            "name": "CHIKORITA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "153": {
+            "name": "BAYLEEF",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "154": {
+            "name": "MEGANIUM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "155": {
+            "name": "CYNDAQUIL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "156": {
+            "name": "QUILAVA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "157": {
+            "name": "TYPHLOSION",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "158": {
+            "name": "TOTODILE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "159": {
+            "name": "CROCONAW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "160": {
+            "name": "FERALIGATR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "161": {
+            "name": "SENTRET",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "162": {
+            "name": "FURRET",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "163": {
+            "name": "HOOTHOOT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "164": {
+            "name": "NOCTOWL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "165": {
+            "name": "LEDYBA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "166": {
+            "name": "LEDIAN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "167": {
+            "name": "SPINARAK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "168": {
+            "name": "ARIADOS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "169": {
+            "name": "CROBAT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "170": {
+            "name": "CHINCHOU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "171": {
+            "name": "LANTURN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "172": {
+            "name": "PICHU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "173": {
+            "name": "CLEFFA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "174": {
+            "name": "IGGLYBUFF",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "175": {
+            "name": "TOGEPI",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "176": {
+            "name": "TOGETIC",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "177": {
+            "name": "NATU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "178": {
+            "name": "XATU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "179": {
+            "name": "MAREEP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "180": {
+            "name": "FLAAFFY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "181": {
+            "name": "AMPHAROS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "182": {
+            "name": "BELLOSSOM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "183": {
+            "name": "MARILL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "184": {
+            "name": "AZUMARILL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "185": {
+            "name": "SUDOWOODO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "186": {
+            "name": "POLITOED",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "187": {
+            "name": "HOPPIP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "188": {
+            "name": "SKIPLOOM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "189": {
+            "name": "JUMPLUFF",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "190": {
+            "name": "AIPOM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "191": {
+            "name": "SUNKERN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "192": {
+            "name": "SUNFLORA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "193": {
+            "name": "YANMA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "194": {
+            "name": "WOOPER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "195": {
+            "name": "QUAGSIRE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "196": {
+            "name": "ESPEON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "197": {
+            "name": "UMBREON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "198": {
+            "name": "MURKROW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "199": {
+            "name": "SLOWKING",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "200": {
+            "name": "MISDREAVUS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "201": {
+            "name": "UNOWN",
+            "forms": {
+                "F": "16",
+                "A": "11",
+                "B": "12",
+                "C": "13",
+                "D": "14",
+                "E": "15",
+                "G": "17",
+                "H": "18",
+                "I": "19",
+                "J": "20",
+                "K": "21",
+                "L": "22",
+                "M": "23",
+                "N": "24",
+                "O": "25",
+                "P": "26",
+                "Q": "27",
+                "R": "28",
+                "S": "29",
+                "T": "30",
+                "U": "31",
+                "V": "32",
+                "W": "33",
+                "X": "34",
+                "Y": "35",
+                "Z": "36",
+                "EXCLAMATION_POINT": "37",
+                "QUESTION_MARK": "38"
+            },
+            "has_forms": true
+        },
+        "202": {
+            "name": "WOBBUFFET",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "203": {
+            "name": "GIRAFARIG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "204": {
+            "name": "PINECO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "205": {
+            "name": "FORRETRESS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "206": {
+            "name": "DUNSPARCE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "207": {
+            "name": "GLIGAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "208": {
+            "name": "STEELIX",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "209": {
+            "name": "SNUBBULL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "210": {
+            "name": "GRANBULL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "211": {
+            "name": "QWILFISH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "212": {
+            "name": "SCIZOR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "213": {
+            "name": "SHUCKLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "214": {
+            "name": "HERACROSS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "215": {
+            "name": "SNEASEL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "216": {
+            "name": "TEDDIURSA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "217": {
+            "name": "URSARING",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "218": {
+            "name": "SLUGMA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "219": {
+            "name": "MAGCARGO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "220": {
+            "name": "SWINUB",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "221": {
+            "name": "PILOSWINE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "222": {
+            "name": "CORSOLA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "223": {
+            "name": "REMORAID",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "224": {
+            "name": "OCTILLERY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "225": {
+            "name": "DELIBIRD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "226": {
+            "name": "MANTINE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "227": {
+            "name": "SKARMORY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "228": {
+            "name": "HOUNDOUR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "229": {
+            "name": "HOUNDOOM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "230": {
+            "name": "KINGDRA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "231": {
+            "name": "PHANPY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "232": {
+            "name": "DONPHAN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "233": {
+            "name": "PORYGON2",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "234": {
+            "name": "STANTLER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "235": {
+            "name": "SMEARGLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "236": {
+            "name": "TYROGUE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "237": {
+            "name": "HITMONTOP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "238": {
+            "name": "SMOOCHUM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "239": {
+            "name": "ELEKID",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "240": {
+            "name": "MAGBY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "241": {
+            "name": "MILTANK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "242": {
+            "name": "BLISSEY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "243": {
+            "name": "RAIKOU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "244": {
+            "name": "ENTEI",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "245": {
+            "name": "SUICUNE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "246": {
+            "name": "LARVITAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "247": {
+            "name": "PUPITAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "248": {
+            "name": "TYRANITAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "249": {
+            "name": "LUGIA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "250": {
+            "name": "HO_OH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "251": {
+            "name": "CELEBI",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "252": {
+            "name": "TREECKO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "253": {
+            "name": "GROVYLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "254": {
+            "name": "SCEPTILE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "255": {
+            "name": "TORCHIC",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "256": {
+            "name": "COMBUSKEN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "257": {
+            "name": "BLAZIKEN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "258": {
+            "name": "MUDKIP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "259": {
+            "name": "MARSHTOMP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "260": {
+            "name": "SWAMPERT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "261": {
+            "name": "POOCHYENA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "262": {
+            "name": "MIGHTYENA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "263": {
+            "name": "ZIGZAGOON",
+            "forms": {
+                "NORMAL": "00",
+                "GALARIAN": "31"
+            },
+            "has_forms": true
+        },
+        "264": {
+            "name": "LINOONE",
+            "forms": {
+                "NORMAL": "00",
+                "GALARIAN": "31"
+            },
+            "has_forms": true
+        },
+        "265": {
+            "name": "WURMPLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "266": {
+            "name": "SILCOON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "267": {
+            "name": "BEAUTIFLY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "268": {
+            "name": "CASCOON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "269": {
+            "name": "DUSTOX",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "270": {
+            "name": "LOTAD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "271": {
+            "name": "LOMBRE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "272": {
+            "name": "LUDICOLO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "273": {
+            "name": "SEEDOT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "274": {
+            "name": "NUZLEAF",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "275": {
+            "name": "SHIFTRY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "276": {
+            "name": "TAILLOW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "277": {
+            "name": "SWELLOW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "278": {
+            "name": "WINGULL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "279": {
+            "name": "PELIPPER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "280": {
+            "name": "RALTS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "281": {
+            "name": "KIRLIA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "282": {
+            "name": "GARDEVOIR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "283": {
+            "name": "SURSKIT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "284": {
+            "name": "MASQUERAIN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "285": {
+            "name": "SHROOMISH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "286": {
+            "name": "BRELOOM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "287": {
+            "name": "SLAKOTH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "288": {
+            "name": "VIGOROTH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "289": {
+            "name": "SLAKING",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "290": {
+            "name": "NINCADA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "291": {
+            "name": "NINJASK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "292": {
+            "name": "SHEDINJA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "293": {
+            "name": "WHISMUR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "294": {
+            "name": "LOUDRED",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "295": {
+            "name": "EXPLOUD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "296": {
+            "name": "MAKUHITA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "297": {
+            "name": "HARIYAMA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "298": {
+            "name": "AZURILL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "299": {
+            "name": "NOSEPASS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "300": {
+            "name": "SKITTY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "301": {
+            "name": "DELCATTY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "302": {
+            "name": "SABLEYE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "303": {
+            "name": "MAWILE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "304": {
+            "name": "ARON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "305": {
+            "name": "LAIRON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "306": {
+            "name": "AGGRON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "307": {
+            "name": "MEDITITE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "308": {
+            "name": "MEDICHAM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "309": {
+            "name": "ELECTRIKE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "310": {
+            "name": "MANECTRIC",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "311": {
+            "name": "PLUSLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "312": {
+            "name": "MINUN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "313": {
+            "name": "VOLBEAT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "314": {
+            "name": "ILLUMISE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "315": {
+            "name": "ROSELIA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "316": {
+            "name": "GULPIN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "317": {
+            "name": "SWALOT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "318": {
+            "name": "CARVANHA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "319": {
+            "name": "SHARPEDO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "320": {
+            "name": "WAILMER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "321": {
+            "name": "WAILORD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "322": {
+            "name": "NUMEL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "323": {
+            "name": "CAMERUPT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "324": {
+            "name": "TORKOAL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "325": {
+            "name": "SPOINK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "326": {
+            "name": "GRUMPIG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "327": {
+            "name": "SPINDA",
+            "forms": {
+                "00": "11",
+                "01": "12",
+                "02": "13",
+                "03": "14",
+                "04": "15",
+                "05": "16",
+                "06": "17",
+                "07": "18",
+                "08": "19",
+                "09": "20",
+                "10": "21",
+                "11": "22",
+                "12": "23",
+                "13": "24",
+                "14": "25",
+                "15": "26",
+                "16": "27",
+                "17": "28",
+                "18": "29",
+                "19": "30"
+            },
+            "has_forms": true
+        },
+        "328": {
+            "name": "TRAPINCH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "329": {
+            "name": "VIBRAVA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "330": {
+            "name": "FLYGON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "331": {
+            "name": "CACNEA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "332": {
+            "name": "CACTURNE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "333": {
+            "name": "SWABLU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "334": {
+            "name": "ALTARIA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "335": {
+            "name": "ZANGOOSE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "336": {
+            "name": "SEVIPER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "337": {
+            "name": "LUNATONE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "338": {
+            "name": "SOLROCK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "339": {
+            "name": "BARBOACH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "340": {
+            "name": "WHISCASH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "341": {
+            "name": "CORPHISH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "342": {
+            "name": "CRAWDAUNT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "343": {
+            "name": "BALTOY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "344": {
+            "name": "CLAYDOL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "345": {
+            "name": "LILEEP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "346": {
+            "name": "CRADILY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "347": {
+            "name": "ANORITH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "348": {
+            "name": "ARMALDO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "349": {
+            "name": "FEEBAS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "350": {
+            "name": "MILOTIC",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "351": {
+            "name": "CASTFORM",
+            "forms": {
+                "NORMAL": "11",
+                "SUNNY": "12",
+                "RAINY": "13",
+                "SNOWY": "14"
+            },
+            "has_forms": true
+        },
+        "352": {
+            "name": "KECLEON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "353": {
+            "name": "SHUPPET",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "354": {
+            "name": "BANETTE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "355": {
+            "name": "DUSKULL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "356": {
+            "name": "DUSCLOPS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "357": {
+            "name": "TROPIUS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "358": {
+            "name": "CHIMECHO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "359": {
+            "name": "ABSOL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "360": {
+            "name": "WYNAUT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "361": {
+            "name": "SNORUNT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "362": {
+            "name": "GLALIE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "363": {
+            "name": "SPHEAL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "364": {
+            "name": "SEALEO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "365": {
+            "name": "WALREIN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "366": {
+            "name": "CLAMPERL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "367": {
+            "name": "HUNTAIL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "368": {
+            "name": "GOREBYSS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "369": {
+            "name": "RELICANTH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "370": {
+            "name": "LUVDISC",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "371": {
+            "name": "BAGON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "372": {
+            "name": "SHELGON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "373": {
+            "name": "SALAMENCE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "374": {
+            "name": "BELDUM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "375": {
+            "name": "METANG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "376": {
+            "name": "METAGROSS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "377": {
+            "name": "REGIROCK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "378": {
+            "name": "REGICE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "379": {
+            "name": "REGISTEEL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "380": {
+            "name": "LATIAS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "381": {
+            "name": "LATIOS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "382": {
+            "name": "KYOGRE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "383": {
+            "name": "GROUDON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "384": {
+            "name": "RAYQUAZA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "385": {
+            "name": "JIRACHI",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "386": {
+            "name": "DEOXYS",
+            "forms": {
+                "NORMAL": "11",
+                "ATTACK": "12",
+                "DEFENSE": "13",
+                "SPEED": "14"
+            },
+            "has_forms": true
+        },
+        "387": {
+            "name": "TURTWIG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "388": {
+            "name": "GROTLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "389": {
+            "name": "TORTERRA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "390": {
+            "name": "CHIMCHAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "391": {
+            "name": "MONFERNO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "392": {
+            "name": "INFERNAPE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "393": {
+            "name": "PIPLUP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "394": {
+            "name": "PRINPLUP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "395": {
+            "name": "EMPOLEON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "396": {
+            "name": "STARLY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "397": {
+            "name": "STARAVIA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "398": {
+            "name": "STARAPTOR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "399": {
+            "name": "BIDOOF",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "400": {
+            "name": "BIBAREL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "401": {
+            "name": "KRICKETOT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "402": {
+            "name": "KRICKETUNE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "403": {
+            "name": "SHINX",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "404": {
+            "name": "LUXIO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "405": {
+            "name": "LUXRAY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "406": {
+            "name": "BUDEW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "407": {
+            "name": "ROSERADE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "408": {
+            "name": "CRANIDOS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "409": {
+            "name": "RAMPARDOS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "410": {
+            "name": "SHIELDON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "411": {
+            "name": "BASTIODON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "412": {
+            "name": "BURMY",
+            "forms": {
+                "PLANT": "11",
+                "SANDY": "12",
+                "TRASH": "13"
+            },
+            "has_forms": true
+        },
+        "413": {
+            "name": "WORMADAM",
+            "forms": {
+                "PLANT": "11",
+                "SANDY": "12",
+                "TRASH": "13"
+            },
+            "has_forms": true
+        },
+        "414": {
+            "name": "MOTHIM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "415": {
+            "name": "COMBEE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "416": {
+            "name": "VESPIQUEN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "417": {
+            "name": "PACHIRISU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "418": {
+            "name": "BUIZEL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "419": {
+            "name": "FLOATZEL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "420": {
+            "name": "CHERUBI",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "421": {
+            "name": "CHERRIM",
+            "forms": {
+                "OVERCAST": "11",
+                "SUNNY": "12"
+            },
+            "has_forms": true
+        },
+        "422": {
+            "name": "SHELLOS",
+            "forms": {
+                "WEST_SEA": "11",
+                "EAST_SEA": "12"
+            },
+            "has_forms": true
+        },
+        "423": {
+            "name": "GASTRODON",
+            "forms": {
+                "WEST_SEA": "11",
+                "EAST_SEA": "12"
+            },
+            "has_forms": true
+        },
+        "424": {
+            "name": "AMBIPOM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "425": {
+            "name": "DRIFLOON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "426": {
+            "name": "DRIFBLIM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "427": {
+            "name": "BUNEARY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "428": {
+            "name": "LOPUNNY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "429": {
+            "name": "MISMAGIUS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "430": {
+            "name": "HONCHKROW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "431": {
+            "name": "GLAMEOW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "432": {
+            "name": "PURUGLY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "433": {
+            "name": "CHINGLING",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "434": {
+            "name": "STUNKY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "435": {
+            "name": "SKUNTANK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "436": {
+            "name": "BRONZOR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "437": {
+            "name": "BRONZONG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "438": {
+            "name": "BONSLY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "439": {
+            "name": "MIME_JR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "440": {
+            "name": "HAPPINY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "441": {
+            "name": "CHATOT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "442": {
+            "name": "SPIRITOMB",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "443": {
+            "name": "GIBLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "444": {
+            "name": "GABITE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "445": {
+            "name": "GARCHOMP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "446": {
+            "name": "MUNCHLAX",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "447": {
+            "name": "RIOLU",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "448": {
+            "name": "LUCARIO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "449": {
+            "name": "HIPPOPOTAS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "450": {
+            "name": "HIPPOWDON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "451": {
+            "name": "SKORUPI",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "452": {
+            "name": "DRAPION",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "453": {
+            "name": "CROAGUNK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "454": {
+            "name": "TOXICROAK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "455": {
+            "name": "CARNIVINE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "456": {
+            "name": "FINNEON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "457": {
+            "name": "LUMINEON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "458": {
+            "name": "MANTYKE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "459": {
+            "name": "SNOVER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "460": {
+            "name": "ABOMASNOW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "461": {
+            "name": "WEAVILE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "462": {
+            "name": "MAGNEZONE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "463": {
+            "name": "LICKILICKY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "464": {
+            "name": "RHYPERIOR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "465": {
+            "name": "TANGROWTH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "466": {
+            "name": "ELECTIVIRE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "467": {
+            "name": "MAGMORTAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "468": {
+            "name": "TOGEKISS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "469": {
+            "name": "YANMEGA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "470": {
+            "name": "LEAFEON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "471": {
+            "name": "GLACEON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "472": {
+            "name": "GLISCOR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "473": {
+            "name": "MAMOSWINE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "474": {
+            "name": "PORYGON_Z",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "475": {
+            "name": "GALLADE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "476": {
+            "name": "PROBOPASS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "477": {
+            "name": "DUSKNOIR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "478": {
+            "name": "FROSLASS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "479": {
+            "name": "ROTOM",
+            "forms": {
+                "NORMAL": "11",
+                "HEAT": "12",
+                "WASH": "13",
+                "FROST": "14",
+                "FAN": "15",
+                "MOW": "16"
+            },
+            "has_forms": true
+        },
+        "480": {
+            "name": "UXIE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "481": {
+            "name": "MESPRIT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "482": {
+            "name": "AZELF",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "483": {
+            "name": "DIALGA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "484": {
+            "name": "PALKIA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "485": {
+            "name": "HEATRAN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "486": {
+            "name": "REGIGIGAS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "487": {
+            "name": "GIRATINA",
+            "forms": {
+                "ALTERED": "11",
+                "ORIGIN": "12"
+            },
+            "has_forms": true
+        },
+        "488": {
+            "name": "CRESSELIA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "489": {
+            "name": "PHIONE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "490": {
+            "name": "MANAPHY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "491": {
+            "name": "DARKRAI",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "492": {
+            "name": "SHAYMIN",
+            "forms": {
+                "LAND": "11",
+                "SKY": "12"
+            },
+            "has_forms": true
+        },
+        "493": {
+            "name": "ARCEUS",
+            "forms": {
+                "NORMAL": "11",
+                "FIGHTING": "12",
+                "FLYING": "13",
+                "POISON": "14",
+                "GROUND": "15",
+                "ROCK": "16",
+                "BUG": "17",
+                "GHOST": "18",
+                "STEEL": "19",
+                "FIRE": "20",
+                "WATER": "21",
+                "GRASS": "22",
+                "ELECTRIC": "23",
+                "PSYCHIC": "24",
+                "ICE": "25",
+                "DRAGON": "26",
+                "DARK": "27",
+                "FAIRY": "28"
+            },
+            "has_forms": true
+        },
+        "494": {
+            "name": "VICTINI",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "495": {
+            "name": "SNIVY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "496": {
+            "name": "SERVINE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "497": {
+            "name": "SERPERIOR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "498": {
+            "name": "TEPIG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "499": {
+            "name": "PIGNITE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "500": {
+            "name": "EMBOAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "501": {
+            "name": "OSHAWOTT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "502": {
+            "name": "DEWOTT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "503": {
+            "name": "SAMUROTT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "504": {
+            "name": "PATRAT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "505": {
+            "name": "WATCHOG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "506": {
+            "name": "LILLIPUP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "507": {
+            "name": "HERDIER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "508": {
+            "name": "STOUTLAND",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "509": {
+            "name": "PURRLOIN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "510": {
+            "name": "LIEPARD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "511": {
+            "name": "PANSAGE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "512": {
+            "name": "SIMISAGE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "513": {
+            "name": "PANSEAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "514": {
+            "name": "SIMISEAR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "515": {
+            "name": "PANPOUR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "516": {
+            "name": "SIMIPOUR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "517": {
+            "name": "MUNNA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "518": {
+            "name": "MUSHARNA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "519": {
+            "name": "PIDOVE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "520": {
+            "name": "TRANQUILL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "521": {
+            "name": "UNFEZANT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "522": {
+            "name": "BLITZLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "523": {
+            "name": "ZEBSTRIKA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "524": {
+            "name": "ROGGENROLA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "525": {
+            "name": "BOLDORE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "526": {
+            "name": "GIGALITH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "527": {
+            "name": "WOOBAT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "528": {
+            "name": "SWOOBAT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "529": {
+            "name": "DRILBUR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "530": {
+            "name": "EXCADRILL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "531": {
+            "name": "AUDINO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "532": {
+            "name": "TIMBURR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "533": {
+            "name": "GURDURR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "534": {
+            "name": "CONKELDURR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "535": {
+            "name": "TYMPOLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "536": {
+            "name": "PALPITOAD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "537": {
+            "name": "SEISMITOAD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "538": {
+            "name": "THROH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "539": {
+            "name": "SAWK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "540": {
+            "name": "SEWADDLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "541": {
+            "name": "SWADLOON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "542": {
+            "name": "LEAVANNY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "543": {
+            "name": "VENIPEDE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "544": {
+            "name": "WHIRLIPEDE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "545": {
+            "name": "SCOLIPEDE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "546": {
+            "name": "COTTONEE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "547": {
+            "name": "WHIMSICOTT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "548": {
+            "name": "PETILIL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "549": {
+            "name": "LILLIGANT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "550": {
+            "name": "BASCULIN",
+            "forms": {
+                "RED_STRIPED": "11",
+                "BLUE_STRIPED": "12"
+            },
+            "has_forms": true
+        },
+        "551": {
+            "name": "SANDILE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "552": {
+            "name": "KROKOROK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "553": {
+            "name": "KROOKODILE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "554": {
+            "name": "DARUMAKA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "555": {
+            "name": "DARMANITAN",
+            "forms": {
+                "STANDARD": "11",
+                "ZEN": "12"
+            },
+            "has_forms": true
+        },
+        "556": {
+            "name": "MARACTUS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "557": {
+            "name": "DWEBBLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "558": {
+            "name": "CRUSTLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "559": {
+            "name": "SCRAGGY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "560": {
+            "name": "SCRAFTY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "561": {
+            "name": "SIGILYPH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "562": {
+            "name": "YAMASK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "563": {
+            "name": "COFAGRIGUS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "564": {
+            "name": "TIRTOUGA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "565": {
+            "name": "CARRACOSTA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "566": {
+            "name": "ARCHEN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "567": {
+            "name": "ARCHEOPS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "568": {
+            "name": "TRUBBISH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "569": {
+            "name": "GARBODOR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "570": {
+            "name": "ZORUA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "571": {
+            "name": "ZOROARK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "572": {
+            "name": "MINCCINO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "573": {
+            "name": "CINCCINO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "574": {
+            "name": "GOTHITA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "575": {
+            "name": "GOTHORITA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "576": {
+            "name": "GOTHITELLE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "577": {
+            "name": "SOLOSIS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "578": {
+            "name": "DUOSION",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "579": {
+            "name": "REUNICLUS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "580": {
+            "name": "DUCKLETT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "581": {
+            "name": "SWANNA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "582": {
+            "name": "VANILLITE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "583": {
+            "name": "VANILLISH",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "584": {
+            "name": "VANILLUXE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "585": {
+            "name": "DEERLING",
+            "forms": {
+                "SPRING": "11",
+                "SUMMER": "12",
+                "AUTUMN": "13",
+                "WINTER": "14"
+            },
+            "has_forms": true
+        },
+        "586": {
+            "name": "SAWSBUCK",
+            "forms": {
+                "SPRING": "11",
+                "SUMMER": "12",
+                "AUTUMN": "13",
+                "WINTER": "14"
+            },
+            "has_forms": true
+        },
+        "587": {
+            "name": "EMOLGA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "588": {
+            "name": "KARRABLAST",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "589": {
+            "name": "ESCAVALIER",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "590": {
+            "name": "FOONGUS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "591": {
+            "name": "AMOONGUSS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "592": {
+            "name": "FRILLISH",
+            "forms": {
+                "NORMAL": "00",
+                "FEMALE": "1"
+            },
+            "has_forms": true
+        },
+        "593": {
+            "name": "JELLICENT",
+            "forms": {
+                "NORMAL": "00",
+                "FEMALE": "1"
+            },
+            "has_forms": true
+        },
+        "594": {
+            "name": "ALOMOMOLA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "595": {
+            "name": "JOLTIK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "596": {
+            "name": "GALVANTULA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "597": {
+            "name": "FERROSEED",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "598": {
+            "name": "FERROTHORN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "599": {
+            "name": "KLINK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "600": {
+            "name": "KLANG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "601": {
+            "name": "KLINKLANG",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "602": {
+            "name": "TYNAMO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "603": {
+            "name": "EELEKTRIK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "604": {
+            "name": "EELEKTROSS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "605": {
+            "name": "ELGYEM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "606": {
+            "name": "BEHEEYEM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "607": {
+            "name": "LITWICK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "608": {
+            "name": "LAMPENT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "609": {
+            "name": "CHANDELURE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "610": {
+            "name": "AXEW",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "611": {
+            "name": "FRAXURE",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "612": {
+            "name": "HAXORUS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "613": {
+            "name": "CUBCHOO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "614": {
+            "name": "BEARTIC",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "615": {
+            "name": "CRYOGONAL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "616": {
+            "name": "SHELMET",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "617": {
+            "name": "ACCELGOR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "618": {
+            "name": "STUNFISK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "619": {
+            "name": "MIENFOO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "620": {
+            "name": "MIENSHAO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "621": {
+            "name": "DRUDDIGON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "622": {
+            "name": "GOLETT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "623": {
+            "name": "GOLURK",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "624": {
+            "name": "PAWNIARD",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "625": {
+            "name": "BISHARP",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "626": {
+            "name": "BOUFFALANT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "627": {
+            "name": "RUFFLET",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "628": {
+            "name": "BRAVIARY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "629": {
+            "name": "VULLABY",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "630": {
+            "name": "MANDIBUZZ",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "631": {
+            "name": "HEATMOR",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "632": {
+            "name": "DURANT",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "633": {
+            "name": "DEINO",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "634": {
+            "name": "ZWEILOUS",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "635": {
+            "name": "HYDREIGON",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "636": {
+            "name": "LARVESTA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "637": {
+            "name": "VOLCARONA",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "638": {
+            "name": "COBALION",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "639": {
+            "name": "TERRAKION",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "640": {
+            "name": "VIRIZION",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "641": {
+            "name": "TORNADUS",
+            "forms": {
+                "INCARNATE": "11",
+                "THERIAN": "12"
+            },
+            "has_forms": true
+        },
+        "642": {
+            "name": "THUNDURUS",
+            "forms": {
+                "INCARNATE": "11",
+                "THERIAN": "12"
+            },
+            "has_forms": true
+        },
+        "643": {
+            "name": "RESHIRAM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "644": {
+            "name": "ZEKROM",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "645": {
+            "name": "LANDORUS",
+            "forms": {
+                "INCARNATE": "11",
+                "THERIAN": "12"
+            },
+            "has_forms": true
+        },
+        "646": {
+            "name": "KYUREM",
+            "forms": {
+                "NORMAL": "11",
+                "WHITE": "12",
+                "BLACK": "13"
+            },
+            "has_forms": true
+        },
+        "647": {
+            "name": "KELDEO",
+            "forms": {
+                "ORDINARY": "11",
+                "RESOLUTE": "12"
+            },
+            "has_forms": true
+        },
+        "648": {
+            "name": "MELOETTA",
+            "forms": {
+                "ARIA": "11",
+                "PIROUETTE": "12"
+            },
+            "has_forms": true
+        },
+        "649": {
+            "name": "GENESECT",
+            "forms": {
+                "SHOCK": "11",
+                "DOUSE": "12",
+                "NORMAL": "13",
+                "BURN": "14",
+                "CHILL": "15"
+            },
+            "has_forms": true
+        },
+        "808": {
+            "name": "MELTAN",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        },
+        "809": {
+            "name": "MELMETAL",
+            "forms": {
+                "NORMAL": "00"
+            },
+            "has_forms": false
+        }
+    }
 }
