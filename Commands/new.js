@@ -43,7 +43,7 @@ module.exports.run = async(client, message, activeRaids, parseArray) => {
     raid = activeRaids.makeRaid(activeRaids.nextID(), parseArray[0], parseArray[1], parseArray[2], message.author, parseArray[3]);
     if (!activeRaids.quietMode) {
         try {
-            await message.channel.send(`Raid: (${raid.id})`, {
+            await message.channel.send({//`Raid: (${raid.id})`, {
                 embed: raid.embed()
             }).then((raidMessage) => {
                 console.debug(`Raid created by ${message.author} in ${message.channel}`);
