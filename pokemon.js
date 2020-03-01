@@ -81,5 +81,8 @@ exports.interpretForm = function interpretForm(poke, pokeID) {
             return match[0].replace(name.toUpperCase() + '_', '')
         }
     }
-    return 'NORMAL';
+    if (Object.keys(currentForms).includes('NORMAL')) {
+        return 'NORMAL';
+    }
+    return Object.keys(currentForms)[0]
 };
