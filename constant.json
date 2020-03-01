@@ -34,5 +34,6 @@
         "message": "message",
         "help": "help",
         "activeraids": "activeraids"
-    }
+    },
+    "shinyRate": 5
 }
