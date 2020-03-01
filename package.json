@@ -27,18 +27,18 @@
     },
     "homepage": "https://github.com/dpalay/RaiderBot#readme",
     "dependencies": {
-        "better-sqlite-pool": "^0.2.0",
-        "big-integer": "^1.6.41",
-        "discord.js": "^11.4.2",
-        "enmap": "^4.7.1",
+        "better-sqlite-pool": "^0.2.3",
+        "big-integer": "^1.6.48",
+        "discord.js": "^11.6.1",
+        "enmap": "^4.8.7",
         "fuzzball": "^0.13.6",
         "moment": "^2.24.0",
-        "node": "^11.9.0",
+        "node": "^11.15.0",
         "node-persist": "^2.1.0",
-        "npm": "^6.11.3",
+        "npm": "^6.14.1",
         "pmx": "^1.6.7",
-        "sinon": "^7.2.4",
-        "underscore": "^1.9.1"
+        "sinon": "^7.5.0",
+        "underscore": "^1.9.2"
     },
     "devDependencies": {
         "chai": "^4.2.0",
