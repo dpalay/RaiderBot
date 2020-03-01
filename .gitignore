@@ -28,3 +28,4 @@ testing.js
 
 .python-version
 env/
+test.py
