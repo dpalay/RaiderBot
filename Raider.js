@@ -1,4 +1,5 @@
 const Raid = require('./Raid.js');
+const forms = require('./forms.js')
 let config = {};
 
 // Check for config file
@@ -39,17 +40,7 @@ function debug(content) {
 }
 
 //check for new game_master to get forms
-debug('Starting Python')
-var child_process = require('child_process'); //https://stackoverflow.com/questions/14332721/
-var child = child_process.spawnSync("python3", ['forms.py'], { encoding : 'utf8' });
-console.log(child.stdout);
-if (child.status == null || child.status !== 0) {
-    console.error('Python Error:', child.stderr);
-}
-if(child.error) {
-    console.error("ERROR: ", child.error);
-}
-debug('Done with Python')
+forms.updateForms()
 
 // Set up discord.js client
 const Discord = require('discord.js');

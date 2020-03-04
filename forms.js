@@ -3,12 +3,12 @@ const fs = require('fs');
 
 try {
     let rawdata = fs.readFileSync('forms.json');
+    let forms = JSON.parse(rawdata);
+    lastCommit = forms.commit
 } catch (error) {
     console.log('forms.json was not found. Was forms.json.example copied and renamed to forms.json?')
     process.exit(1)
 }
-let forms = JSON.parse(rawdata);
-lastCommit = forms.commit
 
 let commitURL = 'https://api.github.com/repos/PokeMiners/game_masters/git/refs/heads/master';
 
@@ -122,7 +122,7 @@ function parseForms() {
     return newForms;
 }
 
-const main = async () => {
+exports.updateForms = async () => {
     let debug = true;
     debug = false;
     const newCommit = await checkForCommit();
@@ -144,5 +144,3 @@ const main = async () => {
     if (newPokemon === oldForms.pokemon)
         writeJSON(newForms, 'forms.json', 'new pokemon forms')
 }
-
-main()
