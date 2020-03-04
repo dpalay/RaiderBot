@@ -1,7 +1,6 @@
 config\.json
 
 *.txt
-!requirements.txt
 
 *.log
 
@@ -28,7 +27,7 @@ testing.js
 
 .python-version
 env/
-test.py
+*.py
 
 game_master.json
 

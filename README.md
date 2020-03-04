@@ -75,8 +75,8 @@ The recommended method of running RaiderBot is to host it yourself on a server c
 For now, I'm assuming you're running this on some local machine or a remote server that you have shell access (and thus can treat it like local).
 __Note about Heroku:__ I did not design this with hosting elsewhere in mind.  I did work on a heroku build for a little, but couldn't get it stable.  If you want to go that route, consider yourself warned.
 
-#### Install Node, NPM, and Python
-There's tons of documentation on how to install these.  I may flesh out this section later, but for now, you should get them installed.
+#### Install Node and NPM
+There's tons of documentation on how to install node and npm.  I may flesh out this section later, but for now, you should get them installed.
 
 #### Install Git
 This one's actually optional but HIGHLY recommended.  If you're going to do all the rest of this, you probably want to pull from this repository.  If you have git, you can watch this repository for updates and bring them into your own copy with very little effort.
@@ -95,8 +95,7 @@ Congratulations.  You should know have all of RaiderBot's files in the directory
 #### Install dependencies
 It's time to get some things put in!
 1. run `npm install` in the directory with the files.  
-  * This will install all of the node dependencies for Raiderbot locally. Raiderbot uses several other libraries
-2. run ` pip3 install -r requirements.txt` in the directory with the files.
+  * This will install all of the dependencies for Raiderbot locally.  Raiderbot uses several other libraries
 
 #### Create a bot
 Head on over to [Discord's Bot creation page](https://discordapp.com/developers/applications/me) and make yourself a shiny new bot! For now, I suggest 1 bot per Discord server ("Guild", in Discord speak)
